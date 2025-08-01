@@ -3,202 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Browse our curated collection of books at Book Haven. Find fiction, non-fiction, and children's books from your favorite authors.">
-    <meta name="keywords" content="books, bookstore, fiction books, non-fiction books, children's books, reading">
-    <meta name="robots" content="index, follow">
-    
-    <!-- Open Graph Tags -->
-    <meta property="og:title" content="Book Gallery | Book Haven">
-    <meta property="og:description" content="Browse our curated collection of books at Book Haven">
-    <meta property="og:image" content="images/gallery-preview.jpg">
-    
-    <!-- Preload Critical Resources -->
-    <link rel="preload" href="css/style.css" as="style">
-    <link rel="preload" href="js/script.js" as="script">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    
-    <title>Book Gallery | Book Haven</title>
-    
-    <!-- Styles -->
-    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <title>Gallery - Book Haven</title>
     <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Skip Link for Keyboard Users -->
-    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <a href="#main" class="skip-link">Skip to main content</a>
 
-    <header role="banner">
-        <nav class="navbar" role="navigation" aria-label="Main navigation">
-            <div class="logo">
-                <img src="images/logo.svg" alt="Book Haven Logo" width="40" height="40">
-                <h1>Book Haven</h1>
-            </div>
-            <button class="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false">
-                <span></span>
-                <span></span>
-                <span></span>
+    <nav class="navbar">
+        <div class="container">
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
             </button>
             <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
                 <li><a href="gallery.html" aria-current="page">Gallery</a></li>
-                <li><a href="about.html">About Us</a></li>
-                <li><a href="custom.html">Staff Picks</a></li>
+                <li><a href="events.html">Events</a></li>
+                <li><a href="contact.html">Contact</a></li>
             </ul>
-            <button class="cart-btn" id="cartButton" aria-label="Shopping cart">
-                <span class="cart-icon" aria-hidden="true">🛒</span>
-                <span class="cart-count" aria-live="polite">0</span>
-            </button>
-        </nav>
-    </header>
+        </div>
+    </nav>
 
-    <main id="main-content" role="main">
-        <section class="gallery-header">
-            <h2>Browse Our Collection</h2>
-            <div class="filters" role="group" aria-label="Book category filters">
-                <button class="filter-btn active" data-filter="all" aria-pressed="true">All Books</button>
-                <button class="filter-btn" data-filter="fiction" aria-pressed="false">Fiction</button>
-                <button class="filter-btn" data-filter="non-fiction" aria-pressed="false">Non-Fiction</button>
-                <button class="filter-btn" data-filter="children" aria-pressed="false">Children's</button>
+    <main id="main">
+        <section class="hero">
+            <div class="container">
+                <h1>Our Gallery</h1>
+                <p>Step into the world of Book Haven</p>
             </div>
         </section>
 
-        <!-- Add Loading State -->
-        <div id="loading-state" class="loading-container" hidden>
-            <div class="loading-spinner"></div>
-            <p>Loading books...</p>
-        </div>
+        <section class="gallery-section container">
+            <div class="gallery-filters">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="store">Store</button>
+                <button class="filter-btn" data-filter="events">Events</button>
+                <button class="filter-btn" data-filter="books">Books</button>
+            </div>
 
-        <!-- Add Error State -->
-        <div id="error-state" class="error-container" hidden>
-            <p>Sorry, we couldn't load the books. Please try again.</p>
-            <button class="btn btn-primary" onclick="loadBooks()">Retry</button>
-        </div>
+            <div class="gallery-grid">
+                <figure class="gallery-item" data-category="store">
+                    <img src="images/gallery/store-front.jpg" alt="Book Haven storefront" loading="lazy">
+                    <figcaption>Our welcoming entrance</figcaption>
+                </figure>
+                <figure class="gallery-item" data-category="store">
+                    <img src="images/gallery/reading-nook.jpg" alt="Cozy reading nook" loading="lazy">
+                    <figcaption>Our famous reading nook</figcaption>
+                </figure>
+                <figure class="gallery-item" data-category="events">
+                    <img src="images/gallery/author-talk.jpg" alt="Author talk event" loading="lazy">
+                    <figcaption>Monthly author talks</figcaption>
+                </figure>
+                <figure class="gallery-item" data-category="books">
+                    <img src="images/gallery/rare-books.jpg" alt="Rare books collection" loading="lazy">
+                    <figcaption>Rare books collection</figcaption>
+                </figure>
+                <!-- Add more gallery items as needed -->
+            </div>
+        </section>
 
-        <div class="gallery-grid" role="list">
-            <!-- Add Template for Dynamic Book Loading -->
-            <template id="book-template">
-                <article class="book-card" role="listitem">
-                    <span class="book-badge"></span>
-                    <img class="book-image" loading="lazy">
-                    <div class="book-info">
-                        <h3 class="book-title"></h3>
-                        <p class="book-author"></p>
-                        <p class="book-price"></p>
-                        <button class="btn btn-primary add-to-cart"></button>
-                    </div>
-                </article>
-            </template>
+        <div class="lightbox" id="gallery-lightbox">
+            <button class="lightbox-close" aria-label="Close image viewer">&times;</button>
+            <img src="" alt="" class="lightbox-image">
+            <button class="lightbox-prev" aria-label="Previous image">&lt;</button>
+            <button class="lightbox-next" aria-label="Next image">&gt;</button>
+            <p class="lightbox-caption"></p>
         </div>
-
-        <!-- Add Pagination -->
-        <nav class="pagination" role="navigation" aria-label="Gallery pages">
-            <button class="btn btn-secondary" id="prevPage" disabled>Previous</button>
-            <span id="pageInfo" aria-live="polite">Page 1 of 1</span>
-            <button class="btn btn-secondary" id="nextPage" disabled>Next</button>
-        </nav>
     </main>
 
-    <!-- Cart Modal -->
-    <div class="modal-overlay" id="modalOverlay" hidden>
-        <div 
-            class="cart-modal" 
-            role="dialog" 
-            aria-labelledby="cartTitle"
-            aria-modal="true"
-        >
-            <header class="modal-header">
-                <h2 id="cartTitle">Your Shopping Cart</h2>
-                <button 
-                    class="close-modal" 
-                    aria-label="Close cart"
-                    onclick="closeCart()"
-                >×</button>
-            </header>
-            
-            <!-- Empty Cart State -->
-            <div id="emptyCart" class="empty-cart" hidden>
-                <p>Your cart is empty</p>
-                <button 
-                    class="btn btn-primary"
-                    onclick="closeCart()"
-                >Continue Shopping</button>
-            </div>
-
-            <div class="cart-items" role="list">
-                <template id="cart-item-template">
-                    <div class="cart-item" role="listitem">
-                        <div class="item-info">
-                            <h3 class="item-title"></h3>
-                            <p class="item-price"></p>
-                        </div>
-                        <div class="item-actions">
-                            <button class="quantity-btn minus" aria-label="Decrease quantity">-</button>
-                            <span class="quantity" aria-label="Quantity">1</span>
-                            <button class="quantity-btn plus" aria-label="Increase quantity">+</button>
-                            <button class="remove-item" aria-label="Remove from cart">×</button>
-                        </div>
-                    </div>
-                </template>
-            </div>
-
-            <footer class="modal-footer">
-                <p class="cart-total">
-                    Total: <span aria-live="polite">$0.00</span>
-                </p>
-                <div class="cart-actions">
-                    <button 
-                        class="btn btn-secondary"
-                        onclick="clearCart()"
-                        aria-label="Clear shopping cart"
-                    >Clear Cart</button>
-                    <button 
-                        class="btn btn-primary"
-                        onclick="checkout()"
-                        aria-label="Proceed to checkout"
-                    >Checkout</button>
-                </div>
-            </footer>
-        </div>
-    </div>
-
     <footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>Visit Us</h3>
-                <p>123 Literary Lane</p>
+        <div class="container footer-content">
+            <div>
+                <h3>Book Haven</h3>
+                <p>Your sanctuary for literary discoveries</p>
+            </div>
+            <div>
+                <h4>Visit Us</h4>
+                <p>123 Bookmark Lane</p>
                 <p>Booktown, BT 12345</p>
             </div>
-            <div class="footer-section">
-                <h3>Hours</h3>
-                <p>Mon-Sat: 9am - 8pm</p>
-                <p>Sun: 10am - 6pm</p>
+            <div>
+                <h4>Connect</h4>
+                <ul class="social-links">
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">Twitter</a></li>
+                </ul>
             </div>
-            <div class="footer-section">
-                <h3>Contact</h3>
-                <p>Tel: (555) 123-BOOK</p>
-                <p>Email: hello@bookhaven.com</p>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2025 Book Haven. All rights reserved.</p>
         </div>
     </footer>
 
-    <!-- Scripts -->
-    <script type="module" src="js/script.js"></script>
-    <script type="module">
-        import { initializeSharedFeatures } from './js/shared.js';
-        import { initializeGallery } from './js/gallery.js';
-
-        document.addEventListener('DOMContentLoaded', () => {
-            initializeSharedFeatures();
-            initializeGallery({
-                itemsPerPage: 12,
-                container: document.querySelector('.gallery-grid'),
-                template: document.querySelector('#book-template')
-            });
-        });
-    </script>
+    <script type="module" src="js/gallery.js"></script>
 </body>
 </html>
 

@@ -3,137 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Book Haven - Your neighborhood bookstore where stories come alive. Browse our collection of books and join our literary community.">
-    <meta name="keywords" content="bookstore, books, reading, literature, book shop, Reading">
-    <meta name="robots" content="index, follow">
-    
-    <!-- Open Graph Tags -->
-    <meta property="og:title" content="Book Haven | Your Literary Sanctuary">
-    <meta property="og:description" content="Your neighborhood bookstore where stories come alive">
-    <meta property="og:image" content="images/og-image.jpg">
-    <meta property="og:type" content="website">
-    
-    <!-- Preload Critical Resources -->
-    <link rel="preload" href="css/style.css" as="style">
-    <link rel="preload" href="js/script.js" as="script">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    
-    <title>Book Haven | Your Literary Sanctuary</title>
-    
-    <!-- Styles -->
-    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <title>Book Haven - Your Literary Sanctuary</title>
+    <meta name="description" content="Discover your next great read at Book Haven - a curated bookstore experience">
     <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Skip Link for Accessibility -->
-    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <a href="#main" class="skip-link">Skip to main content</a>
 
-    <header role="banner">
-        <nav class="navbar" role="navigation" aria-label="Main navigation">
-            <div class="logo">
-                <img src="images/logo.svg" alt="Book Haven Logo" width="40" height="40">
-                <span class="logo-text">Book Haven</span>
-            </div>
-            
-            <button class="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false">
-                <span></span>
-                <span></span>
-                <span></span>
+    <nav class="navbar">
+        <div class="container">
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
             </button>
-
             <ul class="nav-links">
                 <li><a href="index.html" aria-current="page">Home</a></li>
+                <li><a href="about.html">About</a></li>
                 <li><a href="gallery.html">Gallery</a></li>
-                <li><a href="about.html">About Us</a></li>
-                <li><a href="custom.html">Staff Picks</a></li>
+                <li><a href="events.html">Events</a></li>
+                <li><a href="contact.html">Contact</a></li>
             </ul>
+        </div>
+    </nav>
 
-            <button class="cart-btn" aria-label="Shopping cart" id="cartButton">
-                <svg class="cart-icon" aria-hidden="true" viewBox="0 0 24 24">
-                    <path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM1 3h4l2.7 11.4c.2.8 1 1.6 2 1.6h12c.8 0 1.5-.5 1.8-1.2l3-7c.3-.7-.2-1.5-1-1.5H7.3l-.5-2C6.5 3.5 5.9 3 5.2 3H1zm16 15c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
-                </svg>
-                <span class="cart-count" aria-live="polite">0</span>
-            </button>
-        </nav>
-    </header>
-
-    <main id="main-content" role="main">
-        <!-- Hero Section -->
+    <main id="main">
         <section class="hero">
-            <div class="hero-content">
-                <h1>Welcome to <span class="highlight">Book Haven</span></h1>
-                <p class="hero-subtitle">Your neighborhood bookstore where stories come alive</p>
-                
-                <div class="cta-buttons">
-                    <a href="gallery.html" class="btn btn-primary">
-                        Explore Books
-                        <svg class="icon" aria-hidden="true" viewBox="0 0 24 24">
-                            <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
-                        </svg>
-                    </a>
-                    <a href="about.html" class="btn btn-secondary">Learn More</a>
-                </div>
-
-                <!-- Featured Books Carousel -->
-                <div class="featured-books" aria-label="Featured books carousel">
-                    <h2 class="visually-hidden">Featured Books</h2>
-                    <div class="book-carousel" id="bookCarousel">
-                        <!-- Books will be dynamically added here -->
-                    </div>
-                    <div class="carousel-controls">
-                        <button class="carousel-btn prev" aria-label="Previous book">‹</button>
-                        <button class="carousel-btn next" aria-label="Next book">›</button>
-                    </div>
+            <div class="container">
+                <h1>Welcome to Book Haven</h1>
+                <p class="hero-subtitle">Where every book tells a story</p>
+                <div class="hero-cta">
+                    <a href="collection.html" class="btn btn-primary">Explore Collection</a>
+                    <a href="about.html" class="btn btn-secondary">Our Story</a>
                 </div>
             </div>
         </section>
 
-        <!-- Newsletter Section -->
+        <section class="featured-collections">
+            <div class="container">
+                <h2>Featured Collections</h2>
+                <div class="collection-grid">
+                    <article class="collection-card">
+                        <img src="images/rare-books.jpg" alt="Rare Books Collection" loading="lazy">
+                        <h3>Rare Finds</h3>
+                        <p>Discover our curated selection of rare and first editions</p>
+                        <a href="collection.html#rare" class="btn btn-secondary">View Collection</a>
+                    </article>
+                    <article class="collection-card">
+                        <img src="images/new-releases.jpg" alt="New Releases" loading="lazy">
+                        <h3>New Arrivals</h3>
+                        <p>Fresh off the press: This month's latest releases</p>
+                        <a href="collection.html#new" class="btn btn-secondary">Browse New</a>
+                    </article>
+                    <article class="collection-card">
+                        <img src="images/local-authors.jpg" alt="Local Authors" loading="lazy">
+                        <h3>Local Authors</h3>
+                        <p>Supporting our community's literary voices</p>
+                        <a href="collection.html#local" class="btn btn-secondary">Meet Authors</a>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="upcoming-events">
+            <div class="container">
+                <h2>Upcoming Events</h2>
+                <div class="events-slider">
+                    <article class="event-card">
+                        <time datetime="2024-02-15">Feb 15</time>
+                        <h3>Author Talk: Mystery Writing</h3>
+                        <p>Join bestselling author Jane Smith for an evening of suspense</p>
+                        <a href="events.html#feb15" class="btn btn-secondary">Learn More</a>
+                    </article>
+                    <!-- More event cards -->
+                </div>
+            </div>
+        </section>
+
         <section class="newsletter">
             <div class="container">
                 <h2>Stay Updated</h2>
-                <p class="section-subtitle">Subscribe for new releases and events</p>
-                
-                <form id="newsletterForm" class="subscribe-form" novalidate>
+                <p>Subscribe to our newsletter for the latest events and new arrivals</p>
+                <form class="subscribe-form" action="/subscribe" method="POST">
                     <div class="form-group">
-                        <label for="emailInput" class="visually-hidden">Email address</label>
-                        <div class="input-group">
-                            <input 
-                                type="email" 
-                                id="emailInput" 
-                                placeholder="Enter your email" 
-                                required
-                                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
-                                aria-describedby="emailHelp"
-                            >
-                            <button 
-                                type="submit"
-                                class="btn btn-primary"
-                                aria-label="Subscribe to newsletter"
-                            >
-                                Subscribe
-                            </button>
-                        </div>
-                        <small id="emailHelp" class="form-help">We'll never share your email</small>
+                        <label for="email" class="visually-hidden">Email Address</label>
+                        <input type="email" id="email" name="email" 
+                               placeholder="Enter your email" required>
+                        <button type="submit" class="btn btn-primary">Subscribe</button>
                     </div>
                 </form>
             </div>
         </section>
     </main>
 
-    <footer role="contentinfo">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>Visit Us</h3>
+    <footer>
+        <div class="container footer-content">
+            <div>
+                <h3>Book Haven</h3>
+                <p>Your sanctuary for literary discoveries</p>
+            </div>
+            <div>
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="events.html">Events</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>Visit Us</h4>
                 <address>
-                    123 Book Street<br>
-                    Reading, RG1 1BB
+                    123 Bookmark Lane<br>
+                    Booktown, BT 12345<br>
+                    Tel: (555) 123-4567
                 </address>
             </div>
-            <div class="footer-section">
-                <h3>Hours</h3>
-                <ul class="hours-list">
-                    <li>Monday - Saturday: 9am - 8pm</li>
+            <div>
+                <h4>Connect</h4>
+                <ul class="social-links">
+                    <li><a href="#" aria-label="Facebook">Facebook</a></li>
+                    <li><a href="#" aria-label="Instagram">Instagram</a></li>
+                    <li><a href="#" aria-label="Twitter">Twitter</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Book Haven. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script type="module" src="js/script.js"></script>
+</body>
+</html>
                     <li>Sunday: 10am - 6pm</li>
                 </ul>
             </div>

@@ -3,112 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Learn about Book Haven's story and get in touch with our team. Your local independent bookstore in Reading.">
-    <meta name="keywords" content="book store, about us, contact, independent bookstore, Reading">
-    <meta name="robots" content="index, follow">
-    
-    <!-- Open Graph Tags -->
-    <meta property="og:title" content="About Us | Book Haven">
-    <meta property="og:description" content="Learn about Book Haven's story and get in touch with our team">
-    <meta property="og:image" content="images/store-front.jpg">
-    
-    <!-- Preload Critical Resources -->
-    <link rel="preload" href="css/style.css" as="style">
-    <link rel="preload" href="images/store-front.jpg" as="image">
-    
-    <title>About Us | Book Haven</title>
-    
-    <!-- Styles -->
-    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <title>About Us - Book Haven</title>
     <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Skip Link -->
-    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <a href="#main" class="skip-link">Skip to main content</a>
 
-    <header role="banner">
-        <nav class="navbar" role="navigation" aria-label="Main navigation">
-            <div class="logo">
-                <img src="images/logo.svg" alt="Book Haven Logo" width="40" height="40">
-                <h1>Book Haven</h1>
-            </div>
-            <button class="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false">
+    <nav class="navbar">
+        <div class="container">
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
                 <span></span>
                 <span></span>
                 <span></span>
             </button>
             <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
-                <li><a href="gallery.html">Gallery</a></li>
-                <li><a href="about.html" aria-current="page">About Us</a></li>
-                <li><a href="custom.html">Staff Picks</a></li>
+                <li><a href="about.html" aria-current="page">About</a></li>
+                <li><a href="collection.html">Collection</a></li>
+                <li><a href="events.html">Events</a></li>
+                <li><a href="contact.html">Contact</a></li>
             </ul>
-        </nav>
-    </header>
+        </div>
+    </nav>
 
-    <main id="main-content" role="main">
-        <!-- About Section -->
-        <section class="about-section">
+    <main id="main">
+        <section class="hero">
             <div class="container">
-                <h2>Our Story</h2>
-                <div class="about-content">
-                    <img 
-                        src="images/store-front.jpg" 
-                        alt="Book Haven store front view" 
-                        class="about-image"
-                        width="600" 
-                        height="400"
-                    >
-                    <div class="about-text">
-                        <p>Welcome to Book Haven, your neighborhood sanctuary for literary adventures. Since 2015, we've been curating exceptional reading experiences for our community in Reading.</p>
-                        <p>Our passion for books goes beyond just selling them - we create a space where stories come alive and readers find their next great adventure.</p>
+                <h1>Our Story</h1>
+                <p>Cultivating knowledge and imagination since 1995</p>
+            </div>
+        </section>
+
+        <section class="container" style="padding: var(--spacing-lg) 0">
+            <h2>Welcome to Book Haven</h2>
+            <p>Founded in 1995, Book Haven has been a cornerstone of literary culture in our community. What started as a small family bookshop has grown into a beloved destination for book lovers, academics, and curious minds alike.</p>
+            
+            <div class="grid-layout" style="margin-top: var(--spacing-lg)">
+                <div class="mission-card">
+                    <h3>Our Mission</h3>
+                    <p>To provide a sanctuary for literature lovers and foster a community of lifelong learners through our carefully curated collection of books.</p>
+                </div>
+                <div class="mission-card">
+                    <h3>Our Vision</h3>
+                    <p>To be more than just a bookstore - to be a cultural hub where stories are shared, ideas are born, and community thrives.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="team-section" style="background-color: var(--inkwell-blue); color: var(--parchment-white); padding: var(--spacing-lg) 0;">
+            <div class="container">
+                <h2>Meet Our Team</h2>
+                <div class="team-grid">
+                    <div class="team-member">
+                        <h3>Sarah Mitchell</h3>
+                        <p>Founder & Chief Curator</p>
+                    </div>
+                    <div class="team-member">
+                        <h3>James Chen</h3>
+                        <p>Literary Events Coordinator</p>
+                    </div>
+                    <div class="team-member">
+                        <h3>Emma Thompson</h3>
+                        <p>Rare Books Specialist</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Contact Form Section -->
-        <section class="contact-section">
-            <div class="container">
-                <h2>Get in Touch</h2>
-                <div class="contact-wrapper">
-                    <form id="contactForm" class="contact-form" novalidate>
-                        <div class="form-group">
-                            <label for="name">Name</label>
-                            <input 
-                                type="text" 
-                                id="name" 
-                                name="name" 
-                                required 
-                                aria-required="true"
-                                autocomplete="name"
-                            >
-                            <span class="error-message" aria-live="polite"></span>
-                        </div>
+        <section class="container" style="padding: var(--spacing-lg) 0">
+            <h2>Visit Us</h2>
+            <address style="font-style: normal;">
+                <p>123 Bookmark Lane</p>
+                <p>Literary District</p>
+                <p>Booktown, BT 12345</p>
+                <p>Phone: (555) 123-4567</p>
+                <p>Email: hello@bookhaven.com</p>
+            </address>
+            <div style="margin-top: var(--spacing-md)">
+                <a href="contact.html" class="btn btn-primary">Contact Us</a>
+            </div>
+        </section>
+    </main>
 
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input 
-                                type="email" 
-                                id="email" 
-                                name="email" 
-                                required 
-                                aria-required="true"
-                                autocomplete="email"
-                                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
-                            >
-                            <span class="error-message" aria-live="polite"></span>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="message">Message</label>
-                            <textarea 
-                                id="message" 
-                                name="message" 
-                                required 
-                                aria-required="true"
-                                rows="5"
-                            ></textarea>
+    <footer>
+        <div class="container footer-content">
+            <div>
+                <h3>Book Haven</h3>
+                <p>Your sanctuary for literary discoveries</p>
+            </div>
+            <div>
+                <h4>Hours</h4>
+                <p>Mon-Sat: 9AM-9PM</p>
+                <p>Sun: 10AM-6PM</p>
+            </div>
+            <div>
+                <h4>Connect</h4>
+                <ul style="list-style: none">
+                    <li><a href="#" style="color: var(--parchment-white)">Facebook</a></li>
+                    <li><a href="#" style="color: var(--parchment-white)">Instagram</a></li>
+                    <li><a href="#" style="color: var(--parchment-white)">Twitter</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
                             <span class="error-message" aria-live="polite"></span>
                         </div>
 

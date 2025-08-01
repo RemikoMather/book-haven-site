@@ -3,128 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Discover our staff's favorite books and request custom orders at Book Haven">
-    <meta name="keywords" content="staff picks, book recommendations, custom book orders, rare books">
-    <meta name="robots" content="index, follow">
-    
-    <!-- Open Graph Tags -->
-    <meta property="og:title" content="Staff Picks & Custom Orders | Book Haven">
-    <meta property="og:description" content="Get personalized book recommendations from our expert staff">
-    <meta property="og:image" content="images/staff-picks.jpg">
-    
-    <title>Staff Picks & Custom Orders | Book Haven</title>
-    
-    <!-- Styles -->
-    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <title>Custom Services - Book Haven</title>
     <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <a href="#main" class="skip-link">Skip to main content</a>
 
-    <header role="banner">
-        <nav class="navbar" role="navigation" aria-label="Main navigation">
-            <div class="logo">
-                <img src="images/logo.svg" alt="Book Haven Logo" width="40" height="40">
-                <h1>Book Haven</h1>
-            </div>
-            <button class="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false">
-                <span></span>
-                <span></span>
-                <span></span>
+    <nav class="navbar">
+        <div class="container">
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
             </button>
             <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
-                <li><a href="gallery.html">Gallery</a></li>
-                <li><a href="about.html">About Us</a></li>
-                <li><a href="custom.html" aria-current="page">Staff Picks</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="collection.html">Collection</a></li>
+                <li><a href="custom.html" aria-current="page">Custom Services</a></li>
+                <li><a href="contact.html">Contact</a></li>
             </ul>
-        </nav>
-    </header>
+        </div>
+    </nav>
 
-    <main id="main-content" role="main">
-        <!-- Staff Picks Section -->
-        <section class="staff-picks">
+    <main id="main">
+        <section class="hero">
             <div class="container">
-                <h2>Staff Picks</h2>
-                <p class="section-subtitle">Handpicked recommendations from our book-loving team</p>
-                
-                <div class="staff-picks-grid">
-                    <!-- Staff Pick Card Template -->
-                    <article class="staff-pick-card">
-                        <img 
-                            src="images/staff/emma.jpg" 
-                            alt="Emma, Book Haven staff member" 
-                            class="staff-photo"
-                            loading="lazy"
-                        >
-                        <div class="pick-content">
-                            <h3 class="staff-name">Emma's Pick</h3>
-                            <h4 class="book-title">The Night Circus</h4>
-                            <p class="book-author">by Erin Morgenstern</p>
-                            <p class="pick-description">
-                                "A magical masterpiece that will transport you to a world of wonder. 
-                                Perfect for readers who love imaginative storytelling."
-                            </p>
-                            <button class="btn btn-secondary add-to-cart" 
-                                    data-book-id="sp1" 
-                                    data-title="The Night Circus"
-                                    data-price="24.99">
-                                Add to Cart
-                            </button>
-                        </div>
-                    </article>
-                    
-                    <!-- Add more staff pick cards here -->
-                </div>
+                <h1>Custom Services</h1>
+                <p>Tailored book services for the discerning reader</p>
             </div>
         </section>
 
-        <!-- Custom Orders Section -->
-        <section class="custom-orders">
-            <div class="container">
-                <h2>Custom Orders</h2>
-                <p class="section-subtitle">Can't find what you're looking for? Let us help!</p>
+        <section class="services-grid container">
+            <div class="service-card">
+                <h2>Special Orders</h2>
+                <p>Can't find the book you're looking for? We'll source it from our global network of trusted sellers.</p>
+                <a href="#order-form" class="btn btn-secondary">Place Order</a>
+            </div>
 
-                <form id="customOrderForm" class="custom-order-form" novalidate>
-                    <div class="form-group">
-                        <label for="bookTitle">Book Title</label>
-                        <input 
-                            type="text" 
-                            id="bookTitle" 
-                            name="bookTitle" 
-                            required 
-                            aria-required="true"
-                        >
-                        <span class="error-message" aria-live="polite"></span>
-                    </div>
+            <div class="service-card">
+                <h2>Book Binding & Repair</h2>
+                <p>Professional restoration services for your cherished books.</p>
+                <a href="#repair-form" class="btn btn-secondary">Request Service</a>
+            </div>
 
-                    <div class="form-group">
-                        <label for="author">Author (if known)</label>
-                        <input 
-                            type="text" 
-                            id="author" 
-                            name="author"
-                        >
-                    </div>
+            <div class="service-card">
+                <h2>Library Curation</h2>
+                <p>Let our experts help you build your perfect personal library.</p>
+                <a href="#consultation" class="btn btn-secondary">Book Consultation</a>
+            </div>
 
-                    <div class="form-group">
-                        <label for="contactName">Your Name</label>
-                        <input 
-                            type="text" 
-                            id="contactName" 
-                            name="contactName" 
-                            required 
-                            aria-required="true"
-                        >
-                        <span class="error-message" aria-live="polite"></span>
-                    </div>
+            <div class="service-card">
+                <h2>Gift Services</h2>
+                <p>Custom gift wrapping and personalized book selections for any occasion.</p>
+                <a href="#gift-service" class="btn btn-secondary">Learn More</a>
+            </div>
+        </section>
 
-                    <div class="form-group">
-                        <label for="contactEmail">Email</label>
-                        <input 
-                            type="email" 
-                            id="contactEmail" 
-                            name="contactEmail" 
+        <section id="order-form" class="form-section container">
+            <h2>Request Custom Service</h2>
+            <form class="custom-form" action="/submit-request" method="POST">
+                <div class="form-group">
+                    <label for="service-type">Service Type</label>
+                    <select id="service-type" name="service-type" required>
+                        <option value="">Select a service</option>
+                        <option value="special-order">Special Order</option>
+                        <option value="repair">Book Repair</option>
+                        <option value="curation">Library Curation</option>
+                        <option value="gift">Gift Service</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Service Details</label>
+                    <textarea id="description" name="description" rows="5" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="timeline">Preferred Timeline</label>
+                    <input type="date" id="timeline" name="timeline" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="contact-preference">Preferred Contact Method</label>
+                    <select id="contact-preference" name="contact-preference" required>
+                        <option value="email">Email</option>
+                        <option value="phone">Phone</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Submit Request</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container footer-content">
+            <div>
+                <h3>Book Haven</h3>
+                <p>Your sanctuary for literary discoveries</p>
+            </div>
+            <div>
+                <h4>Contact</h4>
+                <p>Email: services@bookhaven.com</p>
+                <p>Phone: (555) 123-4567</p>
+            </div>
+            <div>
+                <h4>Follow Us</h4>
+                <ul class="social-links">
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">Twitter</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module" src="js/script.js"></script>
+    <script type="module">
+        import { initializeSharedFeatures } from './js/shared.js';
+        document.addEventListener('DOMContentLoaded', initializeSharedFeatures);
+    </script>
+</body>
+</html>
                             required 
                             aria-required="true"
                             pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
