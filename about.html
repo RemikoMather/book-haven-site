@@ -12,19 +12,22 @@
 <body>
     <a href="#main" class="skip-link">Skip to main content</a>
 
-    <nav class="navbar">
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
         <div class="container">
-            <button class="mobile-menu-btn" aria-label="Toggle menu">
+            <button class="mobile-menu-btn" 
+                    aria-label="Toggle menu" 
+                    aria-expanded="false" 
+                    aria-controls="main-menu">
                 <span></span>
                 <span></span>
                 <span></span>
             </button>
-            <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="about.html" aria-current="page">About</a></li>
-                <li><a href="collection.html">Collection</a></li>
-                <li><a href="events.html">Events</a></li>
-                <li><a href="contact.html">Contact</a></li>
+            <ul class="nav-links" id="main-menu" role="menubar">
+                <li role="none"><a href="index.html" role="menuitem">Home</a></li>
+                <li role="none"><a href="about.html" aria-current="page" role="menuitem">About</a></li>
+                <li role="none"><a href="collection.html" role="menuitem">Collection</a></li>
+                <li role="none"><a href="events.html" role="menuitem">Events</a></li>
+                <li role="none"><a href="contact.html" role="menuitem">Contact</a></li>
             </ul>
         </div>
     </nav>
@@ -82,44 +85,41 @@
                 <p>Phone: (555) 123-4567</p>
                 <p>Email: hello@bookhaven.com</p>
             </address>
-            <div style="margin-top: var(--spacing-md)">
-                <a href="contact.html" class="btn btn-primary">Contact Us</a>
-            </div>
+            
+            <h3>Opening Hours</h3>
+            <ul class="hours-list">
+                <li>Monday - Saturday: 9am - 8pm</li>
+                <li>Sunday: 10am - 6pm</li>
+            </ul>
+
+            <h3>Contact Details</h3>
+            <p>Phone: <a href="tel:+15551234567">(555) 123-BOOK</a></p>
+            <p>Email: <a href="mailto:hello@bookhaven.com">hello@bookhaven.com</a></p>
         </section>
     </main>
 
-    <footer>
-        <div class="container footer-content">
-            <div>
-                <h3>Book Haven</h3>
-                <p>Your sanctuary for literary discoveries</p>
-            </div>
-            <div>
-                <h4>Hours</h4>
-                <p>Mon-Sat: 9AM-9PM</p>
-                <p>Sun: 10AM-6PM</p>
-            </div>
-            <div>
-                <h4>Connect</h4>
-                <ul class="social-links">
-                    <li><a href="#">Facebook</a></li>
-                    <li><a href="#">Instagram</a></li>
-                    <li><a href="#">Twitter</a></li>
-                </ul>
-            </div>
+    <footer role="contentinfo">
+        <div class="footer-content">
+            <!-- Standard footer content -->
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2024 Book Haven. All rights reserved.</p>
+            <p>&copy; 2025 Book Haven. All rights reserved.</p>
         </div>
     </footer>
 
+    <!-- Scripts -->
     <script type="module" src="js/script.js"></script>
     <script type="module">
         import { initializeSharedFeatures } from './js/shared.js';
-        
+        import { initializeContactForm } from './js/contact.js';
+
         document.addEventListener('DOMContentLoaded', () => {
             initializeSharedFeatures();
+            initializeContactForm();
         });
+    </script>
+</body>
+</html>
     </script>
 </body>
 </html>
