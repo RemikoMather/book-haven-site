@@ -58,14 +58,23 @@
 
         <section class="collection-grid container">
             <div class="book-grid">
-                <article class="book-card">
-                    <img src="images/books/book1.jpg" alt="Book cover" loading="lazy">
+                <article class="book-card" data-book-id="001">
+                    <div class="book-image-wrapper">
+                        <img src="images/books/book1.jpg" alt="The Lost Library by Sarah Mitchell" loading="lazy">
+                        <button class="quick-view-btn" aria-label="Quick view The Lost Library">Quick View</button>
+                        <button class="wishlist-btn" aria-label="Add to wishlist" data-book-id="001">
+                            <span class="heart-icon">♡</span>
+                        </button>
+                    </div>
                     <div class="book-info">
                         <h2>The Lost Library</h2>
                         <p class="author">By Sarah Mitchell</p>
                         <p class="category">Fiction</p>
-                        <p class="status available">In Stock</p>
-                        <a href="#" class="btn btn-secondary">More Details</a>
+                        <p class="status available" aria-live="polite">In Stock</p>
+                        <div class="book-actions">
+                            <button class="btn btn-secondary quick-view" data-book-id="001">Quick View</button>
+                            <button class="btn btn-primary add-to-cart" data-book-id="001">Add to Cart</button>
+                        </div>
                     </div>
                 </article>
                 <!-- More book cards will be dynamically added here -->
@@ -77,6 +86,32 @@
                 <button class="next" aria-label="Next page">&gt;</button>
             </div>
         </section>
+
+        <!-- Book Quick View Modal -->
+        <div class="modal" id="book-modal" aria-hidden="true">
+            <div class="modal-content" role="dialog" aria-labelledby="modal-title">
+                <button class="modal-close" aria-label="Close modal">&times;</button>
+                <div class="book-detail-content">
+                    <div class="book-image">
+                        <img src="" alt="" loading="lazy">
+                    </div>
+                    <div class="book-details">
+                        <h2 id="modal-title"></h2>
+                        <p class="author"></p>
+                        <p class="description"></p>
+                        <div class="details-grid">
+                            <p class="isbn"></p>
+                            <p class="publish-date"></p>
+                            <p class="price"></p>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="btn btn-primary add-to-cart">Add to Cart</button>
+                            <button class="btn btn-secondary add-to-wishlist">Add to Wishlist</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 
     <footer>

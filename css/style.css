@@ -543,6 +543,87 @@ footer {
     width: 100%;
 }
 
+/* Book Card Enhancements */
+.book-image-wrapper {
+    position: relative;
+    overflow: hidden;
+}
+
+.quick-view-btn,
+.wishlist-btn {
+    position: absolute;
+    background: rgba(45, 66, 80, 0.9);
+    color: var(--parchment-white);
+    border: none;
+    padding: var(--spacing-xs);
+    cursor: pointer;
+    transition: all var(--transition-speed);
+}
+
+.quick-view-btn {
+    bottom: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: var(--border-radius);
+}
+
+.wishlist-btn {
+    top: var(--spacing-xs);
+    right: var(--spacing-xs);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.book-image-wrapper:hover .quick-view-btn {
+    bottom: var(--spacing-sm);
+}
+
+.wishlist-btn.active {
+    color: #ff4d4d;
+}
+
+/* Book Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(19, 28, 38, 0.9);
+    z-index: 1000;
+}
+
+.modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: var(--parchment-white);
+    max-width: 800px;
+    width: 90%;
+    border-radius: var(--border-radius);
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.book-detail-content {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+}
+
+@media (max-width: 768px) {
+    .book-detail-content {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     :root {
