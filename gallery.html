@@ -3,138 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Browse our curated collection of books at Book Haven">
     <title>Book Haven | Gallery</title>
-    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <header>
-        <nav class="navbar">
+    <!-- Skip Link for Keyboard Users -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header role="banner">
+        <nav class="navbar" role="navigation" aria-label="Main navigation">
             <div class="logo">
-                <img src="images/logo.svg" alt="">
+                <img src="images/logo.svg" alt="Book Haven Logo" width="40" height="40">
                 <h1>Book Haven</h1>
             </div>
+            <button class="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
             <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
-                <li><a href="gallery.html" class="active">Gallery</a></li>
+                <li><a href="gallery.html" aria-current="page">Gallery</a></li>
                 <li><a href="about.html">About Us</a></li>
                 <li><a href="custom.html">Staff Picks</a></li>
             </ul>
-            <button class="cart-btn" id="cartButton">
-                <span class="cart-icon">🛒</span>
-                <span class="cart-count">0</span>
+            <button class="cart-btn" id="cartButton" aria-label="Shopping cart">
+                <span class="cart-icon" aria-hidden="true">🛒</span>
+                <span class="cart-count" aria-live="polite">0</span>
             </button>
         </nav>
     </header>
 
-    <main>
+    <main id="main-content" role="main">
         <section class="gallery-header">
             <h2>Browse Our Collection</h2>
-            <div class="filters">
-                <button class="filter-btn active" data-filter="all">All Books</button>
-                <button class="filter-btn" data-filter="fiction">Fiction</button>
-                <button class="filter-btn" data-filter="non-fiction">Non-Fiction</button>
-                <button class="filter-btn" data-filter="children">Children's</button>
+            <div class="filters" role="group" aria-label="Book category filters">
+                <button class="filter-btn active" data-filter="all" aria-pressed="true">All Books</button>
+                <button class="filter-btn" data-filter="fiction" aria-pressed="false">Fiction</button>
+                <button class="filter-btn" data-filter="non-fiction" aria-pressed="false">Non-Fiction</button>
+                <button class="filter-btn" data-filter="children" aria-pressed="false">Children's</button>
             </div>
         </section>
 
-        <section class="gallery-grid">
-            <div class="book-card" data-category="fiction">
-                <div class="book-badge">Bestseller</div>
-                <img src="images/book1.jpg" alt="The Great Gatsby" class="book-image">
+        <div class="gallery-grid" role="list">
+            <!-- Book Card Template -->
+            <article class="book-card" role="listitem" data-category="fiction">
+                <span class="book-badge" aria-label="Special offer">New Release</span>
+                <img 
+                    src="images/book1.jpg" 
+                    alt="Book cover of The Great Gatsby by F. Scott Fitzgerald"
+                    class="book-image"
+                    loading="lazy"
+                >
                 <div class="book-info">
                     <h3 class="book-title">The Great Gatsby</h3>
                     <p class="book-author">F. Scott Fitzgerald</p>
-                    <p class="book-price">$24.99</p>
-                    <button class="add-to-cart" data-book-id="1" data-title="The Great Gatsby" data-price="24.99">
+                    <p class="book-price" aria-label="Price: 24 dollars and 99 cents">$24.99</p>
+                    <button 
+                        class="btn btn-primary add-to-cart"
+                        data-book-id="1"
+                        data-title="The Great Gatsby"
+                        data-price="24.99"
+                        aria-label="Add The Great Gatsby to cart"
+                    >
                         Add to Cart
                     </button>
                 </div>
-            </div>
-
-            <div class="book-card" data-category="non-fiction">
-                <div class="book-badge">New Release</div>
-                <img src="images/book2.jpg" alt="Atomic Habits" class="book-image">
-                <div class="book-info">
-                    <h3 class="book-title">Atomic Habits</h3>
-                    <p class="book-author">James Clear</p>
-                    <p class="book-price">$29.99</p>
-                    <button class="add-to-cart" data-book-id="2" data-title="Atomic Habits" data-price="29.99">
-                        Add to Cart
-                    </button>
-                </div>
-            </div>
-
-            <div class="book-card" data-category="children">
-                <img src="images/book3.jpg" alt="Where the Wild Things Are" class="book-image">
-                <div class="book-info">
-                    <h3 class="book-title">Where the Wild Things Are</h3>
-                    <p class="book-author">Maurice Sendak</p>
-                    <p class="book-price">$19.99</p>
-                    <button class="add-to-cart" data-book-id="3" data-title="Where the Wild Things Are" data-price="19.99">
-                        Add to Cart
-                    </button>
-                </div>
-            </div>
-        </section>
+            </article>
+            <!-- More book cards... -->
+        </div>
     </main>
 
     <!-- Cart Modal -->
-    <div class="modal-overlay" id="modalOverlay" hidden>
-        <div class="cart-modal" id="cartModal">
-            <div class="modal-header">
-                <h3>Your Cart</h3>
-                <button class="close-modal">×</button>
-            </div>
-            <div class="cart-items">
+    <div 
+        class="modal-overlay" 
+        id="modalOverlay" 
+        hidden 
+        role="dialog"
+        aria-labelledby="cartTitle"
+        aria-modal="true"
+    >
+        <div class="cart-modal">
+            <header>
+                <h2 id="cartTitle">Your Cart</h2>
+                <button class="close-modal" aria-label="Close cart">×</button>
+            </header>
+            <div class="cart-items" role="list">
                 <!-- Cart items will be inserted here -->
-                <template id="cartItemTemplate">
-                    <div class="cart-item" data-item-id="">
-                        <div class="item-info">
-                            <h4 class="item-title"></h4>
-                            <p class="item-price"></p>
-                        </div>
-                        <div class="item-actions">
-                            <button class="quantity-btn minus">-</button>
-                            <span class="quantity">1</span>
-                            <button class="quantity-btn plus">+</button>
-                            <button class="remove-item">×</button>
-                        </div>
-                    </div>
-                </template>
             </div>
-            <div class="cart-total">
-                <p>Total: <span id="cartTotal">$0.00</span></p>
+            <footer>
+                <p class="cart-total">Total: <span aria-live="polite">$0.00</span></p>
                 <div class="cart-actions">
-                    <button class="btn-secondary" onclick="clearCart()">Clear Cart</button>
-                    <button class="btn-primary" onclick="processOrder()">Checkout</button>
+                    <button class="btn btn-secondary" onclick="clearCart()">Clear Cart</button>
+                    <button class="btn btn-primary" onclick="checkout()">Checkout</button>
                 </div>
-            </div>
+            </footer>
         </div>
     </div>
-
-    <footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>Visit Us</h3>
-                <p>123 Literary Lane</p>
-                <p>Booktown, BT 12345</p>
-            </div>
-            <div class="footer-section">
-                <h3>Hours</h3>
-                <p>Mon-Sat: 9am - 8pm</p>
-                <p>Sun: 10am - 6pm</p>
-            </div>
-            <div class="footer-section">
-                <h3>Contact</h3>
-                <p>Tel: (555) 123-BOOK</p>
-                <p>Email: hello@bookhaven.com</p>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2025 Book Haven. All rights reserved.</p>
-        </div>
-    </footer>
 
     <script type="module" src="js/script.js"></script>
 </body>

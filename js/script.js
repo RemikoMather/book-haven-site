@@ -98,6 +98,58 @@ function saveStaffPick(pick) {
     localStorage.setItem('staffPicks', JSON.stringify(staffPicks));
 }
 
+// Add fade-in animation to images after load
+document.querySelectorAll('.book-image').forEach(img => {
+    img.style.opacity = '0';
+    img.addEventListener('load', function() {
+        this.style.opacity = '1';
+    });
+});
+
+// Enhance button accessibility
+document.querySelectorAll('button').forEach(button => {
+    if (!button.getAttribute('aria-label')) {
+        button.setAttribute('aria-label', button.textContent.trim());
+    }
+});
+
+// Mobile menu accessibility
+const menuButton = document.querySelector('.mobile-menu-btn');
+const navLinks = document.querySelector('.nav-links');
+
+menuButton?.addEventListener('click', () => {
+    const isExpanded = menuButton.getAttribute('aria-expanded') === 'true';
+    menuButton.setAttribute('aria-expanded', !isExpanded);
+    navLinks.classList.toggle('active');
+});
+
+// Enhance modal accessibility
+const modal = document.getElementById('modalOverlay');
+const openModal = () => {
+    modal.hidden = false;
+    document.body.style.overflow = 'hidden';
+    // Trap focus within modal
+    const focusableElements = modal.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    );
+    const firstFocusable = focusableElements[0];
+    const lastFocusable = focusableElements[focusableElements.length - 1];
+    
+    firstFocusable.focus();
+
+    modal.addEventListener('keydown', function(e) {
+        if (e.key === 'Tab') {
+            if (e.shiftKey && document.activeElement === firstFocusable) {
+                e.preventDefault();
+                lastFocusable.focus();
+            } else if (!e.shiftKey && document.activeElement === lastFocusable) {
+                e.preventDefault();
+                firstFocusable.focus();
+            }
+        }
+    });
+};
+
 // Utility functions
 function validateEmail(email) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);

@@ -483,18 +483,82 @@ footer {
     }
 }
 
-/* Animations */
+/* Base Animations */
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes imageLoad {
+    from { opacity: 0; filter: blur(10px); }
+    to { opacity: 1; filter: blur(0); }
+}
+
+/* Accessibility Improvements */
+.visually-hidden:not(:focus):not(:active) {
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+}
+
+/* Enhanced Button Styles */
+.btn {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn:hover::after {
+    width: 300%;
+    height: 300%;
+}
+
+/* Enhanced Image Loading */
+.book-image {
+    animation: imageLoad 0.5s ease-out;
+    will-change: opacity, filter;
+}
+
+/* Focus States for Accessibility */
+:focus-visible {
+    outline: 3px solid var(--aged-gold);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+/* Skip Link for Keyboard Users */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--aged-gold);
+    color: var(--bookish-black);
+    padding: 8px;
+    z-index: 100;
+    transition: top 0.3s;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* Animations */
 .book-card {
     animation: fadeIn 0.5s ease-out;
 }
