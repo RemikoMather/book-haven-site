@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Book Haven's custom services - from special orders to book restoration and library curation">
     <title>Custom Services - Book Haven</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
@@ -34,65 +35,93 @@
         </section>
 
         <section class="services-grid container">
-            <div class="service-card">
-                <h2>Special Orders</h2>
-                <p>Can't find the book you're looking for? We'll source it from our global network of trusted sellers.</p>
-                <a href="#order-form" class="btn btn-secondary">Place Order</a>
+            <div class="service-card" itemscope itemtype="http://schema.org/Service">
+                <h2 itemprop="name">Special Orders</h2>
+                <p itemprop="description">Can't find the book you're looking for? We'll source it from our global network of trusted sellers.</p>
+                <a href="#order-form" class="btn btn-secondary" data-service="special-order">Place Order</a>
             </div>
 
-            <div class="service-card">
-                <h2>Book Binding & Repair</h2>
-                <p>Professional restoration services for your cherished books.</p>
-                <a href="#repair-form" class="btn btn-secondary">Request Service</a>
+            <div class="service-card" itemscope itemtype="http://schema.org/Service">
+                <h2 itemprop="name">Book Binding & Repair</h2>
+                <p itemprop="description">Professional restoration services for your cherished books.</p>
+                <a href="#repair-form" class="btn btn-secondary" data-service="repair">Request Service</a>
             </div>
 
-            <div class="service-card">
-                <h2>Library Curation</h2>
-                <p>Let our experts help you build your perfect personal library.</p>
-                <a href="#consultation" class="btn btn-secondary">Book Consultation</a>
+            <div class="service-card" itemscope itemtype="http://schema.org/Service">
+                <h2 itemprop="name">Library Curation</h2>
+                <p itemprop="description">Let our experts help you build your perfect personal library.</p>
+                <a href="#consultation" class="btn btn-secondary" data-service="curation">Book Consultation</a>
             </div>
 
-            <div class="service-card">
-                <h2>Gift Services</h2>
-                <p>Custom gift wrapping and personalized book selections for any occasion.</p>
-                <a href="#gift-service" class="btn btn-secondary">Learn More</a>
+            <div class="service-card" itemscope itemtype="http://schema.org/Service">
+                <h2 itemprop="name">Gift Services</h2>
+                <p itemprop="description">Custom gift wrapping and personalized book selections for any occasion.</p>
+                <a href="#gift-service" class="btn btn-secondary" data-service="gift">Learn More</a>
             </div>
         </section>
 
-        <section id="order-form" class="form-section container">
-            <h2>Request Custom Service</h2>
-            <form class="custom-form" action="/submit-request" method="POST">
-                <div class="form-group">
-                    <label for="service-type">Service Type</label>
-                    <select id="service-type" name="service-type" required>
-                        <option value="">Select a service</option>
-                        <option value="special-order">Special Order</option>
-                        <option value="repair">Book Repair</option>
-                        <option value="curation">Library Curation</option>
-                        <option value="gift">Gift Service</option>
-                    </select>
-                </div>
+        <section id="order-form" class="form-section">
+            <div class="container">
+                <h2>Request Custom Service</h2>
+                <form class="custom-form" action="/submit-request" method="POST" novalidate>
+                    <div class="form-group">
+                        <label for="service-type">Service Type <span class="required">*</span></label>
+                        <select 
+                            id="service-type" 
+                            name="service-type" 
+                            required 
+                            aria-required="true"
+                            aria-describedby="service-type-error"
+                        >
+                            <option value="">Select a service</option>
+                            <option value="special-order">Special Order</option>
+                            <option value="repair">Book Repair</option>
+                            <option value="curation">Library Curation</option>
+                            <option value="gift">Gift Service</option>
+                        </select>
+                        <span id="service-type-error" class="error-message" aria-live="polite"></span>
+                    </div>
 
-                <div class="form-group">
-                    <label for="description">Service Details</label>
-                    <textarea id="description" name="description" rows="5" required></textarea>
-                </div>
+                    <div class="form-group">
+                        <label for="description">Service Details <span class="required">*</span></label>
+                        <textarea 
+                            id="description" 
+                            name="description" 
+                            rows="5" 
+                            required 
+                            aria-required="true"
+                            aria-describedby="description-error"
+                            minlength="10"
+                        ></textarea>
+                        <span id="description-error" class="error-message" aria-live="polite"></span>
+                    </div>
 
-                <div class="form-group">
-                    <label for="timeline">Preferred Timeline</label>
-                    <input type="date" id="timeline" name="timeline" required>
-                </div>
+                    <div class="form-group">
+                        <label for="timeline">Preferred Timeline</label>
+                        <input 
+                            type="date" 
+                            id="timeline" 
+                            name="timeline" 
+                            min="2024-01-01"
+                            aria-describedby="timeline-error"
+                        >
+                        <span id="timeline-error" class="error-message" aria-live="polite"></span>
+                    </div>
 
-                <div class="form-group">
-                    <label for="contact-preference">Preferred Contact Method</label>
-                    <select id="contact-preference" name="contact-preference" required>
-                        <option value="email">Email</option>
-                        <option value="phone">Phone</option>
-                    </select>
-                </div>
+                    <div class="form-group">
+                        <label for="contact-preference">Preferred Contact Method</label>
+                        <select id="contact-preference" name="contact-preference" required>
+                            <option value="email">Email</option>
+                            <option value="phone">Phone</option>
+                        </select>
+                    </div>
 
-                <button type="submit" class="btn btn-primary">Submit Request</button>
-            </form>
+                    <button type="submit" class="btn btn-primary">
+                        Submit Request
+                        <span class="loading-indicator" aria-hidden="true"></span>
+                    </button>
+                </form>
+            </div>
         </section>
     </main>
 
@@ -119,38 +148,9 @@
     </footer>
 
     <script type="module" src="js/script.js"></script>
-    <script type="module">
-        import { initializeSharedFeatures } from './js/shared.js';
-        document.addEventListener('DOMContentLoaded', initializeSharedFeatures);
-    </script>
+    <script type="module" src="js/custom-services.js"></script>
 </body>
 </html>
-                            required 
-                            aria-required="true"
-                            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
-                        >
-                        <span class="error-message" aria-live="polite"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="notes">Additional Notes</label>
-                        <textarea 
-                            id="notes" 
-                            name="notes" 
-                            rows="4"
-                        ></textarea>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">Submit Request</button>
-                </form>
-            </div>
-        </section>
-    </main>
-
-    <footer role="contentinfo">
-        <div class="footer-content">
-            <!-- Standard footer content -->
-        </div>
         <div class="footer-bottom">
             <p>&copy; 2025 Book Haven. All rights reserved.</p>
         </div>

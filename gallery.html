@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explore Book Haven's photo gallery featuring our store, events, and rare book collection">
     <title>Gallery - Book Haven</title>
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
@@ -34,40 +35,53 @@
         </section>
 
         <section class="gallery-section container">
-            <div class="gallery-filters">
-                <button class="filter-btn active" data-filter="all">All</button>
-                <button class="filter-btn" data-filter="store">Store</button>
-                <button class="filter-btn" data-filter="events">Events</button>
-                <button class="filter-btn" data-filter="books">Books</button>
+            <div class="gallery-filters" role="tablist" aria-label="Gallery filters">
+                <button class="filter-btn active" data-filter="all" role="tab" aria-selected="true">
+                    All <span class="visually-hidden">images</span>
+                </button>
+                <button class="filter-btn" data-filter="store" role="tab" aria-selected="false">
+                    Store <span class="visually-hidden">images</span>
+                </button>
+                <button class="filter-btn" data-filter="events" role="tab" aria-selected="false">
+                    Events <span class="visually-hidden">images</span>
+                </button>
+                <button class="filter-btn" data-filter="books" role="tab" aria-selected="false">
+                    Books <span class="visually-hidden">images</span>
+                </button>
             </div>
 
-            <div class="gallery-grid">
+            <div class="gallery-grid" role="tabpanel">
                 <figure class="gallery-item" data-category="store">
-                    <img src="images/gallery/store-front.jpg" alt="Book Haven storefront" loading="lazy">
+                    <img src="images/gallery/store-front.jpg" 
+                         alt="Book Haven storefront" 
+                         loading="lazy"
+                         onerror="this.onerror=null; this.src='images/placeholder.jpg';">
                     <figcaption>Our welcoming entrance</figcaption>
                 </figure>
                 <figure class="gallery-item" data-category="store">
-                    <img src="images/gallery/reading-nook.jpg" alt="Cozy reading nook" loading="lazy">
+                    <img src="images/gallery/reading-nook.jpg" alt="Cozy reading nook" loading="lazy" onerror="this.onerror=null; this.src='images/placeholder.jpg';">
                     <figcaption>Our famous reading nook</figcaption>
                 </figure>
                 <figure class="gallery-item" data-category="events">
-                    <img src="images/gallery/author-talk.jpg" alt="Author talk event" loading="lazy">
+                    <img src="images/gallery/author-talk.jpg" alt="Author talk event" loading="lazy" onerror="this.onerror=null; this.src='images/placeholder.jpg';">
                     <figcaption>Monthly author talks</figcaption>
                 </figure>
                 <figure class="gallery-item" data-category="books">
-                    <img src="images/gallery/rare-books.jpg" alt="Rare books collection" loading="lazy">
+                    <img src="images/gallery/rare-books.jpg" alt="Rare books collection" loading="lazy" onerror="this.onerror=null; this.src='images/placeholder.jpg';">
                     <figcaption>Rare books collection</figcaption>
                 </figure>
                 <!-- Add more gallery items as needed -->
             </div>
         </section>
 
-        <div class="lightbox" id="gallery-lightbox">
+        <div class="lightbox" id="gallery-lightbox" role="dialog" aria-modal="true" aria-hidden="true">
             <button class="lightbox-close" aria-label="Close image viewer">&times;</button>
-            <img src="" alt="" class="lightbox-image">
             <button class="lightbox-prev" aria-label="Previous image">&lt;</button>
+            <div class="lightbox-content">
+                <img src="" alt="" class="lightbox-image">
+                <p class="lightbox-caption" aria-live="polite"></p>
+            </div>
             <button class="lightbox-next" aria-label="Next image">&gt;</button>
-            <p class="lightbox-caption"></p>
         </div>
     </main>
 
@@ -94,6 +108,18 @@
     </footer>
 
     <script type="module" src="js/gallery.js"></script>
+    <script>
+        // Fallback for failed image loads
+        document.addEventListener('DOMContentLoaded', () => {
+            const images = document.querySelectorAll('.gallery-item img');
+            images.forEach(img => {
+                img.addEventListener('error', () => {
+                    img.classList.add('image-error');
+                    img.closest('.gallery-item').classList.add('load-error');
+                });
+            });
+        });
+    </script>
 </body>
 </html>
 
