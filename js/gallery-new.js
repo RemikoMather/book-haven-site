@@ -35,24 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let galleryItems = [];
     let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
 
-    // Filter functionality
-    filterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const filter = btn.dataset.filter;
-            
-            filterBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-
-            document.querySelectorAll('.gallery-item').forEach(item => {
-                if (filter === 'all' || item.dataset.category === filter) {
-                    item.style.display = 'block';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-        });
-    });
-
     // Cart functionality
     function updateCartDisplay() {
         if (cartCount) {
@@ -110,8 +92,51 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Event Listeners for Gallery and Cart
+    // Lightbox functionality
+    function openLightbox(index) {
+        currentIndex = index;
+        updateLightboxContent();
+        lightbox?.classList.add('active');
+    }
+
+    function updateLightboxContent() {
+        if (!lightboxImg || !lightboxCaption || galleryItems.length === 0) return;
+        
+        const item = galleryItems[currentIndex];
+        const img = item.querySelector('img');
+        const caption = item.querySelector('figcaption');
+        
+        if (img) {
+            lightboxImg.src = img.src;
+            lightboxImg.alt = img.alt;
+        }
+        
+        if (caption) {
+            lightboxCaption.textContent = caption.textContent;
+        }
+    }
+
+    // Event Listeners
     if (gallery) {
+        // Filter functionality
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const filter = btn.dataset.filter;
+                
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                document.querySelectorAll('.gallery-item').forEach(item => {
+                    if (filter === 'all' || item.dataset.category === filter) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Gallery click events
         gallery.addEventListener('click', (e) => {
             // Handle add to cart
             if (e.target.classList.contains('add-to-cart')) {
@@ -136,6 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Cart event listeners
     if (cartItems) {
         cartItems.addEventListener('click', (e) => {
             if (e.target.classList.contains('remove-item')) {
@@ -160,6 +186,27 @@ document.addEventListener('DOMContentLoaded', () => {
         processOrderBtn.addEventListener('click', processOrder);
     }
 
+    // Lightbox event listeners
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            lightbox?.classList.remove('active');
+        });
+    }
+
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + galleryItems.length) % galleryItems.length;
+            updateLightboxContent();
+        });
+    }
+
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % galleryItems.length;
+            updateLightboxContent();
+        });
+    }
+
     // Close modal when clicking outside
     if (cartModal) {
         window.addEventListener('click', (e) => {
@@ -169,57 +216,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Initialize cart display
-    updateCartDisplay();
-
-    // Lightbox functionality
-    function openLightbox(index) {
-        galleryItems = Array.from(document.querySelectorAll('.gallery-item:not([style*="display: none"])'));
-        currentIndex = index;
-        updateLightboxContent();
-        lightbox.classList.add('active');
-    }
-
-    function updateLightboxContent() {
-        const item = galleryItems[currentIndex];
-        const img = item.querySelector('img');
-        const caption = item.querySelector('figcaption');
-        
-        lightboxImg.src = img.src;
-        lightboxImg.alt = img.alt;
-        lightboxCaption.textContent = caption.textContent;
-    }
-
-    // Lightbox event handlers are now combined with the gallery click handler above
-
-    closeBtn.addEventListener('click', () => {
-        lightbox.classList.remove('active');
-    });
-
-    prevBtn.addEventListener('click', () => {
-        currentIndex = (currentIndex - 1 + galleryItems.length) % galleryItems.length;
-        updateLightboxContent();
-    });
-
-    nextBtn.addEventListener('click', () => {
-        currentIndex = (currentIndex + 1) % galleryItems.length;
-        updateLightboxContent();
-    });
-
-    // Keyboard navigation
+    // Keyboard navigation for lightbox
     document.addEventListener('keydown', (e) => {
-        if (!lightbox.classList.contains('active')) return;
+        if (!lightbox?.classList.contains('active')) return;
         
         switch(e.key) {
             case 'Escape': 
                 lightbox.classList.remove('active');
                 break;
             case 'ArrowLeft':
-                prevBtn.click();
+                prevBtn?.click();
                 break;
             case 'ArrowRight':
-                nextBtn.click();
+                nextBtn?.click();
                 break;
         }
     });
+
+    // Initialize cart display
+    updateCartDisplay();
 });
