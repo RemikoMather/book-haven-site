@@ -3,8 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Browse our curated collection of books at Book Haven">
-    <title>Book Haven | Gallery</title>
+    <meta name="description" content="Browse our curated collection of books at Book Haven. Find fiction, non-fiction, and children's books from your favorite authors.">
+    <meta name="keywords" content="books, bookstore, fiction books, non-fiction books, children's books, reading">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Book Gallery | Book Haven">
+    <meta property="og:description" content="Browse our curated collection of books at Book Haven">
+    <meta property="og:image" content="images/gallery-preview.jpg">
+    
+    <!-- Preload Critical Resources -->
+    <link rel="preload" href="css/style.css" as="style">
+    <link rel="preload" href="js/script.js" as="script">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    
+    <title>Book Gallery | Book Haven</title>
+    
+    <!-- Styles -->
     <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -47,57 +62,100 @@
             </div>
         </section>
 
-        <div class="gallery-grid" role="list">
-            <!-- Book Card Template -->
-            <article class="book-card" role="listitem" data-category="fiction">
-                <span class="book-badge" aria-label="Special offer">New Release</span>
-                <img 
-                    src="images/book1.jpg" 
-                    alt="Book cover of The Great Gatsby by F. Scott Fitzgerald"
-                    class="book-image"
-                    loading="lazy"
-                >
-                <div class="book-info">
-                    <h3 class="book-title">The Great Gatsby</h3>
-                    <p class="book-author">F. Scott Fitzgerald</p>
-                    <p class="book-price" aria-label="Price: 24 dollars and 99 cents">$24.99</p>
-                    <button 
-                        class="btn btn-primary add-to-cart"
-                        data-book-id="1"
-                        data-title="The Great Gatsby"
-                        data-price="24.99"
-                        aria-label="Add The Great Gatsby to cart"
-                    >
-                        Add to Cart
-                    </button>
-                </div>
-            </article>
-            <!-- More book cards... -->
+        <!-- Add Loading State -->
+        <div id="loading-state" class="loading-container" hidden>
+            <div class="loading-spinner"></div>
+            <p>Loading books...</p>
         </div>
+
+        <!-- Add Error State -->
+        <div id="error-state" class="error-container" hidden>
+            <p>Sorry, we couldn't load the books. Please try again.</p>
+            <button class="btn btn-primary" onclick="loadBooks()">Retry</button>
+        </div>
+
+        <div class="gallery-grid" role="list">
+            <!-- Add Template for Dynamic Book Loading -->
+            <template id="book-template">
+                <article class="book-card" role="listitem">
+                    <span class="book-badge"></span>
+                    <img class="book-image" loading="lazy">
+                    <div class="book-info">
+                        <h3 class="book-title"></h3>
+                        <p class="book-author"></p>
+                        <p class="book-price"></p>
+                        <button class="btn btn-primary add-to-cart"></button>
+                    </div>
+                </article>
+            </template>
+        </div>
+
+        <!-- Add Pagination -->
+        <nav class="pagination" role="navigation" aria-label="Gallery pages">
+            <button class="btn btn-secondary" id="prevPage" disabled>Previous</button>
+            <span id="pageInfo" aria-live="polite">Page 1 of 1</span>
+            <button class="btn btn-secondary" id="nextPage" disabled>Next</button>
+        </nav>
     </main>
 
     <!-- Cart Modal -->
-    <div 
-        class="modal-overlay" 
-        id="modalOverlay" 
-        hidden 
-        role="dialog"
-        aria-labelledby="cartTitle"
-        aria-modal="true"
-    >
-        <div class="cart-modal">
-            <header>
-                <h2 id="cartTitle">Your Cart</h2>
-                <button class="close-modal" aria-label="Close cart">×</button>
+    <div class="modal-overlay" id="modalOverlay" hidden>
+        <div 
+            class="cart-modal" 
+            role="dialog" 
+            aria-labelledby="cartTitle"
+            aria-modal="true"
+        >
+            <header class="modal-header">
+                <h2 id="cartTitle">Your Shopping Cart</h2>
+                <button 
+                    class="close-modal" 
+                    aria-label="Close cart"
+                    onclick="closeCart()"
+                >×</button>
             </header>
-            <div class="cart-items" role="list">
-                <!-- Cart items will be inserted here -->
+            
+            <!-- Empty Cart State -->
+            <div id="emptyCart" class="empty-cart" hidden>
+                <p>Your cart is empty</p>
+                <button 
+                    class="btn btn-primary"
+                    onclick="closeCart()"
+                >Continue Shopping</button>
             </div>
-            <footer>
-                <p class="cart-total">Total: <span aria-live="polite">$0.00</span></p>
+
+            <div class="cart-items" role="list">
+                <template id="cart-item-template">
+                    <div class="cart-item" role="listitem">
+                        <div class="item-info">
+                            <h3 class="item-title"></h3>
+                            <p class="item-price"></p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="quantity-btn minus" aria-label="Decrease quantity">-</button>
+                            <span class="quantity" aria-label="Quantity">1</span>
+                            <button class="quantity-btn plus" aria-label="Increase quantity">+</button>
+                            <button class="remove-item" aria-label="Remove from cart">×</button>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <footer class="modal-footer">
+                <p class="cart-total">
+                    Total: <span aria-live="polite">$0.00</span>
+                </p>
                 <div class="cart-actions">
-                    <button class="btn btn-secondary" onclick="clearCart()">Clear Cart</button>
-                    <button class="btn btn-primary" onclick="checkout()">Checkout</button>
+                    <button 
+                        class="btn btn-secondary"
+                        onclick="clearCart()"
+                        aria-label="Clear shopping cart"
+                    >Clear Cart</button>
+                    <button 
+                        class="btn btn-primary"
+                        onclick="checkout()"
+                        aria-label="Proceed to checkout"
+                    >Checkout</button>
                 </div>
             </footer>
         </div>
@@ -126,10 +184,20 @@
         </div>
     </footer>
 
+    <!-- Scripts -->
     <script type="module" src="js/script.js"></script>
     <script type="module">
         import { initializeSharedFeatures } from './js/shared.js';
-        document.addEventListener('DOMContentLoaded', initializeSharedFeatures);
+        import { initializeGallery } from './js/gallery.js';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeSharedFeatures();
+            initializeGallery({
+                itemsPerPage: 12,
+                container: document.querySelector('.gallery-grid'),
+                template: document.querySelector('#book-template')
+            });
+        });
     </script>
 </body>
 </html>

@@ -1,40 +1,171 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Book Haven | Staff Picks</title>
-  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
-  <script defer src="script.js"></script>
-  <script type="module">
-    import { initializeSharedFeatures } from './js/shared.js';
-    document.addEventListener('DOMContentLoaded', initializeSharedFeatures);
-  </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Discover our staff's favorite books and request custom orders at Book Haven">
+    <meta name="keywords" content="staff picks, book recommendations, custom book orders, rare books">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="Staff Picks & Custom Orders | Book Haven">
+    <meta property="og:description" content="Get personalized book recommendations from our expert staff">
+    <meta property="og:image" content="images/staff-picks.jpg">
+    
+    <title>Staff Picks & Custom Orders | Book Haven</title>
+    
+    <!-- Styles -->
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <header>
-    <h1>Book Haven</h1>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="gallery.html">Gallery</a>
-      <a href="about.html">About Us</a>
-      <a href="custom.html">Staff Picks</a>
-    </nav>
-  </header>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
 
-  <main>
-    <h2>Staff Picks</h2>
-    <ul>
-      <li>The Hidden Library</li>
-      <li>Pages of Light</li>
-      <li>The Reader's Compass</li>
-    </ul>
-  </main>
+    <header role="banner">
+        <nav class="navbar" role="navigation" aria-label="Main navigation">
+            <div class="logo">
+                <img src="images/logo.svg" alt="Book Haven Logo" width="40" height="40">
+                <h1>Book Haven</h1>
+            </div>
+            <button class="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="custom.html" aria-current="page">Staff Picks</a></li>
+            </ul>
+        </nav>
+    </header>
 
-  <footer>
-    <input type="email" id="subscribeEmail" placeholder="Enter your email">
-    <button onclick="handleSubscribe()">Subscribe</button>
-  </footer>
+    <main id="main-content" role="main">
+        <!-- Staff Picks Section -->
+        <section class="staff-picks">
+            <div class="container">
+                <h2>Staff Picks</h2>
+                <p class="section-subtitle">Handpicked recommendations from our book-loving team</p>
+                
+                <div class="staff-picks-grid">
+                    <!-- Staff Pick Card Template -->
+                    <article class="staff-pick-card">
+                        <img 
+                            src="images/staff/emma.jpg" 
+                            alt="Emma, Book Haven staff member" 
+                            class="staff-photo"
+                            loading="lazy"
+                        >
+                        <div class="pick-content">
+                            <h3 class="staff-name">Emma's Pick</h3>
+                            <h4 class="book-title">The Night Circus</h4>
+                            <p class="book-author">by Erin Morgenstern</p>
+                            <p class="pick-description">
+                                "A magical masterpiece that will transport you to a world of wonder. 
+                                Perfect for readers who love imaginative storytelling."
+                            </p>
+                            <button class="btn btn-secondary add-to-cart" 
+                                    data-book-id="sp1" 
+                                    data-title="The Night Circus"
+                                    data-price="24.99">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </article>
+                    
+                    <!-- Add more staff pick cards here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Custom Orders Section -->
+        <section class="custom-orders">
+            <div class="container">
+                <h2>Custom Orders</h2>
+                <p class="section-subtitle">Can't find what you're looking for? Let us help!</p>
+
+                <form id="customOrderForm" class="custom-order-form" novalidate>
+                    <div class="form-group">
+                        <label for="bookTitle">Book Title</label>
+                        <input 
+                            type="text" 
+                            id="bookTitle" 
+                            name="bookTitle" 
+                            required 
+                            aria-required="true"
+                        >
+                        <span class="error-message" aria-live="polite"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="author">Author (if known)</label>
+                        <input 
+                            type="text" 
+                            id="author" 
+                            name="author"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contactName">Your Name</label>
+                        <input 
+                            type="text" 
+                            id="contactName" 
+                            name="contactName" 
+                            required 
+                            aria-required="true"
+                        >
+                        <span class="error-message" aria-live="polite"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contactEmail">Email</label>
+                        <input 
+                            type="email" 
+                            id="contactEmail" 
+                            name="contactEmail" 
+                            required 
+                            aria-required="true"
+                            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                        >
+                        <span class="error-message" aria-live="polite"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="notes">Additional Notes</label>
+                        <textarea 
+                            id="notes" 
+                            name="notes" 
+                            rows="4"
+                        ></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Submit Request</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer role="contentinfo">
+        <div class="footer-content">
+            <!-- Standard footer content -->
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Book Haven. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script type="module" src="js/script.js"></script>
+    <script type="module">
+        import { initializeSharedFeatures } from './js/shared.js';
+        import { initializeCustomOrders } from './js/custom.js';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeSharedFeatures();
+            initializeCustomOrders();
+        });
+    </script>
 </body>
 </html>

@@ -3,86 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Haven | Your Literary Sanctuary</title>
-    
-    <!-- Enhanced Meta Tags -->
     <meta name="description" content="Book Haven - Your neighborhood bookstore where stories come alive. Browse our collection of books and join our literary community.">
     <meta name="keywords" content="bookstore, books, reading, literature, book shop, Reading">
-    <meta name="author" content="Book Haven">
     <meta name="robots" content="index, follow">
     
     <!-- Open Graph Tags -->
     <meta property="og:title" content="Book Haven | Your Literary Sanctuary">
     <meta property="og:description" content="Your neighborhood bookstore where stories come alive">
     <meta property="og:image" content="images/og-image.jpg">
-    <meta property="og:url" content="https://bookhaven.com">
+    <meta property="og:type" content="website">
     
     <!-- Preload Critical Resources -->
     <link rel="preload" href="css/style.css" as="style">
     <link rel="preload" href="js/script.js" as="script">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     
+    <title>Book Haven | Your Literary Sanctuary</title>
+    
     <!-- Styles -->
     <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
-    
-    <!-- Favicons -->
-    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
-    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
 </head>
 <body>
-    <!-- Add skip link for keyboard users -->
+    <!-- Skip Link for Accessibility -->
     <a href="#main-content" class="skip-link">Skip to main content</a>
 
     <header role="banner">
         <nav class="navbar" role="navigation" aria-label="Main navigation">
             <div class="logo">
-                <h1>Book Haven</h1>
+                <img src="images/logo.svg" alt="Book Haven Logo" width="40" height="40">
+                <span class="logo-text">Book Haven</span>
             </div>
+            
+            <button class="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
             <ul class="nav-links">
-                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="index.html" aria-current="page">Home</a></li>
                 <li><a href="gallery.html">Gallery</a></li>
                 <li><a href="about.html">About Us</a></li>
                 <li><a href="custom.html">Staff Picks</a></li>
             </ul>
+
+            <button class="cart-btn" aria-label="Shopping cart" id="cartButton">
+                <svg class="cart-icon" aria-hidden="true" viewBox="0 0 24 24">
+                    <path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM1 3h4l2.7 11.4c.2.8 1 1.6 2 1.6h12c.8 0 1.5-.5 1.8-1.2l3-7c.3-.7-.2-1.5-1-1.5H7.3l-.5-2C6.5 3.5 5.9 3 5.2 3H1zm16 15c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+                </svg>
+                <span class="cart-count" aria-live="polite">0</span>
+            </button>
         </nav>
     </header>
 
     <main id="main-content" role="main">
+        <!-- Hero Section -->
         <section class="hero">
             <div class="hero-content">
                 <h1>Welcome to <span class="highlight">Book Haven</span></h1>
                 <p class="hero-subtitle">Your neighborhood bookstore where stories come alive</p>
                 
-                <!-- Call to Action Buttons -->
                 <div class="cta-buttons">
-                    <a href="gallery.html" class="btn btn-primary">Explore Books →</a>
+                    <a href="gallery.html" class="btn btn-primary">
+                        Explore Books
+                        <svg class="icon" aria-hidden="true" viewBox="0 0 24 24">
+                            <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+                        </svg>
+                    </a>
                     <a href="about.html" class="btn btn-secondary">Learn More</a>
                 </div>
-                
-                <!-- Newsletter Form -->
-                <form id="newsletterForm" class="subscribe-form" onsubmit="handleSubscribe(event)">
-                    <h2 class="form-title">Stay Updated</h2>
-                    <p class="form-subtitle">Subscribe for new releases and events</p>
-                    <div class="input-group">
-                        <label for="emailInput" class="visually-hidden">Email address</label>
-                        <input 
-                            type="email" 
-                            id="emailInput" 
-                            placeholder="Enter your email" 
-                            required
-                            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
-                            aria-describedby="emailHelp"
-                        >
-                        <button 
-                            type="submit"
-                            class="btn btn-primary"
-                        >
-                            Subscribe
-                        </button>
+
+                <!-- Featured Books Carousel -->
+                <div class="featured-books" aria-label="Featured books carousel">
+                    <h2 class="visually-hidden">Featured Books</h2>
+                    <div class="book-carousel" id="bookCarousel">
+                        <!-- Books will be dynamically added here -->
                     </div>
-                    <small id="emailHelp" class="form-help">We'll never share your email</small>
+                    <div class="carousel-controls">
+                        <button class="carousel-btn prev" aria-label="Previous book">‹</button>
+                        <button class="carousel-btn next" aria-label="Next book">›</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Newsletter Section -->
+        <section class="newsletter">
+            <div class="container">
+                <h2>Stay Updated</h2>
+                <p class="section-subtitle">Subscribe for new releases and events</p>
+                
+                <form id="newsletterForm" class="subscribe-form" novalidate>
+                    <div class="form-group">
+                        <label for="emailInput" class="visually-hidden">Email address</label>
+                        <div class="input-group">
+                            <input 
+                                type="email" 
+                                id="emailInput" 
+                                placeholder="Enter your email" 
+                                required
+                                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                                aria-describedby="emailHelp"
+                            >
+                            <button 
+                                type="submit"
+                                class="btn btn-primary"
+                                aria-label="Subscribe to newsletter"
+                            >
+                                Subscribe
+                            </button>
+                        </div>
+                        <small id="emailHelp" class="form-help">We'll never share your email</small>
+                    </div>
                 </form>
             </div>
         </section>
@@ -92,38 +125,34 @@
         <div class="footer-content">
             <div class="footer-section">
                 <h3>Visit Us</h3>
-                <p>123 Book Street</p>
-                <p>Reading, RG1 1BB</p>
-            </div>
-            <div class="footer-section">
-                <h3>Contact</h3>
-                <p>Tel: (555) 123-4567</p>
-                <p>Email: hello@bookhaven.com</p>
+                <address>
+                    123 Book Street<br>
+                    Reading, RG1 1BB
+                </address>
             </div>
             <div class="footer-section">
                 <h3>Hours</h3>
-                <p>Mon-Sat: 9am - 8pm</p>
-                <p>Sun: 10am - 6pm</p>
+                <ul class="hours-list">
+                    <li>Monday - Saturday: 9am - 8pm</li>
+                    <li>Sunday: 10am - 6pm</li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p>Tel: <a href="tel:+15551234567">(555) 123-BOOK</a></p>
+                <p>Email: <a href="mailto:hello@bookhaven.com">hello@bookhaven.com</a></p>
             </div>
             <div class="footer-section">
                 <h3>Follow Us</h3>
                 <div class="social-links">
-                    <a href="https://facebook.com/bookhaven" 
-                       target="_blank" 
-                       rel="noopener noreferrer" 
-                       class="social-link"
-                       aria-label="Follow us on Facebook">
+                    <a href="https://facebook.com/bookhaven" target="_blank" rel="noopener noreferrer" aria-label="Follow us on Facebook">
                         <svg class="icon" aria-hidden="true" viewBox="0 0 24 24">
                             <path d="M18.77 7.46H14.5v-1.9c0-.9.6-1.1 1-1.1h3V.5h-4.33C10.24.5 9.5 3.44 9.5 5.32v2.15h-3v4h3v12h5v-12h3.85l.42-4z"/>
                         </svg>
                     </a>
-                    <a href="https://instagram.com/bookhaven" 
-                       target="_blank" 
-                       rel="noopener noreferrer" 
-                       class="social-link"
-                       aria-label="Follow us on Instagram">
+                    <a href="https://instagram.com/bookhaven" target="_blank" rel="noopener noreferrer" aria-label="Follow us on Instagram">
                         <svg class="icon" aria-hidden="true" viewBox="0 0 24 24">
-                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073z"/>
                         </svg>
                     </a>
                 </div>
@@ -134,70 +163,18 @@
         </div>
     </footer>
 
-    <!-- Structured Data -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "BookStore",
-        "name": "Book Haven",
-        "image": "images/storefront.jpg",
-        "address": {
-            "@type": "PostalAddress",
-            "streetAddress": "123 Book Street",
-            "addressLocality": "Reading",
-            "postalCode": "RG1 1BB",
-            "addressCountry": "UK"
-        },
-        "openingHoursSpecification": [
-            {
-                "@type": "OpeningHoursSpecification",
-                "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-                "opens": "09:00",
-                "closes": "20:00"
-            },
-            {
-                "@type": "OpeningHoursSpecification",
-                "dayOfWeek": "Sunday",
-                "opens": "10:00",
-                "closes": "18:00"
-            }
-        ],
-        "telephone": "(555) 123-4567",
-        "url": "https://bookhaven.com"
-    }
-    </script>
-
-    <!-- Initialize Service Worker -->
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(registration => {
-                        console.log('ServiceWorker registration successful');
-                    })
-                    .catch(err => {
-                        console.log('ServiceWorker registration failed: ', err);
-                    });
-            });
-        }
-    </script>
-
-    <!-- Main Scripts -->
-    <script src="js/script.js" type="module"></script>
+    <!-- Scripts -->
+    <script type="module" src="js/script.js"></script>
     <script type="module">
         import { initializeSharedFeatures } from './js/shared.js';
-        import { initializeNewsletterForm } from './js/forms.js';
+        import { initializeCarousel } from './js/carousel.js';
+        import { initializeNewsletter } from './js/newsletter.js';
 
-        // Initialize features when DOM is ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => {
-                initializeSharedFeatures();
-                initializeNewsletterForm();
-            });
-        } else {
+        document.addEventListener('DOMContentLoaded', () => {
             initializeSharedFeatures();
-            initializeNewsletterForm();
-        }
+            initializeCarousel();
+            initializeNewsletter();
+        });
     </script>
 </body>
 </html>

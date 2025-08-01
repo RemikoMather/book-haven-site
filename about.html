@@ -1,42 +1,164 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Book Haven | About</title>
-  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
-  <script defer src="script.js"></script>
-  <script type="module">
-    import { initializeSharedFeatures } from './js/shared.js';
-    document.addEventListener('DOMContentLoaded', initializeSharedFeatures);
-  </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Learn about Book Haven's story and get in touch with our team. Your local independent bookstore in Reading.">
+    <meta name="keywords" content="book store, about us, contact, independent bookstore, Reading">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="About Us | Book Haven">
+    <meta property="og:description" content="Learn about Book Haven's story and get in touch with our team">
+    <meta property="og:image" content="images/store-front.jpg">
+    
+    <!-- Preload Critical Resources -->
+    <link rel="preload" href="css/style.css" as="style">
+    <link rel="preload" href="images/store-front.jpg" as="image">
+    
+    <title>About Us | Book Haven</title>
+    
+    <!-- Styles -->
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <header>
-    <h1>Book Haven</h1>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="gallery.html">Gallery</a>
-      <a href="about.html">About Us</a>
-      <a href="custom.html">Staff Picks</a>
-    </nav>
-  </header>
+    <!-- Skip Link -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
 
-  <main>
-    <h2>About Us</h2>
-    <p>Book Haven is your neighborhood bookstore filled with community and character.</p>
-    <form onsubmit="submitContactForm(event)">
-      <input type="text" id="name" placeholder="Your Name" required>
-      <input type="email" id="email" placeholder="Your Email" required>
-      <textarea id="message" placeholder="Your Message" required></textarea>
-      <button type="submit">Send</button>
-    </form>
-  </main>
+    <header role="banner">
+        <nav class="navbar" role="navigation" aria-label="Main navigation">
+            <div class="logo">
+                <img src="images/logo.svg" alt="Book Haven Logo" width="40" height="40">
+                <h1>Book Haven</h1>
+            </div>
+            <button class="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="about.html" aria-current="page">About Us</a></li>
+                <li><a href="custom.html">Staff Picks</a></li>
+            </ul>
+        </nav>
+    </header>
 
-  <footer>
-    <input type="email" id="subscribeEmail" placeholder="Enter your email">
-    <button onclick="handleSubscribe()">Subscribe</button>
-  </footer>
+    <main id="main-content" role="main">
+        <!-- About Section -->
+        <section class="about-section">
+            <div class="container">
+                <h2>Our Story</h2>
+                <div class="about-content">
+                    <img 
+                        src="images/store-front.jpg" 
+                        alt="Book Haven store front view" 
+                        class="about-image"
+                        width="600" 
+                        height="400"
+                    >
+                    <div class="about-text">
+                        <p>Welcome to Book Haven, your neighborhood sanctuary for literary adventures. Since 2015, we've been curating exceptional reading experiences for our community in Reading.</p>
+                        <p>Our passion for books goes beyond just selling them - we create a space where stories come alive and readers find their next great adventure.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Form Section -->
+        <section class="contact-section">
+            <div class="container">
+                <h2>Get in Touch</h2>
+                <div class="contact-wrapper">
+                    <form id="contactForm" class="contact-form" novalidate>
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input 
+                                type="text" 
+                                id="name" 
+                                name="name" 
+                                required 
+                                aria-required="true"
+                                autocomplete="name"
+                            >
+                            <span class="error-message" aria-live="polite"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input 
+                                type="email" 
+                                id="email" 
+                                name="email" 
+                                required 
+                                aria-required="true"
+                                autocomplete="email"
+                                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                            >
+                            <span class="error-message" aria-live="polite"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea 
+                                id="message" 
+                                name="message" 
+                                required 
+                                aria-required="true"
+                                rows="5"
+                            ></textarea>
+                            <span class="error-message" aria-live="polite"></span>
+                        </div>
+
+                        <button 
+                            type="submit" 
+                            class="btn btn-primary"
+                        >Send Message</button>
+                    </form>
+
+                    <div class="contact-info">
+                        <h3>Visit Our Store</h3>
+                        <address>
+                            123 Literary Lane<br>
+                            Booktown, BT 12345
+                        </address>
+                        
+                        <h3>Opening Hours</h3>
+                        <ul class="hours-list">
+                            <li>Monday - Saturday: 9am - 8pm</li>
+                            <li>Sunday: 10am - 6pm</li>
+                        </ul>
+
+                        <h3>Contact Details</h3>
+                        <p>Phone: <a href="tel:+15551234567">(555) 123-BOOK</a></p>
+                        <p>Email: <a href="mailto:hello@bookhaven.com">hello@bookhaven.com</a></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer role="contentinfo">
+        <div class="footer-content">
+            <!-- Standard footer content -->
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Book Haven. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script type="module" src="js/script.js"></script>
+    <script type="module">
+        import { initializeSharedFeatures } from './js/shared.js';
+        import { initializeContactForm } from './js/contact.js';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeSharedFeatures();
+            initializeContactForm();
+        });
+    </script>
 </body>
 </html>
