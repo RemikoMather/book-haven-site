@@ -97,7 +97,28 @@
         "card": {
           "icon": "📖",
           "text": "Discover Your Next Great Read"
-        }
+        },
+        "photos": [
+          {
+            "src": "images/hero-bookshelf.jpg",
+            "alt": "Bookshelf full of books",
+            "style": {
+              "width": "320px",
+              "border-radius": "18px",
+              "box-shadow": "0 4px 16px rgba(34,52,74,0.15)",
+              "margin-bottom": "24px"
+            }
+          },
+          {
+            "src": "images/hero-reading.jpg",
+            "alt": "Person reading in cozy bookstore",
+            "style": {
+              "width": "320px",
+              "border-radius": "18px",
+              "box-shadow": "0 4px 16px rgba(34,52,74,0.15)"
+            }
+          }
+        ]
       }
     }
   }
