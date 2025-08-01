@@ -164,16 +164,29 @@ footer {
 }
 
 .book-card {
+    position: relative;
     background: white;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    transition: transform 0.3s ease;
     overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .book-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+}
+
+.book-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: var(--aged-gold);
+    color: var(--bookish-black);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
 }
 
 .book-image {
@@ -262,16 +275,54 @@ footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 0;
+    padding: 1rem;
     border-bottom: 1px solid #eee;
 }
 
-.cart-total {
-    margin-top: 2rem;
-    padding-top: 1rem;
-    border-top: 2px solid var(--inkwell-blue);
-    text-align: right;
+.item-info {
+    flex: 1;
+}
+
+.item-title {
+    font-family: 'Lora', serif;
+    margin-bottom: 0.25rem;
+}
+
+.item-price {
+    color: var(--inkwell-blue);
     font-weight: 600;
+}
+
+.item-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.quantity-btn {
+    width: 24px;
+    height: 24px;
+    border: 1px solid var(--inkwell-blue);
+    border-radius: 50%;
+    background: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.quantity {
+    min-width: 24px;
+    text-align: center;
+}
+
+.remove-item {
+    color: #ff4444;
+    border: none;
+    background: none;
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: 0 0.5rem;
 }
 
 /* Mobile Menu */
