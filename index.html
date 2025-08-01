@@ -24,11 +24,43 @@
       <p>Discover stories that spark imagination.</p>
       <input type="email" id="subscribeEmail" placeholder="Enter your email">
       <button onclick="handleSubscribe()">Subscribe</button>
+      <div id="subscribeMessage" style="margin-top:10px;"></div>
     </section>
   </main>
 
   <footer>
     <p>&copy; 2025 Book Haven</p>
   </footer>
+  <script>
+    function handleSubscribe() {
+      const emailInput = document.getElementById('subscribeEmail');
+      const messageDiv = document.getElementById('subscribeMessage');
+      const email = emailInput.value.trim();
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!email) {
+        messageDiv.textContent = "Please enter your email address.";
+        messageDiv.style.color = "red";
+        return;
+      }
+      if (!emailRegex.test(email)) {
+        messageDiv.textContent = "Please enter a valid email address.";
+        messageDiv.style.color = "red";
+        return;
+      }
+
+      // Save to localStorage
+      let subs = [];
+      try {
+        subs = JSON.parse(localStorage.getItem('newsletterSubscriptions')) || [];
+      } catch {}
+      subs.push({ email, timestamp: new Date().toISOString() });
+      localStorage.setItem('newsletterSubscriptions', JSON.stringify(subs));
+
+      messageDiv.textContent = "Thank you for subscribing!";
+      messageDiv.style.color = "green";
+      emailInput.value = "";
+    }
+  </script>
 </body>
 </html>
