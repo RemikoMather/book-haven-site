@@ -1,5 +1,104 @@
 {
   "dependencies": {
     "@supabase/supabase-js": "^2.53.0"
+  },
+  "styles": [
+    {
+      "href": "https://fonts.googleapis.com/css?family=Inter:400,700&display=swap",
+      "rel": "stylesheet"
+    }
+  ],
+  "body": {
+    "font-family": "'Inter', Arial, sans-serif",
+    "background": "#fdf6ee",
+    "margin": "0"
+  },
+  "header": {
+    "display": "flex",
+    "align-items": "center",
+    "justify-content": "space-between",
+    "padding": "24px 48px",
+    "background": "#22344a",
+    "box-shadow": "0 2px 8px rgba(0,0,0,0.04)"
+  },
+  "nav": {
+    "a": {
+      "color": "#fff",
+      "text-decoration": "none",
+      "margin-left": "32px",
+      "font-weight": "600",
+      "padding": "8px 20px",
+      "border-radius": "8px",
+      "transition": "background 0.2s, color 0.2s"
+    }
+  },
+  "hero": {
+    "display": "flex",
+    "justify-content": "space-between",
+    "align-items": "center",
+    "padding": "80px 48px",
+    "background": "linear-gradient(135deg, #22344a 0%, #1a2737 100%)",
+    "color": "#fff"
+  },
+  "hero-content": {
+    "h1": {
+      "font-size": "3rem",
+      "font-weight": "700",
+      "margin-bottom": "24px"
+    },
+    "highlight": {
+      "color": "#e6c15b"
+    },
+    "p": {
+      "font-size": "1.25rem",
+      "margin-bottom": "32px"
+    }
+  },
+  "hero-buttons": {
+    "button": {
+      "font-size": "1rem",
+      "padding": "16px 32px",
+      "border-radius": "8px",
+      "border": "none",
+      "margin-right": "16px",
+      "font-weight": "600",
+      "cursor": "pointer"
+    },
+    "primary": {
+      "background": "#e6c15b",
+      "color": "#22344a"
+    },
+    "secondary": {
+      "background": "transparent",
+      "color": "#e6c15b",
+      "border": "2px solid #e6c15b"
+    }
+  },
+  "main": {
+    "section": {
+      "hero": {
+        "content": {
+          "h1": {
+            "text": "Welcome to Book Haven",
+            "highlight": true
+          },
+          "p": "Your neighborhood bookstore where stories come alive and literary dreams take flight",
+          "buttons": {
+            "primary": {
+              "text": "Explore Books →",
+              "action": "exploreBooks"
+            },
+            "secondary": {
+              "text": "Join Community",
+              "action": "joinCommunity"
+            }
+          }
+        },
+        "card": {
+          "icon": "📖",
+          "text": "Discover Your Next Great Read"
+        }
+      }
+    }
   }
 }
