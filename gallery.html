@@ -3,10 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Explore Book Haven's photo gallery featuring our store, events, and rare book collection">
-    <title>Gallery - Book Haven</title>
+    <meta name="description" content="Explore Book Haven's collection of books - browse, search, and shop our carefully curated selection">
+    <title>Book Gallery - Book Haven</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/bookhaven-styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <script src="js/services/api.js" defer></script>
+    <script src="js/components/cart-manager.js" defer></script>
+    <script src="js/components/form-manager.js" defer></script>
+    <script src="js/pages/gallery.js" defer></script>
 </head>
 <body>
     <a href="#main" class="skip-link">Skip to main content</a>
@@ -33,21 +38,131 @@
         </div>
     </nav>
 
-    <main id="main">
-        <section class="hero">
-            <div class="container">
-                <h1>Our Gallery</h1>
-                <p>Step into the world of Book Haven</p>
+    <main id="main" class="container">
+        <section class="gallery-header">
+            <h1>Book Gallery</h1>
+            <div class="search-controls">
+                <div class="search-input">
+                    <input type="search" id="book-search" 
+                           placeholder="Search by title, author, or ISBN"
+                           aria-label="Search books">
+                </div>
+                <div class="filters">
+                    <select id="category-filter" aria-label="Filter by category">
+                        <option value="">All Categories</option>
+                    </select>
+                    <select id="price-filter" aria-label="Filter by price">
+                        <option value="">Any Price</option>
+                        <option value="0-25">Under $25</option>
+                        <option value="25-50">$25 - $50</option>
+                        <option value="50+">Over $50</option>
+                    </select>
+                    <select id="sort-filter" aria-label="Sort by">
+                        <option value="title">Title A-Z</option>
+                        <option value="-title">Title Z-A</option>
+                        <option value="price">Price Low-High</option>
+                        <option value="-price">Price High-Low</option>
+                    </select>
+                </div>
             </div>
         </section>
 
-        <section class="gallery-section container">
-            <div class="gallery-filters" role="tablist" aria-label="Book category filters">
-                <button class="filter-btn active" data-filter="all" role="tab" aria-selected="true">
-                    All Books
+        <section class="book-gallery">
+            <div id="book-grid" class="book-grid" role="list">
+                <!-- Loading state -->
+                <div class="loading-state">
+                    <div class="processing-indicator"></div>
+                    <p>Loading books...</p>
+                </div>
+            </div>
+
+            <!-- Load More button -->
+            <div class="load-more" hidden>
+                <button class="btn btn-outline" onclick="BookGallery.loadMore()">
+                    Load More Books
                 </button>
-                <button class="filter-btn" data-filter="fiction" role="tab" aria-selected="false">
-                    Fiction
+            </div>
+        </section>
+
+        <!-- Book card template -->
+        <template id="book-card-template">
+            <div class="book-card" role="listitem" tabindex="0">
+                <div class="book-image">
+                    <img src="" alt="" loading="lazy">
+                    <div class="book-overlay">
+                        <button class="btn btn-outline view-details">View Details</button>
+                        <button class="btn add-to-cart">Add to Cart</button>
+                    </div>
+                </div>
+                <div class="book-info">
+                    <h3 class="book-title"></h3>
+                    <p class="book-author"></p>
+                    <p class="book-price"></p>
+                    <div class="book-rating"></div>
+                </div>
+            </div>
+        </template>
+
+        <!-- Book details template -->
+        <template id="book-details-template">
+            <div class="book-details">
+                <div class="book-main">
+                    <div class="book-image">
+                        <img src="" alt="">
+                    </div>
+                    <div class="book-info">
+                        <h2 class="book-title"></h2>
+                        <p class="book-author"></p>
+                        <p class="book-price"></p>
+                        <div class="book-rating"></div>
+                        <p class="book-description"></p>
+                        <div class="book-meta">
+                            <p class="book-isbn"></p>
+                            <p class="book-category"></p>
+                            <p class="book-stock"></p>
+                        </div>
+                        <div class="quantity-selector">
+                            <button class="btn btn-icon" onclick="this.parentNode.querySelector('input').stepDown()">-</button>
+                            <input type="number" value="1" min="1" max="99">
+                            <button class="btn btn-icon" onclick="this.parentNode.querySelector('input').stepUp()">+</button>
+                        </div>
+                        <button class="btn add-to-cart">Add to Cart</button>
+                    </div>
+                </div>
+                <div class="book-reviews">
+                    <h3>Customer Reviews</h3>
+                    <div class="reviews-summary">
+                        <div class="average-rating"></div>
+                        <div class="rating-bars"></div>
+                    </div>
+                    <div class="reviews-list"></div>
+                    <form class="review-form" data-validate data-form-type="review">
+                        <input type="hidden" name="bookId">
+                        <div class="rating-input">
+                            <label>Your Rating</label>
+                            <div class="star-rating">
+                                <input type="radio" name="rating" value="5" id="star5">
+                                <label for="star5">★</label>
+                                <input type="radio" name="rating" value="4" id="star4">
+                                <label for="star4">★</label>
+                                <input type="radio" name="rating" value="3" id="star3">
+                                <label for="star3">★</label>
+                                <input type="radio" name="rating" value="2" id="star2">
+                                <label for="star2">★</label>
+                                <input type="radio" name="rating" value="1" id="star1">
+                                <label for="star1">★</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="review-comment">Your Review</label>
+                            <textarea id="review-comment" name="comment" required
+                                    placeholder="What did you think about this book?"></textarea>
+                        </div>
+                        <button type="submit" class="btn">Submit Review</button>
+                    </form>
+                </div>
+            </div>
+        </template>
                 </button>
                 <button class="filter-btn" data-filter="mystery" role="tab" aria-selected="false">
                     Mystery
