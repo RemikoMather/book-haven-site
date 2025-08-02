@@ -1,10 +1,15 @@
 class CartManager {
     constructor() {
+        // Initialize cart state
         this.cart = JSON.parse(sessionStorage.getItem('bookCart')) || [];
-        this.listeners = new Set();
         this.lastOrder = JSON.parse(sessionStorage.getItem('lastOrder') || 'null');
         this.isProcessing = false;
+        this.isOpen = false;
+        this.listeners = new Set();
+
+        // Initialize UI
         this.updateCartDisplay();
+        this.setupEventListeners();
         
         // Listen for storage events to sync cart across tabs
         window.addEventListener('storage', (e) => {
@@ -134,19 +139,48 @@ class CartManager {
     }
 
     simulateOrderProcessing() {
-        return new Promise(resolve => setTimeout(resolve, 1500));
+        return new Promise((resolve, reject) => {
+            const processingTime = 1500 + Math.random() * 1000;
+            setTimeout(() => {
+                // Simulate success with 95% probability
+                if (Math.random() > 0.05) {
+                    resolve();
+                } else {
+                    reject(new Error('Transaction failed'));
+                }
+            }, processingTime);
+        });
     }
 
     saveCart() {
         const cartData = JSON.stringify(this.cart);
         sessionStorage.setItem('bookCart', cartData);
         this.updateCartCount();
+        
         // Dispatch storage event for cross-tab sync
         window.dispatchEvent(new StorageEvent('storage', {
             key: 'bookCart',
             newValue: cartData,
             url: window.location.href
         }));
+        
+        // Update UI elements
+        this.updateCartButtons();
+    }
+
+    updateCartButtons() {
+        // Update all add to cart buttons
+        document.querySelectorAll('[data-book-id]').forEach(button => {
+            const bookId = button.dataset.bookId;
+            const inCart = this.cart.some(item => item.id === bookId);
+            button.classList.toggle('in-cart', inCart);
+            if (inCart) {
+                const item = this.cart.find(item => item.id === bookId);
+                button.setAttribute('aria-label', `In cart (${item.quantity})`);
+            } else {
+                button.setAttribute('aria-label', 'Add to cart');
+            }
+        });
     }
 
     updateCartCount() {
@@ -179,29 +213,77 @@ class CartManager {
         }, 3000);
     }
 
+    setupEventListeners() {
+        // Handle escape key to close cart
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && this.isOpen) {
+                this.toggleCart();
+            }
+        });
+
+        // Handle click outside to close cart
+        document.addEventListener('click', (e) => {
+            const cartSidebar = document.getElementById('cart-sidebar');
+            if (this.isOpen && cartSidebar && !cartSidebar.contains(e.target) && 
+                !e.target.closest('.cart-toggle')) {
+                this.toggleCart();
+            }
+        });
+
+        // Sync cart across tabs
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'bookCart') {
+                this.cart = JSON.parse(e.newValue || '[]');
+                this.updateCartDisplay();
+            } else if (e.key === 'lastOrder') {
+                this.lastOrder = JSON.parse(e.newValue || 'null');
+            }
+        });
+    }
+
+    toggleCart() {
+        const cartSidebar = document.getElementById('cart-sidebar');
+        if (!cartSidebar) return;
+
+        this.isOpen = !this.isOpen;
+        cartSidebar.classList.toggle('open', this.isOpen);
+        
+        if (this.isOpen) {
+            this.updateCartDisplay();
+        }
+    }
+
     updateCartDisplay() {
         const cartContainer = document.getElementById('cart-items');
         const cartSidebar = document.getElementById('cart-sidebar');
+        const checkoutBtn = document.getElementById('process-order');
         if (!cartContainer) return;
 
-        // Update cart visibility
+        // Update cart visibility and state
         if (cartSidebar) {
             cartSidebar.classList.toggle('empty', this.cart.length === 0);
+        }
+
+        // Disable checkout button if cart is empty
+        if (checkoutBtn) {
+            checkoutBtn.disabled = this.cart.length === 0;
         }
 
         // Show empty cart message
         if (this.cart.length === 0) {
             cartContainer.innerHTML = `
                 <div class="empty-cart">
+                    <div class="empty-cart-icon">🛒</div>
                     <p class="empty-cart-message">Your cart is empty</p>
-                    <p class="empty-cart-sub">Add some books to get started!</p>
+                    <p class="empty-cart-sub">Browse our collection and add some books!</p>
                 </div>`;
             document.getElementById('cart-total').textContent = '0.00';
             return;
         }
 
-        // Show cart items
-        cartContainer.innerHTML = this.cart.map(item => `
+        // Show cart items with animation
+        cartContainer.innerHTML = this.cart.map((item, index) => `
+            <div class="cart-item" data-id="${item.id}" style="animation-delay: ${index * 0.1}s;"
             <div class="cart-item" data-id="${item.id}">
                 <div class="item-details">
                     <h3>${item.title}</h3>
