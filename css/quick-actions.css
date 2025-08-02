@@ -1,0 +1,75 @@
+/* Quick Actions styles */
+.quick-actions {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 1000;
+}
+
+.quick-actions-toggle {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s;
+}
+
+.quick-actions-toggle:hover {
+    transform: scale(1.1);
+}
+
+.quick-actions-menu {
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    margin-bottom: 1rem;
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    padding: 0.5rem;
+    display: none;
+}
+
+.quick-actions-menu.active {
+    display: block;
+    animation: slideUp 0.3s ease;
+}
+
+.quick-action-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    color: var(--text-color);
+    text-decoration: none;
+    border-radius: 0.25rem;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+}
+
+.quick-action-item:hover {
+    background-color: var(--background-hover);
+}
+
+.quick-action-item i {
+    width: 1.5rem;
+    text-align: center;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(1rem); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (min-width: 769px) {
+    .quick-actions {
+        display: none;
+    }
+}

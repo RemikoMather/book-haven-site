@@ -17,6 +17,8 @@
     <link rel="stylesheet" href="css/cart.css">
     <link rel="stylesheet" href="css/forms.css">
     <link rel="stylesheet" href="css/notifications.css">
+    <link rel="stylesheet" href="css/breadcrumb.css">
+    <link rel="stylesheet" href="css/quick-actions.css">
     
     <!-- Structured Data -->
     <script type="application/ld+json">
@@ -42,18 +44,34 @@
 <body>
     <a href="#main" class="skip-link">Skip to main content</a>
 
-    <nav class="nav-container">
+    <nav class="nav-container" role="navigation" aria-label="Main navigation">
         <div class="nav-content">
-            <a href="index.html" class="logo">Book Haven</a>
-            <button class="menu-toggle" aria-label="Toggle navigation menu">
+            <a href="index.html" class="logo" aria-label="Book Haven Homepage">Book Haven</a>
+            <button class="menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-menu">
                 <i class="fas fa-bars"></i>
+                <span class="visually-hidden">Menu</span>
             </button>
-            <div class="nav-links">
-                <a href="index.html" aria-current="page">Home</a>
-                <a href="gallery.html">Gallery</a>
-                <a href="about.html">About</a>
-                <a href="custom.html">Custom</a>
-                <a href="contact.html">Contact</a>
+            <div id="nav-menu" class="nav-links" aria-label="Site menu">
+                <a href="index.html" aria-current="page">
+                    <i class="fas fa-home" aria-hidden="true"></i>
+                    <span>Home</span>
+                </a>
+                <a href="gallery.html">
+                    <i class="fas fa-book" aria-hidden="true"></i>
+                    <span>Gallery</span>
+                </a>
+                <a href="about.html">
+                    <i class="fas fa-info-circle" aria-hidden="true"></i>
+                    <span>About</span>
+                </a>
+                <a href="custom.html">
+                    <i class="fas fa-cog" aria-hidden="true"></i>
+                    <span>Custom</span>
+                </a>
+                <a href="contact.html">
+                    <i class="fas fa-envelope" aria-hidden="true"></i>
+                    <span>Contact</span>
+                </a>
             </div>
             <div class="nav-cart">
                 <button class="cart-toggle" aria-label="Open cart">
@@ -154,15 +172,39 @@
         </section>
     </main>
 
+    <div class="quick-actions">
+        <button class="quick-actions-toggle" aria-label="Quick actions menu" aria-expanded="false" aria-controls="quick-actions-menu">
+            <i class="fas fa-plus"></i>
+        </button>
+        <div id="quick-actions-menu" class="quick-actions-menu" role="menu">
+            <a href="#" class="quick-action-item" role="menuitem" onclick="window.cart.showCart()">
+                <i class="fas fa-shopping-cart"></i>
+                <span>View Cart</span>
+            </a>
+            <a href="#footer-subscribe-form" class="quick-action-item" role="menuitem">
+                <i class="fas fa-envelope"></i>
+                <span>Subscribe</span>
+            </a>
+            <a href="contact.html" class="quick-action-item" role="menuitem">
+                <i class="fas fa-phone"></i>
+                <span>Contact Us</span>
+            </a>
+            <button class="quick-action-item" role="menuitem" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                <i class="fas fa-arrow-up"></i>
+                <span>Back to Top</span>
+            </button>
+        </div>
+    </div>
+
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-section">
                 <h3>Book Haven</h3>
                 <p>Your Literary Sanctuary</p>
                 <div class="social-links">
-                    <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
-                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-link" aria-label="Follow us on Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="social-link" aria-label="Follow us on Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link" aria-label="Follow us on Instagram"><i class="fab fa-instagram"></i></a>
                 </div>
             </div>
 
@@ -193,6 +235,7 @@
     <script src="js/cart-manager-v2.js" type="module"></script>
     <script src="js/mobile-nav.js" type="module"></script>
     <script src="js/newsletter.js" type="module"></script>
+    <script src="js/quick-actions.js" type="module"></script>
     <script src="js/script.js" type="module"></script>
 </body>
 </html>
