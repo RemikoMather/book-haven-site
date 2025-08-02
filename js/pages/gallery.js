@@ -10,6 +10,18 @@ const BookGallery = {
         sort: 'title'
     },
 
+    cartActions: {
+        addToCart(book) {
+            CartManager.addItem({
+                id: book.id,
+                title: book.title,
+                price: book.price,
+                image: book.image_url,
+                quantity: 1
+            });
+        }
+    },
+
     async init() {
         this.setupEventListeners();
         await this.loadBooks();

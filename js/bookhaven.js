@@ -3,10 +3,9 @@ const BookHaven = {
     // Initialize all components
     init() {
         this.initializeNavigation();
-        if (window.Cart) Cart.init();
+        if (window.CartManager) CartManager.init();
         if (window.ContactForm) ContactForm.init();
         if (window.CustomPage) CustomPage.init();
-        this.initializeFooter();
     },
 
     // Navigation highlighting
@@ -18,6 +17,29 @@ const BookHaven = {
                 link.setAttribute('aria-current', 'page');
             }
         });
+    },
+
+    // Modal System
+    showModal({ title, content, footer }) {
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.innerHTML = `
+            <div class="modal-content">
+                ${title ? `<div class="modal-header"><h3>${title}</h3></div>` : ''}
+                <div class="modal-body">${content}</div>
+                ${footer ? `<div class="modal-footer">${footer}</div>` : ''}
+            </div>
+        `;
+        document.body.appendChild(modal);
+        setTimeout(() => modal.classList.add('active'), 10);
+    },
+
+    closeModal(element) {
+        const modal = element.closest('.modal');
+        if (modal) {
+            modal.classList.remove('active');
+            setTimeout(() => modal.remove(), 300);
+        }
     },
 
     // Footer with newsletter

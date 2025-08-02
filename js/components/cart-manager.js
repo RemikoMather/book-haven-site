@@ -2,7 +2,6 @@
 const CartManager = {
     async init() {
         this.loadFromStorage();
-        await this.syncWithServer();
         this.setupEventListeners();
         this.updateUI();
     },
@@ -16,7 +15,7 @@ const CartManager = {
             }
         });
 
-        // Add keyboard navigation for cart items
+        // Add keyboard navigation for cart
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 this.closeCart();
@@ -24,58 +23,20 @@ const CartManager = {
         });
     },
 
-    async syncWithServer() {
-        if (BookHavenState.user) {
-            try {
-                const serverCart = await BookHavenAPI.cart.get();
-                await this.mergeWithServer(serverCart);
-            } catch (error) {
-                console.error('Cart sync error:', error);
-            }
-        }
-    },
-
-    async mergeWithServer(serverCart) {
-        const localItems = new Map(BookHavenState.cart.items.map(item => [item.id, item]));
-        const serverItems = new Map(serverCart.items.map(item => [item.id, item]));
-
-        // Merge items, preferring server quantities but keeping local items
-        const mergedItems = [];
-        for (const [id, serverItem] of serverItems) {
-            const localItem = localItems.get(id);
-            if (localItem) {
-                mergedItems.push({
-                    ...serverItem,
-                    quantity: Math.max(serverItem.quantity, localItem.quantity)
-                });
-                localItems.delete(id);
-            } else {
-                mergedItems.push(serverItem);
-            }
-        }
-
-        // Add remaining local items
-        mergedItems.push(...localItems.values());
-
-        BookHavenState.cart.items = mergedItems;
-        this.saveToStorage();
-        this.updateUI();
-    },
-
     async addItem(item) {
-        const existingItem = BookHavenState.cart.items.find(i => i.id === item.id);
+        const cart = JSON.parse(sessionStorage.getItem('cart')) || [];
+        const existingItem = cart.find(i => i.id === item.id);
         
         if (existingItem) {
             existingItem.quantity += 1;
         } else {
-            BookHavenState.cart.items.push({
+            cart.push({
                 ...item,
                 quantity: 1
             });
         }
 
-        BookHavenState.updateCartTotal();
-        this.saveToStorage();
+        sessionStorage.setItem('cart', JSON.stringify(cart));
         this.updateUI();
 
         // Show success feedback
@@ -100,66 +61,39 @@ const CartManager = {
             `
         });
 
-        // Sync with server if logged in
-        if (BookHavenState.user) {
-            try {
-                await BookHavenAPI.cart.addItem(item);
-            } catch (error) {
-                console.error('Error syncing cart:', error);
-            }
-        }
     },
 
     async removeItem(itemId) {
-        BookHavenState.cart.items = BookHavenState.cart.items.filter(item => item.id !== itemId);
-        BookHavenState.updateCartTotal();
-        this.saveToStorage();
+        const cart = JSON.parse(sessionStorage.getItem('cart')) || [];
+        const updatedCart = cart.filter(item => item.id !== itemId);
+        sessionStorage.setItem('cart', JSON.stringify(updatedCart));
         this.updateUI();
-
-        if (BookHavenState.user) {
-            try {
-                await BookHavenAPI.cart.removeItem(itemId);
-            } catch (error) {
-                console.error('Error removing item:', error);
-            }
-        }
+        this.showCart(); // Refresh cart display
     },
 
     async updateQuantity(itemId, quantity) {
-        const item = BookHavenState.cart.items.find(i => i.id === itemId);
+        const cart = JSON.parse(sessionStorage.getItem('cart')) || [];
+        const item = cart.find(i => i.id === itemId);
+        
         if (item) {
             item.quantity = Math.max(0, quantity);
             if (item.quantity === 0) {
                 await this.removeItem(itemId);
             } else {
-                BookHavenState.updateCartTotal();
-                this.saveToStorage();
+                sessionStorage.setItem('cart', JSON.stringify(cart));
                 this.updateUI();
-
-                if (BookHavenState.user) {
-                    try {
-                        await BookHavenAPI.cart.updateItem(itemId, { quantity });
-                    } catch (error) {
-                        console.error('Error updating quantity:', error);
-                    }
-                }
             }
         }
     },
 
     async clear() {
-        BookHavenState.cart.items = [];
-        BookHavenState.updateCartTotal();
-        this.saveToStorage();
+        sessionStorage.removeItem('cart');
         this.updateUI();
-
-        if (BookHavenState.user) {
-            try {
-                await BookHavenAPI.cart.clear();
-            } catch (error) {
-                console.error('Error clearing cart:', error);
-            }
-        }
+        BookHaven.showModal({
+            title: 'Cart Cleared',
+            content: '<p>Your shopping cart has been cleared.</p>',
+            footer: '<button class="btn" onclick="BookHaven.closeModal(this)">Close</button>'
+        });
     },
 
     showCart() {
@@ -210,91 +144,72 @@ const CartManager = {
         });
     },
 
-    async checkout() {
-        if (!BookHavenState.user) {
+    async processOrder() {
+        const cart = JSON.parse(sessionStorage.getItem('cart')) || [];
+        if (cart.length === 0) {
             BookHaven.showModal({
-                title: 'Sign In Required',
-                content: `
-                    <p>Please sign in to complete your purchase.</p>
-                    <form id="login-form" onsubmit="CartManager.handleLogin(event)">
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" id="email" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="password">Password</label>
-                            <input type="password" id="password" required>
-                        </div>
-                    </form>
-                `,
-                footer: `
-                    <button class="btn btn-outline" onclick="BookHaven.closeModal(this)">Cancel</button>
-                    <button class="btn" form="login-form">Sign In & Checkout</button>
-                `
+                title: 'Error',
+                content: '<p>Cannot process an empty cart</p>',
+                footer: '<button class="btn" onclick="BookHaven.closeModal(this)">Close</button>'
             });
             return;
         }
 
-        try {
-            const order = await BookHavenAPI.orders.create({
-                items: BookHavenState.cart.items,
-                total: BookHavenState.cart.total
-            });
+        // Show processing state
+        BookHaven.showModal({
+            title: 'Processing Order',
+            content: `
+                <div class="processing-message">
+                    <h4>Processing Your Order</h4>
+                    <p>Please wait while we process your order...</p>
+                    <div class="spinner"></div>
+                </div>
+            `
+        });
 
+        // Simulate order processing
+        setTimeout(async () => {
             await this.clear();
-
             BookHaven.showModal({
                 title: 'Order Confirmed',
                 content: `
                     <div class="success-message">
                         <h4>Thank You for Your Order!</h4>
-                        <p>Order #: ${order.id}</p>
+                        <p>Your order has been processed successfully!</p>
                         <p>We'll send you an email confirmation shortly.</p>
                     </div>
-                `
+                `,
+                footer: '<button class="btn" onclick="BookHaven.closeModal(this)">Continue Shopping</button>'
             });
-        } catch (error) {
-            BookHaven.showModal({
-                title: 'Checkout Error',
-                content: `
-                    <div class="error-message">
-                        <p>Sorry, there was an error processing your order.</p>
-                        <p>${error.message}</p>
-                    </div>
-                `
-            });
-        }
+        }, 2000);
     },
 
     loadFromStorage() {
-        const savedCart = localStorage.getItem('cart');
-        if (savedCart) {
-            BookHavenState.cart = JSON.parse(savedCart);
-        }
+        const cart = sessionStorage.getItem('cart');
+        return cart ? JSON.parse(cart) : [];
     },
 
-    saveToStorage() {
-        localStorage.setItem('cart', JSON.stringify(BookHavenState.cart));
+    getTotal() {
+        const cart = this.loadFromStorage();
+        return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     },
 
     updateUI() {
         // Update cart count badge
         const cartCount = document.querySelector('.cart-count');
         if (cartCount) {
-            const totalItems = BookHavenState.cart.items.reduce((sum, item) => sum + item.quantity, 0);
+            const cart = this.loadFromStorage();
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
             cartCount.textContent = totalItems;
             cartCount.hidden = totalItems === 0;
-        }
-
-        // Update cart button state
-        const cartButton = document.querySelector('[onclick="CartManager.showCart()"]');
-        if (cartButton) {
-            cartButton.disabled = BookHavenState.cart.items.length === 0;
         }
     },
 
     closeCart() {
-        BookHaven.closeModal(document.querySelector('.modal'));
+        const modal = document.querySelector('.modal');
+        if (modal) {
+            BookHaven.closeModal(modal);
+        }
     }
 };
 
