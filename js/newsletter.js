@@ -3,17 +3,13 @@ import { supabase } from './config.js';
 // Newsletter subscription handling
 class NewsletterSubscription {
     constructor() {
-        this.mainForm = document.querySelector('.subscribe-form');
-        this.footerForm = document.getElementById('footer-subscribe-form');
+        this.form = document.getElementById('footer-subscribe-form');
         this.setupEventListeners();
     }
 
     setupEventListeners() {
-        if (this.mainForm) {
-            this.mainForm.addEventListener('submit', (e) => this.handleSubmit(e));
-        }
-        if (this.footerForm) {
-            this.footerForm.addEventListener('submit', (e) => this.handleSubmit(e));
+        if (this.form) {
+            this.form.addEventListener('submit', (e) => this.handleSubmit(e));
         }
     }
 
