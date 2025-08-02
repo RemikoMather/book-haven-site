@@ -1,20 +1,38 @@
 class CartManager {
     constructor() {
-        this.items = JSON.parse(sessionStorage.getItem('cart') || '[]');
+        this.items = JSON.parse(localStorage.getItem('cart') || '[]');
+        this.maxItems = 99;
         this.updateUI();
         this.setupListeners();
     }
 
     addItem(item) {
         const existingItem = this.items.find(i => i.id === item.id);
+        const totalItems = this.items.reduce((sum, i) => sum + i.quantity, 0);
+        
+        if (totalItems >= this.maxItems) {
+            this.showNotification('Cart is full (maximum 99 items)', 'error');
+            return false;
+        }
+
         if (existingItem) {
+            if (existingItem.quantity >= 99) {
+                this.showNotification('Maximum quantity reached for this item', 'error');
+                return false;
+            }
             existingItem.quantity += 1;
         } else {
-            this.items.push({ ...item, quantity: 1 });
+            this.items.push({ 
+                ...item, 
+                quantity: 1,
+                price: Number(item.price).toFixed(2),
+                addedAt: new Date().toISOString()
+            });
         }
         this.saveToStorage();
         this.updateUI();
-        this.showNotification(`Added "${item.name}" to cart`);
+        this.showNotification(`Added "${item.name}" to cart`, 'success');
+        return true;
     }
 
     removeItem(id) {
@@ -44,7 +62,9 @@ class CartManager {
     }
 
     saveToStorage() {
-        sessionStorage.setItem('cart', JSON.stringify(this.items));
+        localStorage.setItem('cart', JSON.stringify(this.items));
+        // Backup to sessionStorage for redundancy
+        sessionStorage.setItem('cart_backup', JSON.stringify(this.items));
     }
 
     updateUI() {
@@ -52,7 +72,21 @@ class CartManager {
         if (count) {
             const totalItems = this.items.reduce((sum, item) => sum + item.quantity, 0);
             count.textContent = totalItems;
+            // Add visual indication if cart is nearly full
+            count.classList.toggle('cart-count--near-full', totalItems >= this.maxItems * 0.8);
         }
+    }
+
+    showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `notification notification--${type} fade-in`;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.classList.add('fade-out');
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
     }
 
     getTotal() {

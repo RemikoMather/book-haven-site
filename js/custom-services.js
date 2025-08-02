@@ -3,10 +3,46 @@ document.addEventListener('DOMContentLoaded', () => {
     const serviceSelect = document.getElementById('service-type');
     const description = document.getElementById('description');
     const timeline = document.getElementById('timeline');
+    const formKey = 'customOrderDraft';
+    let autoSaveTimer;
 
     // Set minimum date to today
     const today = new Date().toISOString().split('T')[0];
     timeline.min = today;
+
+    // Load saved draft if exists
+    const savedDraft = localStorage.getItem(formKey);
+    if (savedDraft) {
+        const draft = JSON.parse(savedDraft);
+        Object.entries(draft).forEach(([key, value]) => {
+            if (form.elements[key]) {
+                form.elements[key].value = value;
+            }
+        });
+        showNotification('Draft loaded from your last session', 'info');
+    }
+
+    // Auto-save form data
+    function autoSaveForm() {
+        const formData = new FormData(form);
+        const data = {};
+        formData.forEach((value, key) => {
+            data[key] = value;
+        });
+        localStorage.setItem(formKey, JSON.stringify(data));
+        showNotification('Draft saved', 'success', 1000);
+    }
+
+    // Debounced auto-save on input
+    function debouncedAutoSave() {
+        clearTimeout(autoSaveTimer);
+        autoSaveTimer = setTimeout(autoSaveForm, 1000);
+    }
+
+    // Add auto-save to form inputs
+    form.querySelectorAll('input, textarea, select').forEach(input => {
+        input.addEventListener('input', debouncedAutoSave);
+    });
 
     // Handle service card links
     document.querySelectorAll('[data-service]').forEach(link => {
@@ -56,10 +92,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: new FormData(form)
             });
             
+            // Clear saved draft after successful submission
+            localStorage.removeItem('customOrderDraft');
             showSuccess('Request submitted successfully!');
             form.reset();
         } catch (error) {
             showError(null, 'Failed to submit request. Please try again.');
+            // Save current form state in case of error
+            debouncedAutoSave();
         } finally {
             submitButton.disabled = false;
             submitButton.querySelector('.loading-indicator').style.display = 'none';
