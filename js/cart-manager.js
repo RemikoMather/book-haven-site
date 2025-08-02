@@ -1,7 +1,32 @@
 class CartManager {
     constructor() {
         this.cart = JSON.parse(sessionStorage.getItem('bookCart')) || [];
+        this.listeners = new Set();
         this.updateCartDisplay();
+        
+        // Listen for storage events to sync cart across tabs
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'bookCart') {
+                this.cart = JSON.parse(e.newValue || '[]');
+                this.notifyListeners();
+                this.updateCartDisplay();
+            }
+        });
+    }
+
+    // Add listener for cart updates
+    addListener(callback) {
+        this.listeners.add(callback);
+    }
+
+    // Remove listener
+    removeListener(callback) {
+        this.listeners.delete(callback);
+    }
+
+    // Notify all listeners of cart changes
+    notifyListeners() {
+        this.listeners.forEach(callback => callback(this.cart));
     }
 
     addItem(book) {
@@ -17,6 +42,7 @@ class CartManager {
             });
         }
         this.saveCart();
+        this.notifyListeners();
         this.showAlert('Item added to cart!', 'success');
     }
 
@@ -74,14 +100,23 @@ class CartManager {
     }
 
     saveCart() {
-        sessionStorage.setItem('bookCart', JSON.stringify(this.cart));
+        const cartData = JSON.stringify(this.cart);
+        sessionStorage.setItem('bookCart', cartData);
         this.updateCartCount();
+        // Dispatch storage event for cross-tab sync
+        window.dispatchEvent(new StorageEvent('storage', {
+            key: 'bookCart',
+            newValue: cartData,
+            url: window.location.href
+        }));
     }
 
     updateCartCount() {
-        const count = this.cart.reduce((total, item) => total + item.quantity, 0);
-        document.querySelectorAll('.cart-count').forEach(el => {
-            el.textContent = count;
+        requestAnimationFrame(() => {
+            const count = this.cart.reduce((total, item) => total + item.quantity, 0);
+            document.querySelectorAll('.cart-count').forEach(el => {
+                el.textContent = count;
+            });
         });
     }
 

@@ -18,6 +18,49 @@
     box-shadow: var(--box-shadow);
 }
 
+/* Add to Cart Button States */
+.add-to-cart {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.add-to-cart.loading {
+    background-color: var(--accent-color-light);
+    cursor: wait;
+}
+
+.add-to-cart.loading::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    left: 50%;
+    margin: -10px 0 0 -10px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: button-loading-spinner 0.8s linear infinite;
+}
+
+.add-to-cart.in-cart {
+    background-color: var(--success-color);
+}
+
+.add-to-cart.in-cart::before {
+    content: '✓';
+    margin-right: 0.5rem;
+}
+
+@keyframes button-loading-spinner {
+    from {
+        transform: rotate(0turn);
+    }
+    to {
+        transform: rotate(1turn);
+    }
+}
+
 .item-image {
     width: 80px;
     height: 120px;

@@ -26,6 +26,9 @@ const books = [
     }
 ];
 
+// Create cart manager instance
+const cartManager = new CartManager();
+
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize gallery
     const bookGrid = document.getElementById('book-grid');
@@ -35,6 +38,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const sortFilter = document.getElementById('sort-filter');
     const cartSidebar = document.getElementById('cart-sidebar');
     const closeCartBtn = document.querySelector('.close-cart');
+    
+    // Listen for cart updates
+    cartManager.addListener(() => {
+        // Update any book cards that are in the cart
+        document.querySelectorAll('.book-card').forEach(card => {
+            const bookId = card.dataset.id;
+            const inCart = cartManager.cart.some(item => item.id === bookId);
+            card.querySelector('.add-to-cart').classList.toggle('in-cart', inCart);
+        });
+    });
 
     // Populate category filter
     const categories = [...new Set(books.map(book => book.category))];
@@ -73,7 +86,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 const bookId = e.target.dataset.bookId;
                 const book = books.find(b => b.id === bookId);
                 if (book) {
+                    // Add loading state to button
+                    const btn = e.target;
+                    btn.disabled = true;
+                    btn.classList.add('loading');
+                    
+                    // Add item to cart
                     cartManager.addItem(book);
+                    
+                    // Remove loading state
+                    setTimeout(() => {
+                        btn.disabled = false;
+                        btn.classList.remove('loading');
+                        btn.classList.add('in-cart');
+                    }, 300);
                 }
             });
         });
