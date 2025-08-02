@@ -1,18 +1,18 @@
 {
+  "name": "book-haven-site",
+  "version": "1.0.0",
+  "description": "Book Haven Bookstore Website",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx http-server . -c-1 -p 8080",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "dependencies": {
-    "@supabase/supabase-js": "^2.53.0"
+    "http-server": "^14.1.1"
   },
-  "styles": [
-    {
-      "href": "https://fonts.googleapis.com/css?family=Inter:400,700&display=swap",
-      "rel": "stylesheet"
-    }
-  ],
-  "body": {
-    "font-family": "'Inter', Arial, sans-serif",
-    "background": "#fdf6ee",
-    "margin": "0"
-  },
+  "devDependencies": {},
+  "author": "",
+  "license": "ISC"},
   "header": {
     "display": "flex",
     "align-items": "center",

@@ -3,343 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Explore Book Haven's collection of books - browse, search, and shop our carefully curated selection">
     <title>Book Gallery - Book Haven</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/bookhaven-styles.css">
-    <link rel="stylesheet" href="css/cart.css">
-    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-    <script src="js/cart-manager.js" defer></script>
-    <script src="js/gallery.js" defer></script>
+    <link rel="stylesheet" href="css/design.css">
+    <link rel="stylesheet" href="css/gallery.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <a href="#main" class="skip-link">Skip to main content</a>
-
     <!-- Navigation -->
-    <nav class="navbar">
-        <div class="container">
-            <div class="nav-left">
-                <a href="index.html" class="logo">Book Haven</a>
-            </div>
-            <div class="nav-right">
-                <button class="cart-toggle" aria-label="Open cart" onclick="cartManager.toggleCart()">
-                    <span class="cart-icon">🛒</span>
-                    <span class="cart-count">0</span>
-                </button>
-            </div>
-            <button class="mobile-menu-btn" aria-label="Toggle menu">
-                <span></span><span></span><span></span>
-            </button>
-            <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="gallery.html" aria-current="page">Gallery</a></li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="custom.html">Custom</a></li>
-                <li><a href="contact.html">Contact</a></li>
-            </ul>
-            <div class="nav-right">
-                <button id="view-cart" class="btn cart-btn" aria-label="View shopping cart">
-                    Cart (<span id="cart-count">0</span>)
-                </button>
+    <nav class="nav-container">
+        <div class="nav-content">
+            <a href="/" class="logo">Book Haven</a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/gallery.html">Gallery</a>
+                <a href="/about.html">About</a>
+                <a href="/custom.html">Custom</a>
             </div>
         </div>
     </nav>
 
-    <!-- Cart Container -->
-    <div class="cart-container" id="cart-container">
-        <div class="cart-header">
-            <h2>Shopping Cart</h2>
-            <button class="cart-close" aria-label="Close cart">&times;</button>
-        </div>
-        <div class="cart-items" id="cart-items">
-            <!-- Cart items will be dynamically added here -->
-        </div>
-        <div class="cart-footer">
-            <div class="cart-total">
-                <span>Total:</span>
-                <span>$<span id="cart-total">0.00</span></span>
-            </div>
-            <div class="cart-actions">
-                <button class="btn btn-secondary" onclick="cartManager.clearCart()">Clear Cart</button>
-                <button class="btn btn-primary" onclick="cartManager.processOrder()">Process Order</button>
-            </div>
-        </div>
-    </div>
-
-    <main id="main" class="container">
-        <section class="gallery-header">
+    <!-- Gallery Header -->
+    <header class="page-header">
+        <div class="container">
             <h1>Book Gallery</h1>
-            <div class="search-controls">
-                <div class="search-input">
-                    <input type="search" id="book-search" 
-                           placeholder="Search by title, author, or ISBN"
-                           aria-label="Search books">
-                </div>
-                <div class="filters">
-                    <select id="category-filter" aria-label="Filter by category">
-                        <option value="">All Categories</option>
-                    </select>
-                    <select id="price-filter" aria-label="Filter by price">
-                        <option value="">Any Price</option>
-                        <option value="0-25">Under $25</option>
-                        <option value="25-50">$25 - $50</option>
-                        <option value="50+">Over $50</option>
-                    </select>
-                    <select id="sort-filter" aria-label="Sort by">
-                        <option value="title">Title A-Z</option>
-                        <option value="-title">Title Z-A</option>
-                        <option value="price">Price Low-High</option>
-                        <option value="-price">Price High-Low</option>
-                    </select>
-                </div>
-            </div>
-        </section>
-
-        <section class="book-gallery">
-            <div id="book-grid" class="book-grid" role="list">
-                <!-- Book cards will be dynamically inserted here -->
-            </div>
-            
-            <div id="no-results" class="no-results" style="display: none;">
-                <p>No books found matching your search criteria.</p>
-            </div>
-            <div class="load-more" hidden>
-                <button class="btn btn-outline" onclick="BookGallery.loadMore()">
-                    Load More Books
-                </button>
-            </div>
-        </section>
-
-        <!-- Book card template -->
-        <template id="book-card-template">
-            <div class="book-card" role="listitem" tabindex="0">
-                <div class="book-image">
-                    <img src="" alt="" loading="lazy">
-                    <div class="book-overlay">
-                        <button class="btn btn-outline view-details">View Details</button>
-                        <button class="btn add-to-cart">Add to Cart</button>
-                    </div>
-                </div>
-                <div class="book-info">
-                    <h3 class="book-title"></h3>
-                    <p class="book-author"></p>
-                    <p class="book-price"></p>
-                    <div class="book-rating"></div>
-                </div>
-            </div>
-        </template>
-
-        <!-- Book details template -->
-        <template id="book-details-template">
-            <div class="book-details">
-                <div class="book-main">
-                    <div class="book-image">
-                        <img src="" alt="">
-                    </div>
-                    <div class="book-info">
-                        <h2 class="book-title"></h2>
-                        <p class="book-author"></p>
-                        <p class="book-price"></p>
-                        <div class="book-rating"></div>
-                        <p class="book-description"></p>
-                        <div class="book-meta">
-                            <p class="book-isbn"></p>
-                            <p class="book-category"></p>
-                            <p class="book-stock"></p>
-                        </div>
-                        <div class="quantity-selector">
-                            <button class="btn btn-icon" onclick="this.parentNode.querySelector('input').stepDown()">-</button>
-                            <input type="number" value="1" min="1" max="99">
-                            <button class="btn btn-icon" onclick="this.parentNode.querySelector('input').stepUp()">+</button>
-                        </div>
-                        <button class="btn add-to-cart">Add to Cart</button>
-                    </div>
-                </div>
-                <div class="book-reviews">
-                    <h3>Customer Reviews</h3>
-                    <div class="reviews-summary">
-                        <div class="average-rating"></div>
-                        <div class="rating-bars"></div>
-                    </div>
-                    <div class="reviews-list"></div>
-                    <form class="review-form" data-validate data-form-type="review">
-                        <input type="hidden" name="bookId">
-                        <div class="rating-input">
-                            <label>Your Rating</label>
-                            <div class="star-rating">
-                                <input type="radio" name="rating" value="5" id="star5">
-                                <label for="star5">★</label>
-                                <input type="radio" name="rating" value="4" id="star4">
-                                <label for="star4">★</label>
-                                <input type="radio" name="rating" value="3" id="star3">
-                                <label for="star3">★</label>
-                                <input type="radio" name="rating" value="2" id="star2">
-                                <label for="star2">★</label>
-                                <input type="radio" name="rating" value="1" id="star1">
-                                <label for="star1">★</label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="review-comment">Your Review</label>
-                            <textarea id="review-comment" name="comment" required
-                                    placeholder="What did you think about this book?"></textarea>
-                        </div>
-                        <button type="submit" class="btn">Submit Review</button>
-                    </form>
-                </div>
-            </div>
-        </template>
-                </button>
-                <button class="filter-btn" data-filter="mystery" role="tab" aria-selected="false">
-                    Mystery
-                </button>
-                <button class="filter-btn" data-filter="nonfiction" role="tab" aria-selected="false">
-                    Non-Fiction
-                </button>
-                <button class="filter-btn" data-filter="classics" role="tab" aria-selected="false">
-                    Classics
-                </button>
-            </div>
-
-            <div class="gallery-grid" role="tabpanel">
-                <div class="gallery-item" data-category="fiction" data-id="1" data-price="24.99">
-                    <img src="images/books/fiction1.jpg" 
-                         alt="The Great Adventure" 
-                         loading="lazy"
-                         onerror="this.onerror=null; this.src='images/placeholder.jpg';">
-                    <h3>The Great Adventure</h3>
-                    <p class="book-author">By Jane Smith</p>
-                    <p class="price">$24.99</p>
-                    <button class="btn add-to-cart">Add to Cart</button>
-                    <figcaption class="book-description">A thrilling journey through uncharted territories</figcaption>
-                </div>
-                <div class="gallery-item" data-category="mystery" data-id="2" data-price="29.99">
-                    <img src="images/books/mystery1.jpg" 
-                         alt="Midnight Mystery" 
-                         loading="lazy"
-                         onerror="this.onerror=null; this.src='images/placeholder.jpg';">
-                    <h3>Midnight Mystery</h3>
-                    <p class="book-author">By John Doe</p>
-                    <p class="price">$29.99</p>
-                    <button class="btn add-to-cart">Add to Cart</button>
-                    <figcaption class="book-description">A gripping detective story set in Victorian London</figcaption>
-                </div>
-                <div class="gallery-item" data-category="nonfiction" data-id="3" data-price="34.99">
-                    <img src="images/books/nonfiction1.jpg" 
-                         alt="The Art of Coding" 
-                         loading="lazy"
-                         onerror="this.onerror=null; this.src='images/placeholder.jpg';">
-                    <h3>The Art of Coding</h3>
-                    <p class="book-author">By Sarah Johnson</p>
-                    <p class="price">$34.99</p>
-                    <button class="btn add-to-cart">Add to Cart</button>
-                    <figcaption class="book-description">A comprehensive guide to modern programming</figcaption>
-                </div>
-                <div class="gallery-item" data-category="classics" data-id="4" data-price="19.99">
-                    <img src="images/books/classic1.jpg" 
-                         alt="Pride and Prejudice" 
-                         loading="lazy"
-                         onerror="this.onerror=null; this.src='images/placeholder.jpg';">
-                    <h3>Pride and Prejudice</h3>
-                    <p class="book-author">By Jane Austen</p>
-                    <p class="price">$19.99</p>
-                    <button class="btn add-to-cart">Add to Cart</button>
-                    <figcaption class="book-description">A timeless classic of romance and social commentary</figcaption>
-                </div>
-            </div>
-
-        </section>
-
-        <div class="lightbox" id="gallery-lightbox" role="dialog" aria-modal="true" aria-hidden="true">
-            <button class="lightbox-close" aria-label="Close image viewer">&times;</button>
-            <button class="lightbox-prev" aria-label="Previous image">&lt;</button>
-            <div class="lightbox-content">
-                <img src="" alt="" class="lightbox-image">
-                <p class="lightbox-caption" aria-live="polite"></p>
-            </div>
-            <button class="lightbox-next" aria-label="Next image">&gt;</button>
+            <p>Explore our curated collection of literary treasures</p>
         </div>
+    </header>
+
+    <!-- Filter Section -->
+    <section class="filters container">
+        <div class="filter-grid">
+            <div class="filter-group">
+                <label for="categoryFilter" class="caption">Category</label>
+                <select id="categoryFilter" class="form-input">
+                    <option value="">All Categories</option>
+                    <option value="fiction">Fiction</option>
+                    <option value="non-fiction">Non-Fiction</option>
+                    <option value="children">Children's Books</option>
+                    <option value="poetry">Poetry</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="sortFilter" class="caption">Sort By</label>
+                <select id="sortFilter" class="form-input">
+                    <option value="newest">Newest First</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="name">Name: A to Z</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="searchInput" class="caption">Search</label>
+                <input type="search" id="searchInput" class="form-input" placeholder="Search books...">
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Grid -->
+    <main class="container section-padding">
+        <div class="product-grid" id="productGrid">
+            <!-- Products will be populated by JavaScript -->
+        </div>
+
+        <!-- Pagination -->
+        <nav class="pagination" aria-label="Page navigation">
+            <button class="btn btn-secondary" aria-label="Previous page">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <div class="page-numbers">
+                <button class="btn active">1</button>
+                <button class="btn">2</button>
+                <button class="btn">3</button>
+            </div>
+            <button class="btn btn-secondary" aria-label="Next page">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </nav>
     </main>
 
-    <footer>
-        <div class="container footer-content">
-            <div>
+    <!-- Cart Controls -->
+    <div class="cart-controls">
+        <button class="btn btn-secondary" id="viewCart">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-count">0</span>
+        </button>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
                 <h3>Book Haven</h3>
-                <p>Your sanctuary for literary discoveries</p>
+                <p>Your Literary Sanctuary</p>
+                <div class="social-links">
+                    <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                </div>
             </div>
-            <div>
-                <h4>Visit Us</h4>
-                <p>123 Bookmark Lane</p>
-                <p>Booktown, BT 12345</p>
-            </div>
-            <div>
-                <h4>Connect</h4>
-                <ul class="social-links">
-                    <li><a href="#">Facebook</a></li>
-                    <li><a href="#">Instagram</a></li>
-                    <li><a href="#">Twitter</a></li>
-                </ul>
+
+            <div class="footer-section">
+                <h3>Newsletter</h3>
+                <form class="footer-newsletter-form">
+                    <div class="form-group">
+                        <input type="email" class="form-input" placeholder="Enter your email" required>
+                    </div>
+                    <button type="submit" class="btn">Subscribe</button>
+                </form>
             </div>
         </div>
     </footer>
 
-    </main>
-
-    <!-- Cart Sidebar -->
-    <div id="cart-sidebar" class="cart-sidebar">
-        <div class="cart-header">
-            <h2>Shopping Cart</h2>
-            <button class="close-cart" aria-label="Close cart">&times;</button>
-        </div>
-        <div id="cart-items" class="cart-items">
-            <!-- Cart items will be dynamically inserted here -->
-        </div>
-        <div class="cart-footer">
-            <div class="cart-total">
-                Total: $<span id="cart-total">0.00</span>
-            </div>
-            <div class="cart-actions">
-                <button id="clear-cart" class="btn btn-secondary">Clear Cart</button>
-                <button id="process-order" class="btn btn-primary">Checkout</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Supabase -->
-    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-    
-    <!-- App scripts -->
-    <script src="js/script.js"></script>
+    <!-- Scripts -->
+    <script src="js/common.js"></script>
+    <script src="js/cart-manager-v2.js"></script>
     <script src="js/gallery.js"></script>
-    <script src="js/cart-manager.js"></script>
-    
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Image error handling
-            document.querySelectorAll('.gallery-item img').forEach(img => {
-                img.addEventListener('error', () => {
-                    img.classList.add('image-error');
-                    img.closest('.gallery-item').classList.add('load-error');
-                });
-            });
-
-            // Cart initialization
-            const cartManager = new CartManager();
-            
-            // Cart UI event listeners
-            const clearCartBtn = document.getElementById('clear-cart');
-            const processOrderBtn = document.getElementById('process-order');
-            const closeCartBtn = document.querySelector('.close-cart');
-            const cartToggleBtn = document.querySelector('.cart-toggle');
-
-            if (clearCartBtn) clearCartBtn.addEventListener('click', () => cartManager.clearCart());
-            if (processOrderBtn) processOrderBtn.addEventListener('click', () => cartManager.processOrder());
-            if (closeCartBtn) closeCartBtn.addEventListener('click', () => cartManager.toggleCart());
-            if (cartToggleBtn) cartToggleBtn.addEventListener('click', () => cartManager.toggleCart());
-
-            // Move cart initialization to window for legacy support
-            window.cartManager = cartManager;
-        });
-    </script>
 </body>
 </html>
