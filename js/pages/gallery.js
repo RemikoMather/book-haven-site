@@ -101,9 +101,15 @@ const BookGallery = {
 
             // Set up buttons
             card.querySelector('.view-details').onclick = () => this.showBookDetails(book);
-            card.querySelector('.add-to-cart').onclick = (e) => {
+            card.querySelector('.add-to-cart').onclick = async (e) => {
                 e.stopPropagation();
-                CartManager.addItem(book);
+                await CartManager.addItem({
+                    id: book.id,
+                    title: book.title,
+                    price: book.price,
+                    image: book.image_url,
+                    quantity: 1
+                });
             };
 
             grid.appendChild(card);
@@ -127,9 +133,12 @@ const BookGallery = {
 
         // Set up add to cart
         const quantityInput = content.querySelector('.quantity-selector input');
-        content.querySelector('.add-to-cart').onclick = () => {
-            CartManager.addItem({
-                ...book,
+        content.querySelector('.add-to-cart').onclick = async () => {
+            await CartManager.addItem({
+                id: book.id,
+                title: book.title,
+                price: book.price,
+                image: book.image_url,
                 quantity: parseInt(quantityInput.value)
             });
         };
