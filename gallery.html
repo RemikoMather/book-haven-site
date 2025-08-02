@@ -10,38 +10,12 @@
     <link rel="stylesheet" href="css/cart.css">
     <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
     <script src="js/cart-manager.js" defer></script>
-    <script>
-        // Sample books data (in a real app, this would come from an API)
-        const books = [
-            {
-                id: '1',
-                title: 'The Great Adventure',
-                author: 'John Smith',
-                price: 24.99,
-                image: 'images/books/adventure1.jpg',
-                category: 'fiction'
-            },
-            {
-                id: '2',
-                title: 'Mystery of the Lost Key',
-                author: 'Sarah Johnson',
-                price: 19.99,
-                image: 'images/books/mystery1.jpg',
-                category: 'mystery'
-            },
-            {
-                id: '3',
-                title: 'The Art of Cooking',
-                author: 'Chef Michael Brown',
-                price: 34.99,
-                image: 'images/books/cooking1.jpg',
-                category: 'non-fiction'
-            }
-        ];
+    <script src="js/gallery.js" defer></script>
 </head>
 <body>
     <a href="#main" class="skip-link">Skip to main content</a>
 
+    <!-- Navigation -->
     <nav class="navbar">
         <div class="container">
             <div class="nav-left">
@@ -117,14 +91,12 @@
 
         <section class="book-gallery">
             <div id="book-grid" class="book-grid" role="list">
-                <!-- Loading state -->
-                <div class="loading-state">
-                    <div class="processing-indicator"></div>
-                    <p>Loading books...</p>
-                </div>
+                <!-- Book cards will be dynamically inserted here -->
             </div>
-
-            <!-- Load More button -->
+            
+            <div id="no-results" class="no-results" style="display: none;">
+                <p>No books found matching your search criteria.</p>
+            </div>
             <div class="load-more" hidden>
                 <button class="btn btn-outline" onclick="BookGallery.loadMore()">
                     Load More Books
@@ -384,30 +356,24 @@
             }
         ];
 
-        // Initialize gallery with books
-        document.addEventListener('DOMContentLoaded', () => {
-            const bookGrid = document.getElementById('book-grid');
-            bookGrid.innerHTML = books.map(book => `
-                <div class="book-card" data-id="${book.id}">
-                    <div class="book-image">
-                        <img src="${book.image}" alt="${book.title}" 
-                             onerror="this.src='images/placeholder.jpg'">
-                        <div class="book-overlay">
-                            <button class="btn btn-primary" 
-                                    onclick="cartManager.addItem(${JSON.stringify(book)})">
-                                Add to Cart
-                            </button>
-                        </div>
-                    </div>
-                    <div class="book-info">
-                        <h3>${book.title}</h3>
-                        <p class="author">by ${book.author}</p>
-                        <p class="price">$${book.price.toFixed(2)}</p>
-                    </div>
-                </div>
-            `).join('');
-        });
-    </script>
+    </main>
+
+    <!-- Cart Sidebar -->
+    <div id="cart-sidebar" class="cart-sidebar">
+        <div class="cart-header">
+            <h2>Shopping Cart</h2>
+            <button class="close-cart" aria-label="Close cart">&times;</button>
+        </div>
+        <div id="cart-items" class="cart-items">
+            <!-- Cart items will be dynamically inserted here -->
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                Total: $<span id="cart-total">0.00</span>
+            </div>
+            <button class="btn btn-secondary" onclick="cartManager.clearCart()">Clear Cart</button>
+            <button class="btn btn-primary" onclick="cartManager.processOrder()">Checkout</button>
+        </div>
+    </div>
 </body>
 </html>
-

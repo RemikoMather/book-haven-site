@@ -1,21 +1,130 @@
-// Utility function for showing alerts
-function showAlert(message) {
-    const alert = document.createElement('div');
-    alert.className = 'alert';
-    alert.textContent = message;
-    document.body.appendChild(alert);
-    
-    setTimeout(() => {
-        alert.remove();
-    }, 3000);
-}
+// Sample books data (in a real app, this would come from an API)
+const books = [
+    {
+        id: '1',
+        title: 'The Great Adventure',
+        author: 'John Smith',
+        price: 24.99,
+        image: 'images/books/adventure1.jpg',
+        category: 'fiction'
+    },
+    {
+        id: '2',
+        title: 'Mystery of the Lost Key',
+        author: 'Sarah Johnson',
+        price: 19.99,
+        image: 'images/books/mystery1.jpg',
+        category: 'mystery'
+    },
+    {
+        id: '3',
+        title: 'The Art of Cooking',
+        author: 'Chef Michael Brown',
+        price: 34.99,
+        image: 'images/books/cooking1.jpg',
+        category: 'non-fiction'
+    }
+];
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Gallery and lightbox elements
-    const gallery = document.querySelector('.gallery-grid');
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    const lightbox = document.querySelector('.lightbox');
-    const lightboxImg = lightbox?.querySelector('.lightbox-image');
+    // Initialize gallery
+    const bookGrid = document.getElementById('book-grid');
+    const searchInput = document.getElementById('book-search');
+    const categoryFilter = document.getElementById('category-filter');
+    const priceFilter = document.getElementById('price-filter');
+    const sortFilter = document.getElementById('sort-filter');
+    const cartSidebar = document.getElementById('cart-sidebar');
+    const closeCartBtn = document.querySelector('.close-cart');
+
+    // Populate category filter
+    const categories = [...new Set(books.map(book => book.category))];
+    categories.forEach(category => {
+        const option = document.createElement('option');
+        option.value = category;
+        option.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+        categoryFilter.appendChild(option);
+    });
+
+    // Initialize book grid
+    function renderBooks(booksToRender) {
+        bookGrid.innerHTML = booksToRender.map(book => `
+            <div class="book-card" data-id="${book.id}" data-category="${book.category}">
+                <div class="book-image">
+                    <img src="${book.image}" alt="${book.title}" 
+                         onerror="this.src='images/placeholder.jpg'">
+                    <div class="book-overlay">
+                        <button class="btn btn-primary add-to-cart" 
+                                data-book-id="${book.id}">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+                <div class="book-info">
+                    <h3>${book.title}</h3>
+                    <p class="author">by ${book.author}</p>
+                    <p class="price">$${book.price.toFixed(2)}</p>
+                </div>
+            </div>
+        `).join('');
+
+        // Add event listeners to Add to Cart buttons
+        document.querySelectorAll('.add-to-cart').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const bookId = e.target.dataset.bookId;
+                const book = books.find(b => b.id === bookId);
+                if (book) {
+                    cartManager.addItem(book);
+                }
+            });
+        });
+    }
+
+    // Initial render
+    renderBooks(books);
+
+    // Filter and search functionality
+    function filterBooks() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const category = categoryFilter.value;
+        const priceRange = priceFilter.value;
+        const sortBy = sortFilter.value;
+
+        let filtered = books.filter(book => {
+            const matchesSearch = book.title.toLowerCase().includes(searchTerm) ||
+                                book.author.toLowerCase().includes(searchTerm);
+            const matchesCategory = !category || book.category === category;
+            const matchesPrice = !priceRange || (() => {
+                const [min, max] = priceRange.split('-').map(Number);
+                return max ? book.price >= min && book.price <= max : book.price >= min;
+            })();
+
+            return matchesSearch && matchesCategory && matchesPrice;
+        });
+
+        // Sort books
+        filtered.sort((a, b) => {
+            if (sortBy === 'title') return a.title.localeCompare(b.title);
+            if (sortBy === '-title') return b.title.localeCompare(a.title);
+            if (sortBy === 'price') return a.price - b.price;
+            if (sortBy === '-price') return b.price - a.price;
+            return 0;
+        });
+
+        renderBooks(filtered);
+        document.getElementById('no-results').style.display = 
+            filtered.length === 0 ? 'block' : 'none';
+    }
+
+    // Event listeners
+    searchInput.addEventListener('input', filterBooks);
+    categoryFilter.addEventListener('change', filterBooks);
+    priceFilter.addEventListener('change', filterBooks);
+    sortFilter.addEventListener('change', filterBooks);
+
+    // Cart sidebar toggle
+    closeCartBtn.addEventListener('click', () => {
+        cartSidebar.classList.remove('open');
+    });
     const lightboxCaption = lightbox?.querySelector('.lightbox-caption');
     const closeBtn = lightbox?.querySelector('.lightbox-close');
     const prevBtn = lightbox?.querySelector('.lightbox-prev');
