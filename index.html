@@ -40,19 +40,16 @@
 <body>
     <a href="#main" class="skip-link">Skip to main content</a>
 
-    <nav class="navbar">
-        <div class="container">
-            <a href="index.html" class="nav-brand">Book Haven</a>
-            <button class="mobile-menu-btn" aria-label="Toggle menu">
-                <span></span><span></span><span></span>
-            </button>
-            <ul class="nav-links">
-                <li><a href="index.html" aria-current="page">Home</a></li>
-                <li><a href="gallery.html">Gallery</a></li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="custom.html">Custom</a></li>
-                <li><a href="contact.html">Contact</a></li>
-            </ul>
+    <nav class="nav-container">
+        <div class="nav-content">
+            <a href="/" class="logo">Book Haven</a>
+            <div class="nav-links">
+                <a href="/" aria-current="page">Home</a>
+                <a href="/gallery.html">Gallery</a>
+                <a href="/about.html">About</a>
+                <a href="/custom.html">Custom</a>
+                <a href="/contact.html">Contact</a>
+            </div>
             <div class="nav-cart">
                 <button class="cart-toggle" aria-label="Open cart">
                     <i class="fas fa-shopping-cart"></i>
@@ -118,19 +115,19 @@
                              onerror="this.src='images/placeholder.jpg'">
                         <h3>Rare Finds</h3>
                         <p>Discover our curated selection of rare and first editions</p>
-                        <a href="collection.html#rare" class="btn btn-secondary">View Collection</a>
+                        <a href="gallery.html?category=rare" class="btn btn-secondary">View Collection</a>
                     </article>
                     <article class="collection-card">
                         <img src="images/new-releases.jpg" alt="New Releases" loading="lazy">
                         <h3>New Arrivals</h3>
                         <p>Fresh off the press: This month's latest releases</p>
-                        <a href="collection.html#new" class="btn btn-secondary">Browse New</a>
+                        <a href="gallery.html?category=new" class="btn btn-secondary">Browse New</a>
                     </article>
                     <article class="collection-card">
                         <img src="images/local-authors.jpg" alt="Local Authors" loading="lazy">
                         <h3>Local Authors</h3>
                         <p>Supporting our community's literary voices</p>
-                        <a href="collection.html#local" class="btn btn-secondary">Meet Authors</a>
+                        <a href="gallery.html?category=local" class="btn btn-secondary">Meet Authors</a>
                     </article>
                 </div>
             </div>
@@ -177,47 +174,33 @@
         </section>
     </main>
 
-    <footer>
-        <div class="container footer-content">
-            <div>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
                 <h3>Book Haven</h3>
-                <p>Your sanctuary for literary discoveries</p>
+                <p>Your Literary Sanctuary</p>
+                <div class="social-links">
+                    <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                </div>
             </div>
-            <div>
-                <h4>Quick Links</h4>
-                <ul>
-                    <li><a href="about.html">About Us</a></li>
-                    <li><a href="events.html">Events</a></li>
-                    <li><a href="contact.html">Contact</a></li>
-                </ul>
+
+            <div class="footer-section">
+                <h3>Newsletter</h3>
+                <form class="footer-newsletter-form">
+                    <div class="form-group">
+                        <input type="email" class="form-input" placeholder="Enter your email" required>
+                    </div>
+                    <button type="submit" class="btn">Subscribe</button>
+                </form>
             </div>
-            <div>
-                <h4>Visit Us</h4>
-                <address>
-                    123 Bookmark Lane<br>
-                    Booktown, BT 12345<br>
-                    Tel: (555) 123-4567
-                </address>
-            </div>
-            <div>
-                <h4>Connect</h4>
-                <ul class="social-links">
-                    <li><a href="#" aria-label="Facebook">Facebook</a></li>
-                    <li><a href="#" aria-label="Instagram">Instagram</a></li>
-                    <li><a href="#" aria-label="Twitter">Twitter</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2024 Book Haven. All rights reserved.</p>
         </div>
     </footer>
 
     <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
-    <script src="js/cart-manager.js"></script>
-    <script type="module" src="js/cart-init.js"></script>
-    <script type="module" src="js/script.js"></script>
-    <script type="module" src="js/newsletter.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/cart-manager-v2.js"></script>
+    <script src="js/script.js"></script>
 </body>
 </html>
