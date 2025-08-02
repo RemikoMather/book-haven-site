@@ -1,0 +1,207 @@
+/* Wireframe Specific Styles */
+:root {
+    /* Only grayscale colors */
+    --wireframe-border: #000;
+    --wireframe-text: #333;
+    --wireframe-placeholder: #eee;
+    --wireframe-label: #666;
+}
+
+/* Wireframe Base Styles */
+.wireframe-box {
+    border: 2px dashed var(--wireframe-border);
+    position: relative;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+.wireframe-box::before {
+    content: attr(data-label);
+    position: absolute;
+    top: -10px;
+    left: 10px;
+    background: white;
+    padding: 0 5px;
+    font-size: 12px;
+    color: var(--wireframe-label);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.wireframe-placeholder {
+    background: var(--wireframe-placeholder);
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: monospace;
+    color: var(--wireframe-label);
+    text-align: center;
+    border: 2px solid var(--wireframe-border);
+    padding: 1rem;
+}
+
+.wireframe-image {
+    background: var(--wireframe-placeholder);
+    aspect-ratio: 16/9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: monospace;
+    color: var(--wireframe-label);
+    border: 2px solid var(--wireframe-border);
+}
+
+.wireframe-text {
+    height: 1rem;
+    background: var(--wireframe-placeholder);
+    margin: 0.5rem 0;
+    width: 100%;
+}
+
+.wireframe-text[data-width="short"] {
+    width: 30%;
+}
+
+.wireframe-text[data-width="medium"] {
+    width: 60%;
+}
+
+.wireframe-text[data-width="long"] {
+    width: 90%;
+}
+
+/* Navigation Wireframe */
+.wireframe-nav {
+    border-bottom: 2px solid var(--wireframe-border);
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.wireframe-logo {
+    width: 120px;
+    height: 40px;
+    border: 2px solid var(--wireframe-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: monospace;
+}
+
+/* Hero Wireframe */
+.wireframe-hero {
+    min-height: 400px;
+    border: 2px solid var(--wireframe-border);
+    margin: 2rem 0;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 1rem;
+    background: var(--wireframe-placeholder);
+}
+
+/* Product Grid Wireframe */
+.wireframe-product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 2rem;
+    padding: 2rem 0;
+}
+
+.wireframe-product {
+    border: 2px solid var(--wireframe-border);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* Form Wireframe */
+.wireframe-form {
+    border: 2px solid var(--wireframe-border);
+    padding: 2rem;
+    max-width: 600px;
+    margin: 2rem auto;
+}
+
+.wireframe-input {
+    width: 100%;
+    height: 40px;
+    border: 2px solid var(--wireframe-border);
+    margin: 0.5rem 0;
+    background: var(--wireframe-placeholder);
+}
+
+.wireframe-textarea {
+    width: 100%;
+    height: 100px;
+    border: 2px solid var(--wireframe-border);
+    margin: 0.5rem 0;
+    background: var(--wireframe-placeholder);
+}
+
+/* Store Hours Table */
+.wireframe-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+}
+
+.wireframe-table th,
+.wireframe-table td {
+    border: 2px solid var(--wireframe-border);
+    padding: 0.5rem;
+    text-align: left;
+}
+
+/* Footer Wireframe */
+.wireframe-footer {
+    border-top: 2px solid var(--wireframe-border);
+    padding: 2rem 0;
+    margin-top: 2rem;
+}
+
+.wireframe-social {
+    display: flex;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.wireframe-social-icon {
+    width: 40px;
+    height: 40px;
+    border: 2px solid var(--wireframe-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: monospace;
+}
+
+/* Mobile Specific */
+@media (max-width: 768px) {
+    .wireframe-nav {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .wireframe-product-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .wireframe-hero {
+        min-height: 300px;
+    }
+}
+
+/* Helper Classes */
+.wireframe-label {
+    font-family: monospace;
+    color: var(--wireframe-label);
+    font-size: 12px;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+}

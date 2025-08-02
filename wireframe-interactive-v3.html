@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Haven - Interactive Wireframe v2</title>
+    <link rel="stylesheet" href="css/wireframe-base.css">
+    <link rel="stylesheet" href="css/wireframe-interactive-v3.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="wireframe-nav" data-label="Main Navigation">
+        <div class="wireframe-logo">LOGO</div>
+        <div class="wireframe-box" data-label="Navigation Links">
+            <div class="wireframe-text" data-width="short">Home</div>
+            <div class="wireframe-text" data-width="short">Gallery</div>
+            <div class="wireframe-text" data-width="short">About</div>
+            <div class="wireframe-text" data-width="short">Events</div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="wireframe-hero" data-label="Hero Banner">
+        <div class="wireframe-text" data-width="long">Welcome to Book Haven</div>
+        <div class="wireframe-text" data-width="medium">Your Literary Sanctuary</div>
+    </section>
+
+    <!-- Content Blocks -->
+    <main>
+        <!-- Featured Books -->
+        <section class="wireframe-box" data-label="Featured Books">
+            <div class="wireframe-product-grid">
+                <div class="wireframe-product has-tooltip">
+                    <div class="wireframe-image">Book Cover</div>
+                    <div class="wireframe-text" data-width="medium">Fantasy Adventure</div>
+                    <div class="wireframe-text" data-width="short">$24.99</div>
+                    <button class="wireframe-button wireframe-add-to-cart">Add to Cart</button>
+                    <div class="wireframe-tooltip">Click to add to cart</div>
+                </div>
+                
+                <div class="wireframe-product has-tooltip">
+                    <div class="wireframe-image">Book Cover</div>
+                    <div class="wireframe-text" data-width="medium">Mystery Novel</div>
+                    <div class="wireframe-text" data-width="short">$19.99</div>
+                    <button class="wireframe-button wireframe-add-to-cart">Add to Cart</button>
+                    <div class="wireframe-tooltip">Click to add to cart</div>
+                </div>
+                
+                <div class="wireframe-product has-tooltip">
+                    <div class="wireframe-image">Book Cover</div>
+                    <div class="wireframe-text" data-width="medium">Science Fiction</div>
+                    <div class="wireframe-text" data-width="short">$21.99</div>
+                    <button class="wireframe-button wireframe-add-to-cart">Add to Cart</button>
+                    <div class="wireframe-tooltip">Click to add to cart</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Newsletter Section -->
+        <section class="wireframe-box" data-label="Newsletter Signup">
+            <form class="wireframe-newsletter-form">
+                <div class="wireframe-input-group">
+                    <input type="email" 
+                           class="wireframe-input" 
+                           placeholder="Enter your email"
+                           required
+                           aria-label="Email address">
+                    <div class="wireframe-tooltip">Enter a valid email address</div>
+                </div>
+                <button type="submit" class="wireframe-button">Subscribe</button>
+            </form>
+        </section>
+
+        <!-- Quick Links -->
+        <section class="wireframe-box" data-label="Quick Links">
+            <div class="wireframe-text" data-width="medium">Latest Events</div>
+            <div class="wireframe-text" data-width="medium">Book Categories</div>
+            <div class="wireframe-text" data-width="medium">Reading Lists</div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="wireframe-footer">
+        <div class="wireframe-box" data-label="Footer Content">
+            <div class="wireframe-social">
+                <div class="wireframe-social-icon has-tooltip">
+                    FB
+                    <div class="wireframe-tooltip">Facebook</div>
+                </div>
+                <div class="wireframe-social-icon has-tooltip">
+                    TW
+                    <div class="wireframe-tooltip">Twitter</div>
+                </div>
+                <div class="wireframe-social-icon has-tooltip">
+                    IG
+                    <div class="wireframe-tooltip">Instagram</div>
+                </div>
+            </div>
+            <div class="wireframe-text" data-width="short">© 2025</div>
+        </div>
+    </footer>
+
+    <!-- Cart Controls -->
+    <div class="wireframe-box" data-label="Cart Actions" style="position: fixed; bottom: 20px; right: 20px;">
+        <button class="wireframe-button" onclick="cart.showCart()">View Cart</button>
+        <button class="wireframe-button wireframe-clear-cart">Clear Cart</button>
+        <div class="cart-count">0</div>
+    </div>
+
+    <script src="js/wireframe-interactive-v3.js"></script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+/* Responsive Breakpoints */
+
+/* Mobile-first styles */
+@media (max-width: 374px) {
+    /* Extra small devices */
+    .container {
+        padding: var(--spacing-xs);
+    }
+    
+    .grid {
+        gap: var(--spacing-xs);
+    }
+}
+
+/* Mobile (375px) */
+@media (min-width: 375px) and (max-width: 767px) {
+    .container {
+        width: 100%;
+        max-width: var(--mobile-width);
+    }
+    
+    .grid {
+        gap: var(--spacing-sm);
+    }
+    
+    .grid-2,
+    .grid-3,
+    .grid-4 {
+        grid-template-columns: 1fr;
+    }
+    
+    .header {
+        padding: var(--spacing-sm) 0;
+    }
+    
+    .nav-links {
+        display: none;
+    }
+    
+    .nav-links.active {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .hamburger {
+        display: flex;
+    }
+    
+    .hero {
+        padding: var(--spacing-lg) 0;
+    }
+    
+    .footer {
+        padding: var(--spacing-md) 0;
+    }
+    
+    .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Tablet */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .container {
+        max-width: 720px;
+    }
+    
+    .grid-4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .gallery-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Small desktop */
+@media (min-width: 1024px) and (max-width: 1439px) {
+    .container {
+        max-width: 960px;
+    }
+}
+
+/* Desktop (1440px) */
+@media (min-width: 1440px) {
+    .container {
+        max-width: var(--desktop-width);
+        padding: 0 var(--spacing-lg);
+    }
+    
+    .grid {
+        gap: var(--spacing-md);
+    }
+    
+    .hamburger {
+        display: none;
+    }
+    
+    .nav-links {
+        display: flex !important;
+        gap: var(--spacing-md);
+    }
+    
+    .gallery-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* High-resolution displays */
+@media (min-width: 1920px) {
+    .container {
+        max-width: 1800px;
+    }
+}
+
+/* Print styles */
+@media print {
+    .nav-links,
+    .hamburger,
+    .viewport-indicator {
+        display: none !important;
+    }
+    
+    .container {
+        max-width: none;
+        padding: 0;
+    }
+    
+    body {
+        color: black;
+    }
+    
+    a {
+        text-decoration: none;
+    }
+    
+    .placeholder,
+    .placeholder-text,
+    .placeholder-image {
+        border: 1px solid #ccc;
+    }
+}

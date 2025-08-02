@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Gallery - Book Haven</title>
+    <link rel="stylesheet" href="css/styles-v2.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="container">
+            <div class="nav-content">
+                <a href="/" class="logo">Book Haven</a>
+                <div class="nav-links">
+                    <a href="/">Home</a>
+                    <a href="/gallery.html">Gallery</a>
+                    <a href="/about.html">About</a>
+                    <a href="/events.html">Events</a>
+                    <a href="/contact.html">Contact</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        <h1>Book Gallery</h1>
+
+        <!-- Filter Section -->
+        <section class="filter-section">
+            <select class="form-input" aria-label="Filter by category">
+                <option value="">All Categories</option>
+                <option value="fiction">Fiction</option>
+                <option value="non-fiction">Non-Fiction</option>
+                <option value="children">Children's Books</option>
+            </select>
+
+            <select class="form-input" aria-label="Sort by">
+                <option value="newest">Newest First</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+            </select>
+
+            <input type="search" class="form-input" placeholder="Search books..." aria-label="Search books">
+        </section>
+
+        <!-- Product Grid -->
+        <section class="product-grid">
+            <!-- Row 1 -->
+            <div class="product-card">
+                <img src="placeholder.jpg" alt="Book 1">
+                <h3>The Great Adventure</h3>
+                <p>John Smith</p>
+                <p>$19.99</p>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+
+            <div class="product-card">
+                <img src="placeholder.jpg" alt="Book 2">
+                <h3>Mystery Manor</h3>
+                <p>Sarah Johnson</p>
+                <p>$24.99</p>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+
+            <div class="product-card">
+                <img src="placeholder.jpg" alt="Book 3">
+                <h3>The Lost City</h3>
+                <p>Michael Brown</p>
+                <p>$21.99</p>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+
+            <!-- Row 2 -->
+            <div class="product-card">
+                <img src="placeholder.jpg" alt="Book 4">
+                <h3>Summer Dreams</h3>
+                <p>Emily White</p>
+                <p>$18.99</p>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+
+            <div class="product-card">
+                <img src="placeholder.jpg" alt="Book 5">
+                <h3>The Science of Everything</h3>
+                <p>David Miller</p>
+                <p>$29.99</p>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+
+            <div class="product-card">
+                <img src="placeholder.jpg" alt="Book 6">
+                <h3>Poetry Collection</h3>
+                <p>Lisa Anderson</p>
+                <p>$15.99</p>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+
+            <!-- Row 3 -->
+            <div class="product-card">
+                <img src="placeholder.jpg" alt="Book 7">
+                <h3>Historical Tales</h3>
+                <p>Robert Wilson</p>
+                <p>$22.99</p>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+
+            <div class="product-card">
+                <img src="placeholder.jpg" alt="Book 8">
+                <h3>Future World</h3>
+                <p>Jessica Lee</p>
+                <p>$23.99</p>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+
+            <div class="product-card">
+                <img src="placeholder.jpg" alt="Book 9">
+                <h3>Cooking Adventures</h3>
+                <p>Chef Tom Parker</p>
+                <p>$26.99</p>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+        </section>
+
+        <!-- Pagination -->
+        <nav class="pagination" aria-label="Page navigation">
+            <button class="rsvp-button" aria-label="Previous page">Previous</button>
+            <button class="rsvp-button active">1</button>
+            <button class="rsvp-button">2</button>
+            <button class="rsvp-button">3</button>
+            <button class="rsvp-button" aria-label="Next page">Next</button>
+        </nav>
+
+        <!-- Cart Button -->
+        <button class="cart-button" aria-label="View Cart">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-count">0</span>
+        </button>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="social-icons">
+                    <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-linkedin"></i></a>
+                </div>
+                <p>&copy; 2025 Book Haven. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

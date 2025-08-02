@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Haven - Interactive Wireframe</title>
+    <link rel="stylesheet" href="css/wireframe-base.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="wireframe-nav" data-label="Main Navigation">
+        <div class="wireframe-logo">LOGO</div>
+        <div class="wireframe-box" data-label="Navigation Links">
+            <span class="wireframe-text" data-width="short">Home</span>
+            <span class="wireframe-text" data-width="short">Gallery</span>
+            <span class="wireframe-text" data-width="short">About</span>
+            <span class="wireframe-text" data-width="short">Events</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="wireframe-hero" data-label="Hero Banner">
+        <div class="wireframe-text" data-width="long">Welcome to Book Haven</div>
+        <div class="wireframe-text" data-width="medium">Your Literary Sanctuary</div>
+    </section>
+
+    <!-- Content Blocks -->
+    <main>
+        <!-- Featured Books -->
+        <section class="wireframe-box" data-label="Featured Books">
+            <div class="wireframe-product-grid">
+                <div class="wireframe-product">
+                    <div class="wireframe-image">Book Cover</div>
+                    <div class="wireframe-text" data-width="medium">Book Title</div>
+                    <div class="wireframe-text" data-width="short">Author</div>
+                    <button class="wireframe-button wireframe-add-to-cart">Add to Cart</button>
+                </div>
+                <div class="wireframe-product">
+                    <div class="wireframe-image">Book Cover</div>
+                    <div class="wireframe-text" data-width="medium">Book Title</div>
+                    <div class="wireframe-text" data-width="short">Author</div>
+                    <button class="wireframe-button wireframe-add-to-cart">Add to Cart</button>
+                </div>
+                <div class="wireframe-product">
+                    <div class="wireframe-image">Book Cover</div>
+                    <div class="wireframe-text" data-width="medium">Book Title</div>
+                    <div class="wireframe-text" data-width="short">Author</div>
+                    <button class="wireframe-button wireframe-add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Events Preview -->
+        <section class="wireframe-box" data-label="Upcoming Events">
+            <div class="wireframe-text" data-width="long">Next Event: Author Meet & Greet</div>
+            <div class="wireframe-text" data-width="medium">Date: August 15, 2025</div>
+            <button class="wireframe-button">RSVP</button>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="wireframe-footer">
+        <div class="wireframe-box" data-label="Newsletter Signup">
+            <form class="wireframe-newsletter-form">
+                <div class="wireframe-input" data-label="Email Input">
+                    <input type="email" required placeholder="Enter your email">
+                </div>
+                <button type="submit" class="wireframe-button">Subscribe</button>
+            </form>
+        </div>
+
+        <div class="wireframe-box" data-label="Social Media">
+            <div class="wireframe-social">
+                <div class="wireframe-social-icon">FB</div>
+                <div class="wireframe-social-icon">TW</div>
+                <div class="wireframe-social-icon">IG</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Cart Controls -->
+    <div class="wireframe-box" data-label="Cart Controls" style="position: fixed; bottom: 20px; right: 20px;">
+        <button class="wireframe-button wireframe-clear-cart">Clear Cart</button>
+        <button class="wireframe-button wireframe-process-order">Process Order</button>
+    </div>
+
+    <script src="js/wireframe-interactive.js"></script>
+</body>
+</html>

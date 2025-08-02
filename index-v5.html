@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Haven - Your Literary Sanctuary</title>
+    <link rel="stylesheet" href="css/design-v2.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav-container">
+        <div class="nav-content">
+            <a href="/" class="logo">Book Haven</a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/gallery.html">Gallery</a>
+                <a href="/about.html">About</a>
+                <a href="/custom.html">Custom</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="container">
+            <h1 class="hero-title slide-up">Welcome to Book Haven</h1>
+            <p class="hero-subtitle slide-up">Your Literary Sanctuary in the Digital Age</p>
+            <a href="/gallery.html" class="btn slide-up">Explore Our Collection</a>
+        </div>
+    </header>
+
+    <!-- Featured Books -->
+    <section class="container section-padding">
+        <h2 class="section-title">Featured Books</h2>
+        <div class="product-grid">
+            <div class="product-card fade-in">
+                <img src="placeholder.jpg" alt="Featured Book 1" class="product-image">
+                <div class="product-info">
+                    <h3>The Art of Reading</h3>
+                    <p class="author">By John Smith</p>
+                    <p class="price">$24.99</p>
+                    <button class="btn btn-secondary add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="product-card fade-in">
+                <img src="placeholder.jpg" alt="Featured Book 2" class="product-image">
+                <div class="product-info">
+                    <h3>Mystery Manor</h3>
+                    <p class="author">By Sarah Johnson</p>
+                    <p class="price">$19.99</p>
+                    <button class="btn btn-secondary add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="product-card fade-in">
+                <img src="placeholder.jpg" alt="Featured Book 3" class="product-image">
+                <div class="product-info">
+                    <h3>Future World</h3>
+                    <p class="author">By Michael Brown</p>
+                    <p class="price">$21.99</p>
+                    <button class="btn btn-secondary add-to-cart">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="newsletter-section">
+        <div class="container">
+            <div class="card text-center">
+                <h2>Stay Updated</h2>
+                <p>Subscribe to our newsletter for the latest book releases and events.</p>
+                <form class="newsletter-form">
+                    <div class="form-group">
+                        <input type="email" class="form-input" placeholder="Enter your email" required>
+                    </div>
+                    <button type="submit" class="btn">Subscribe</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Links -->
+    <section class="quick-links container section-padding">
+        <h2 class="section-title">Quick Links</h2>
+        <div class="links-grid">
+            <a href="/events.html" class="quick-link-card">
+                <i class="fas fa-calendar"></i>
+                <h3>Latest Events</h3>
+                <p>Join our book clubs and author meetups</p>
+            </a>
+            
+            <a href="/gallery.html" class="quick-link-card">
+                <i class="fas fa-books"></i>
+                <h3>Book Categories</h3>
+                <p>Browse our extensive collection</p>
+            </a>
+            
+            <a href="/custom.html" class="quick-link-card">
+                <i class="fas fa-list"></i>
+                <h3>Reading Lists</h3>
+                <p>Curated collections for every taste</p>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Book Haven</h3>
+                <p>Your Literary Sanctuary</p>
+                <div class="social-links">
+                    <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="/about.html">About Us</a></li>
+                    <li><a href="/gallery.html">Book Gallery</a></li>
+                    <li><a href="/contact.html">Contact</a></li>
+                    <li><a href="/custom.html">Custom Orders</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Newsletter</h3>
+                <form class="footer-newsletter-form">
+                    <input type="email" class="form-input" placeholder="Enter your email">
+                    <button type="submit" class="btn">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Book Haven. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Cart Indicator -->
+    <div class="cart-indicator">
+        <button class="btn btn-secondary" id="viewCart">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-count">0</span>
+        </button>
+    </div>
+
+    <script src="js/storage-manager.js"></script>
+    <script src="js/cart-manager.js"></script>
+    <script src="js/newsletter-manager.js"></script>
+</body>
+</html>
