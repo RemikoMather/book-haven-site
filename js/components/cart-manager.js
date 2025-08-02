@@ -1,31 +1,38 @@
-// Enhanced Cart Manager
-const CartManager = {
-    async init() {
-        this.loadFromStorage();
+class CartManager {
+    constructor() {
+        this.cart = JSON.parse(sessionStorage.getItem('bookCart')) || [];
+        this.initialize();
+    }
+
+    initialize() {
+        this.updateCartDisplay();
+        this.updateCartCount();
         this.setupEventListeners();
-        this.updateUI();
-    },
+    }
 
     setupEventListeners() {
-        // Listen for storage events for cross-tab synchronization
-        window.addEventListener('storage', (e) => {
-            if (e.key === 'cart') {
-                this.loadFromStorage();
-                this.updateUI();
-            }
+        const cartBtn = document.getElementById('view-cart');
+        const cartClose = document.querySelector('.cart-close');
+        const cartContainer = document.getElementById('cart-container');
+
+        cartBtn?.addEventListener('click', () => {
+            cartContainer.classList.add('active');
         });
 
-        // Add keyboard navigation for cart
+        cartClose?.addEventListener('click', () => {
+            cartContainer.classList.remove('active');
+        });
+
+        // Close cart when Escape key is pressed
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                this.closeCart();
+            if (e.key === 'Escape' && cartContainer?.classList.contains('active')) {
+                cartContainer.classList.remove('active');
             }
         });
-    },
+    }
 
-    async addItem(item) {
-        const cart = JSON.parse(sessionStorage.getItem('cart')) || [];
-        const existingItem = cart.find(i => i.id === item.id);
+    addItem(book) {
+        const existingItem = this.cart.find(item => item.id === book.id);
         
         if (existingItem) {
             existingItem.quantity += 1;
