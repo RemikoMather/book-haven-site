@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Haven - Events</title>
+    <link rel="stylesheet" href="css/wireframes.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav>
+                <button class="nav-toggle">☰</button>
+                <div class="nav-menu">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="gallery.html" class="nav-link">Gallery</a>
+                    <a href="about.html" class="nav-link">About</a>
+                    <a href="events.html" class="nav-link">Events</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1 style="margin: 2rem 0;">Upcoming Events</h1>
+            
+            <div class="events-list">
+                <div class="event-card">
+                    <div style="background: var(--placeholder-dark);"></div>
+                    <div class="event-details">
+                        <div class="placeholder-text">Event 1 Details</div>
+                    </div>
+                </div>
+                <div class="event-card">
+                    <div style="background: var(--placeholder-dark);"></div>
+                    <div class="event-details">
+                        <div class="placeholder-text">Event 2 Details</div>
+                    </div>
+                </div>
+                <div class="event-card">
+                    <div style="background: var(--placeholder-dark);"></div>
+                    <div class="event-details">
+                        <div class="placeholder-text">Event 3 Details</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="placeholder-text">Footer Content</div>
+        </div>
+    </footer>
+
+    <script>
+        document.querySelector('.nav-toggle').addEventListener('click', () => {
+            document.querySelector('.nav-menu').classList.toggle('active');
+        });
+    </script>
+</body>
+</html>

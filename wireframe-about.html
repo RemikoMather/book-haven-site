@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Haven - About</title>
+    <link rel="stylesheet" href="css/wireframe-interactive-v2.css">
+</head>
+<body>
+    <header class="wireframe-box">
+        <div class="wireframe-label">HEADER</div>
+        <nav>
+            <a href="wireframe-index.html" class="btn">Home</a>
+            <a href="wireframe-gallery.html" class="btn">Gallery</a>
+            <a href="wireframe-about.html" class="btn">About</a>
+            <a href="wireframe-contact.html" class="btn">Contact</a>
+            <button class="btn" onclick="Cart.showCart()">Cart <span class="cart-count">0</span></button>
+        </nav>
+    </header>
+
+    <main>
+        <section class="wireframe-box">
+            <div class="wireframe-label">ABOUT US</div>
+            <div class="about-content">
+                <h1>About Book Haven</h1>
+                <p>Your literary sanctuary in the digital age</p>
+            </div>
+        </section>
+
+        <section class="wireframe-box">
+            <div class="wireframe-label">OUR STORY</div>
+            <div class="story-content">
+                <p>Book Haven was founded with a simple mission: to create a space where book lovers can discover their next great read.</p>
+            </div>
+        </section>
+
+        <section class="wireframe-box">
+            <div class="wireframe-label">CONTACT FORM</div>
+            <form onsubmit="FormHandler.handleSubmit(event, 'contact')">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" required placeholder="Enter your full name">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" required placeholder="Enter your message" rows="5"></textarea>
+                </div>
+                <button type="submit" class="btn">Send Message</button>
+            </form>
+        </section>
+    </main>
+
+    <footer class="wireframe-box">
+        <div class="wireframe-label">FOOTER</div>
+        <p>&copy; 2025 Book Haven. All rights reserved.</p>
+    </footer>
+
+    <script src="js/wireframe-interactive-v2.js"></script>
+</body>
+</html>

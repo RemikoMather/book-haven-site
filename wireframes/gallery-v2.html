@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Haven - Gallery Wireframe</title>
+    <link rel="stylesheet" href="css/wireframe-v2.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav>
+                <div class="wireframe-box" style="width: 150px; height: 40px; display: inline-block;">
+                    <div class="wireframe-label">LOGO</div>
+                </div>
+                <button class="nav-toggle">≡</button>
+                <div class="nav-menu">
+                    <a href="#" class="nav-link">Home</a>
+                    <a href="#" class="nav-link">Gallery</a>
+                    <a href="#" class="nav-link">About</a>
+                    <a href="#" class="nav-link">Events</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div style="text-align: right; margin: 1rem 0;">
+                <div class="wireframe-box" style="display: inline-block; padding: 0.5rem 2rem;">
+                    <div class="wireframe-label">CART (0)</div>
+                </div>
+            </div>
+
+            <div class="section-label">FILTER & SEARCH</div>
+            <div class="wireframe-box" style="margin-bottom: 2rem;">
+                <div style="display: flex; gap: 1rem;">
+                    <div style="flex: 1;">
+                        <input type="text" class="form-control" placeholder="[ Search Input ]">
+                    </div>
+                    <div style="width: 150px;">
+                        <select class="form-control">
+                            <option>[ Category ]</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-label">PRODUCT GRID</div>
+            <div class="product-grid">
+                <div class="product-card">
+                    <div style="height: 60%; border: 2px dashed var(--border-color);">
+                        <div class="wireframe-label">BOOK COVER</div>
+                    </div>
+                    <div style="margin-top: 1rem;">
+                        <div style="border: 1px solid var(--border-color); margin-bottom: 0.5rem;">[ Title ]</div>
+                        <div style="border: 1px solid var(--border-color); margin-bottom: 0.5rem;">[ Author ]</div>
+                        <div style="border: 1px solid var(--border-color); margin-bottom: 0.5rem;">[ Price ]</div>
+                        <button style="width: 100%; border: 2px solid var(--border-color); padding: 0.5rem;">
+                            ADD TO CART
+                        </button>
+                    </div>
+                </div>
+                <!-- Repeat product-card 7 more times -->
+            </div>
+
+            <div style="margin: 2rem 0; text-align: center;">
+                <div class="wireframe-box" style="display: inline-block;">
+                    <div class="wireframe-label">PAGINATION</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="wireframe-box">
+                    <div class="wireframe-label">CONTACT INFO</div>
+                </div>
+                <div class="wireframe-box">
+                    <div class="wireframe-label">QUICK LINKS</div>
+                </div>
+                <div class="wireframe-box">
+                    <div class="wireframe-label">STORE HOURS</div>
+                </div>
+                <div class="wireframe-box">
+                    <div class="wireframe-label">SOCIAL MEDIA</div>
+                    <div class="social-links">
+                        <div class="social-link">FB</div>
+                        <div class="social-link">TW</div>
+                        <div class="social-link">IG</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.querySelector('.nav-toggle').addEventListener('click', () => {
+            document.querySelector('.nav-menu').classList.toggle('active');
+        });
+    </script>
+</body>
+</html>

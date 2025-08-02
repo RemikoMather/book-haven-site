@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Haven - Your Literary Paradise</title>
+    <link rel="stylesheet" href="css/design-system.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Page-specific styles */
+        .hero {
+            background-color: var(--color-aged-gold);
+            color: white;
+            padding: var(--spacing-xl) 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            color: white;
+            font-size: 3rem;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .features {
+            padding: var(--spacing-xl) 0;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--spacing-lg);
+        }
+
+        .feature-box {
+            background: white;
+            padding: var(--spacing-lg);
+            border-radius: var(--radius-md);
+            text-align: center;
+            box-shadow: var(--shadow-md);
+        }
+
+        .feature-box i {
+            font-size: 2.5rem;
+            color: var(--color-aged-gold);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .newsletter {
+            background-color: var(--color-inkwell-blue);
+            color: white;
+            padding: var(--spacing-xl) 0;
+            text-align: center;
+        }
+
+        .newsletter-form {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="index.html" class="nav-brand">Book Haven</a>
+                <button class="nav-toggle" aria-label="Toggle navigation">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="nav-menu">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="gallery.html" class="nav-link">Gallery</a>
+                    <a href="about.html" class="nav-link">About</a>
+                    <a href="events.html" class="nav-link">Events</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>Welcome to Book Haven</h1>
+                <p style="font-size: 1.25rem; margin-bottom: var(--spacing-md);">Discover Your Next Literary Adventure</p>
+                <a href="gallery.html" class="btn btn-secondary">Browse Books</a>
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="container">
+                <div class="feature-box">
+                    <i class="fas fa-book"></i>
+                    <h3>Latest Releases</h3>
+                    <p>Explore our newest additions to find your next favorite book.</p>
+                </div>
+                <div class="feature-box">
+                    <i class="fas fa-calendar"></i>
+                    <h3>Upcoming Events</h3>
+                    <p>Join our author meet-ups, book clubs, and reading sessions.</p>
+                </div>
+                <div class="feature-box">
+                    <i class="fas fa-star"></i>
+                    <h3>Member Benefits</h3>
+                    <p>Exclusive discounts and early access to special editions.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="newsletter">
+            <div class="container">
+                <h2>Stay Updated</h2>
+                <p style="margin-bottom: var(--spacing-lg);">Subscribe to our newsletter for the latest updates and exclusive offers.</p>
+                <form class="newsletter-form">
+                    <div class="form-group">
+                        <input type="email" class="form-control" placeholder="Enter your email address">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Subscribe</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <h4>Contact Us</h4>
+                    <p>123 Book Street<br>Literary Town, LT 12345</p>
+                    <p>Phone: (555) 123-4567<br>Email: info@bookhaven.com</p>
+                </div>
+                <div>
+                    <h4>Quick Links</h4>
+                    <ul style="list-style: none;">
+                        <li><a href="#" class="nav-link">About Us</a></li>
+                        <li><a href="#" class="nav-link">Events</a></li>
+                        <li><a href="#" class="nav-link">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Follow Us</h4>
+                    <div class="social-links">
+                        <a href="#" class="social-link" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="social-link" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.querySelector('.nav-toggle').addEventListener('click', () => {
+            document.querySelector('.nav-menu').classList.toggle('active');
+        });
+    </script>
+</body>
+</html>

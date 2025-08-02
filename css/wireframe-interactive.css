@@ -1,0 +1,195 @@
+/* Wireframe Styles */
+:root {
+    --border-color: #999;
+    --border-style: 2px dashed var(--border-color);
+    --placeholder-bg: #f0f0f0;
+    --label-color: #666;
+}
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background: white;
+    color: #333;
+}
+
+/* Wireframe Components */
+.wireframe-box {
+    border: var(--border-style);
+    padding: 1rem;
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.wireframe-label {
+    position: absolute;
+    top: -0.75rem;
+    left: 1rem;
+    background: white;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    color: var(--label-color);
+    text-transform: uppercase;
+}
+
+/* Layout */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+/* Header */
+.header {
+    border-bottom: var(--border-style);
+    padding: 1rem;
+    margin-bottom: 2rem;
+}
+
+/* Navigation */
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-menu {
+    display: flex;
+    gap: 1rem;
+}
+
+.nav-link {
+    border: 1px solid var(--border-color);
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    color: inherit;
+    transition: background-color 0.2s;
+}
+
+.nav-link:hover {
+    background: var(--placeholder-bg);
+}
+
+/* Buttons */
+.btn {
+    border: var(--border-style);
+    background: white;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn:hover {
+    background: var(--placeholder-bg);
+}
+
+/* Forms */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--label-color);
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.5rem;
+    border: var(--border-style);
+    background: white;
+}
+
+/* Grid Layouts */
+.grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+/* Alert/Modal System */
+.alert {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    padding: 1rem;
+    border: var(--border-style);
+    background: white;
+    z-index: 1000;
+    animation: slideIn 0.3s ease;
+}
+
+.modal {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s;
+}
+
+.modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background: white;
+    padding: 2rem;
+    border: var(--border-style);
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+}
+
+/* Animations */
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+/* Utility Classes */
+.placeholder {
+    background: var(--placeholder-bg);
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: var(--border-style);
+}
+
+.hoverable {
+    transition: transform 0.2s;
+}
+
+.hoverable:hover {
+    transform: translateY(-2px);
+}
+
+.label {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid var(--border-color);
+    font-size: 0.75rem;
+    color: var(--label-color);
+    margin-bottom: 0.5rem;
+}

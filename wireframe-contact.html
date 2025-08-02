@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Haven - Contact</title>
+    <link rel="stylesheet" href="css/wireframe-interactive-v2.css">
+</head>
+<body>
+    <header class="wireframe-box">
+        <div class="wireframe-label">HEADER</div>
+        <nav>
+            <a href="wireframe-index.html" class="btn">Home</a>
+            <a href="wireframe-gallery.html" class="btn">Gallery</a>
+            <a href="wireframe-about.html" class="btn">About</a>
+            <a href="wireframe-contact.html" class="btn">Contact</a>
+            <button class="btn" onclick="Cart.showCart()">Cart <span class="cart-count">0</span></button>
+        </nav>
+    </header>
+
+    <main>
+        <section class="wireframe-box">
+            <div class="wireframe-label">CONTACT FORM</div>
+            <form onsubmit="FormHandler.handleSubmit(event, 'contact')">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" required placeholder="Enter your full name">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="subject">Subject</label>
+                    <input type="text" id="subject" name="subject" required placeholder="Enter message subject">
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" required placeholder="Enter your message" rows="5"></textarea>
+                </div>
+                <button type="submit" class="btn">Send Message</button>
+            </form>
+        </section>
+
+        <section class="wireframe-box">
+            <div class="wireframe-label">CONTACT INFO</div>
+            <div class="contact-details">
+                <p>Address: 123 Book Street, Literary Town</p>
+                <p>Phone: (555) 123-4567</p>
+                <p>Email: info@bookhaven.com</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="wireframe-box">
+        <div class="wireframe-label">FOOTER</div>
+        <p>&copy; 2025 Book Haven. All rights reserved.</p>
+    </footer>
+
+    <script src="js/wireframe-interactive-v2.js"></script>
+</body>
+</html>

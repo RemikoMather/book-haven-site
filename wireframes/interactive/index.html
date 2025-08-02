@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Haven - Interactive Wireframe</title>
+    <link rel="stylesheet" href="css/wireframe-interactive.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <div class="wireframe-box" style="padding: 0.5rem 1rem;">
+                    <div class="wireframe-label">LOGO</div>
+                </div>
+                <div class="nav-menu">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="gallery.html" class="nav-link">Gallery</a>
+                    <a href="about.html" class="nav-link">About</a>
+                    <a href="events.html" class="nav-link">Events</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="wireframe-box" style="height: 400px;">
+            <div class="wireframe-label">HERO SECTION</div>
+            <div style="text-align: center; padding-top: 150px;">
+                <h1>[Main Headline]</h1>
+                <button class="btn hoverable">Browse Books</button>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="grid grid-3">
+                <div class="wireframe-box hoverable">
+                    <div class="wireframe-label">FEATURE 1</div>
+                    <div class="placeholder">[New Releases]</div>
+                </div>
+                <div class="wireframe-box hoverable">
+                    <div class="wireframe-label">FEATURE 2</div>
+                    <div class="placeholder">[Bestsellers]</div>
+                </div>
+                <div class="wireframe-box hoverable">
+                    <div class="wireframe-label">FEATURE 3</div>
+                    <div class="placeholder">[Coming Soon]</div>
+                </div>
+            </div>
+
+            <div class="wireframe-box" style="margin-top: 2rem;">
+                <div class="wireframe-label">NEWSLETTER SIGNUP</div>
+                <form onsubmit="FormHandler.handleSubmit(event, 'newsletter')" style="max-width: 400px; margin: 0 auto;">
+                    <div class="form-group">
+                        <input type="email" class="form-control" placeholder="Enter your email" required>
+                    </div>
+                    <button type="submit" class="btn">Subscribe</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer class="wireframe-box" style="margin-top: 2rem;">
+        <div class="wireframe-label">FOOTER</div>
+        <div class="container">
+            <div class="grid grid-3">
+                <div class="wireframe-box">
+                    <div class="wireframe-label">CONTACT INFO</div>
+                    <div class="placeholder">[Address & Phone]</div>
+                </div>
+                <div class="wireframe-box">
+                    <div class="wireframe-label">QUICK LINKS</div>
+                    <div class="placeholder">[Navigation Links]</div>
+                </div>
+                <div class="wireframe-box">
+                    <div class="wireframe-label">SOCIAL MEDIA</div>
+                    <div class="placeholder">[Social Icons]</div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/wireframe-interactive.js"></script>
+</body>
+</html>
