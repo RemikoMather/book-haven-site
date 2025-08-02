@@ -15,6 +15,7 @@
     <!-- Stylesheets -->
     <link rel="stylesheet" href="css/design.css">
     <link rel="stylesheet" href="css/cart.css">
+    <link rel="stylesheet" href="css/forms.css">
     
     <!-- Structured Data -->
     <script type="application/ld+json">
@@ -191,20 +192,31 @@
 
             <div class="footer-section">
                 <h3>Newsletter</h3>
-                <form class="footer-newsletter-form">
+                <form id="footer-subscribe-form" class="footer-newsletter-form" novalidate>
                     <div class="form-group">
-                        <input type="email" class="form-input" placeholder="Enter your email" required>
+                        <input type="email" 
+                               id="footer-email" 
+                               name="email" 
+                               class="form-input" 
+                               placeholder="Enter your email" 
+                               required 
+                               pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
+                        <div id="footer-email-error" class="error-message" aria-live="polite"></div>
                     </div>
-                    <button type="submit" class="btn">Subscribe</button>
+                    <button type="submit" class="btn">
+                        Subscribe
+                        <span class="loading-indicator" aria-hidden="true"></span>
+                    </button>
                 </form>
             </div>
         </div>
     </footer>
 
     <!-- Scripts -->
-    <script src="js/common.js"></script>
-    <script src="js/cart-manager-v2.js"></script>
-    <script src="js/mobile-nav.js"></script>
-    <script src="js/script.js"></script>
+    <script src="js/common.js" type="module"></script>
+    <script src="js/cart-manager-v2.js" type="module"></script>
+    <script src="js/mobile-nav.js" type="module"></script>
+    <script src="js/newsletter.js" type="module"></script>
+    <script src="js/script.js" type="module"></script>
 </body>
 </html>
