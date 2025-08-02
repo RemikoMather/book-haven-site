@@ -1,0 +1,104 @@
+/* Accessibility Enhancements */
+:root {
+    /* High contrast focus styles */
+    --focus-outline-color: #2E4057;
+    --focus-outline-width: 3px;
+    --focus-outline-style: solid;
+    --focus-outline-offset: 2px;
+}
+
+/* Enhanced focus styles */
+:focus {
+    outline: var(--focus-outline-width) var(--focus-outline-style) var(--focus-outline-color);
+    outline-offset: var(--focus-outline-offset);
+}
+
+/* Focus visible polyfill */
+:focus:not(:focus-visible) {
+    outline: none;
+}
+
+:focus-visible {
+    outline: var(--focus-outline-width) var(--focus-outline-style) var(--focus-outline-color);
+    outline-offset: var(--focus-outline-offset);
+}
+
+/* Skip link enhancement */
+.skip-link {
+    position: absolute;
+    top: -9999px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--primary-color);
+    color: white;
+    padding: 8px 16px;
+    z-index: var(--z-toast);
+    text-decoration: none;
+    border-radius: 0 0 4px 4px;
+    transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+/* ARIA labels and roles */
+[role="button"],
+[role="tab"],
+[role="menuitem"] {
+    cursor: pointer;
+}
+
+/* Enhanced button states */
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Screen reader only text */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Enhanced keyboard navigation */
+.nav-menu a:focus,
+.nav-menu button:focus {
+    background-color: rgba(255, 255, 255, 0.1);
+    outline: none;
+    box-shadow: 0 0 0 2px var(--focus-outline-color);
+}
+
+/* Dialog accessibility */
+[role="dialog"] {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 2rem;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    z-index: var(--z-modal);
+}
+
+[role="dialog"]::backdrop {
+    background: rgba(0, 0, 0, 0.5);
+}

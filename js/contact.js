@@ -13,9 +13,15 @@ document.addEventListener('DOMContentLoaded', () => {
             loadingIndicator.style.display = 'inline-block';
 
             const formData = new FormData(form);
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             const response = await fetch('/submit-contact', {
                 method: 'POST',
-                body: formData
+                headers: {
+                    'X-CSRF-Token': csrfToken,
+                    'Accept': 'application/json'
+                },
+                body: formData,
+                credentials: 'same-origin'
             });
 
             if (!response.ok) throw new Error('Submission failed');

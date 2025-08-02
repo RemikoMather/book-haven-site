@@ -5,7 +5,8 @@ const books = [
         name: "The Great Gatsby",
         price: 19.99,
         category: "fiction",
-        image: "https://via.placeholder.com/300x400/2E4057/ffffff?text=The+Great+Gatsby",
+        image: "/images/books/great-gatsby.webp",
+        thumbnail: "/images/books/thumbnails/great-gatsby.webp",
         description: "A classic novel by F. Scott Fitzgerald"
     },
     {
