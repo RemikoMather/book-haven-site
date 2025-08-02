@@ -15,6 +15,7 @@
     <!-- Stylesheets -->
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/cart.css">
+    <link rel="stylesheet" href="css/cart-alerts.css">
     
     <!-- Structured Data -->
     <script type="application/ld+json">
@@ -216,33 +217,8 @@
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
     <script src="js/cart-manager.js"></script>
+    <script type="module" src="js/cart-init.js"></script>
     <script type="module" src="js/script.js"></script>
     <script type="module" src="js/newsletter.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Initialize cart
-            const cartManager = new CartManager();
-            window.cartManager = cartManager;  // Make it globally available
-
-            // Add event listeners to all "Add to Cart" buttons
-            document.querySelectorAll('.add-to-cart').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    const card = e.target.closest('.gallery-item');
-                    if (!card) return;
-                    
-                    const bookData = {
-                        id: card.dataset.id,
-                        title: card.querySelector('h3').textContent,
-                        price: parseFloat(card.dataset.price || '0'),
-                        image: card.querySelector('img').src
-                    };
-
-                    if (bookData.id && bookData.title && bookData.price) {
-                        cartManager.addItem(bookData);
-                    }
-                });
-            });
-        });
-    </script>
 </body>
 </html>
