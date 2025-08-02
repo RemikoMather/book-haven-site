@@ -11,17 +11,6 @@ class CartManager {
         this.updateCartDisplay();
         this.setupEventListeners();
         
-        // Listen for storage events to sync cart across tabs
-        window.addEventListener('storage', (e) => {
-            if (e.key === 'bookCart') {
-                this.cart = JSON.parse(e.newValue || '[]');
-                this.notifyListeners();
-                this.updateCartDisplay();
-            }
-            if (e.key === 'lastOrder') {
-                this.lastOrder = JSON.parse(e.newValue || 'null');
-            }
-        });
     }
 
     // Add listener for cart updates
@@ -192,27 +181,6 @@ class CartManager {
         });
     }
 
-    showAlert(message, type = 'info') {
-        const alertEl = document.createElement('div');
-        alertEl.className = `alert alert-${type}`;
-        alertEl.textContent = message;
-        
-        // Remove any existing alerts
-        document.querySelectorAll('.alert').forEach(el => el.remove());
-        
-        // Add new alert
-        document.body.appendChild(alertEl);
-        
-        // Animate
-        setTimeout(() => alertEl.classList.add('show'), 10);
-        
-        // Remove after delay
-        setTimeout(() => {
-            alertEl.classList.remove('show');
-            setTimeout(() => alertEl.remove(), 300);
-        }, 3000);
-    }
-
     setupEventListeners() {
         // Handle escape key to close cart
         document.addEventListener('keydown', (e) => {
@@ -257,6 +225,8 @@ class CartManager {
         const cartContainer = document.getElementById('cart-items');
         const cartSidebar = document.getElementById('cart-sidebar');
         const checkoutBtn = document.getElementById('process-order');
+        const totalElement = document.getElementById('cart-total');
+        
         if (!cartContainer) return;
 
         // Update cart visibility and state
@@ -277,41 +247,72 @@ class CartManager {
                     <p class="empty-cart-message">Your cart is empty</p>
                     <p class="empty-cart-sub">Browse our collection and add some books!</p>
                 </div>`;
-            document.getElementById('cart-total').textContent = '0.00';
+            if (totalElement) {
+                totalElement.textContent = '0.00';
+            }
             return;
         }
 
         // Show cart items with animation
+        const self = this; // Store reference for event handlers
         cartContainer.innerHTML = this.cart.map((item, index) => `
-            <div class="cart-item" data-id="${item.id}" style="animation-delay: ${index * 0.1}s;"
-            <div class="cart-item" data-id="${item.id}">
+            <div class="cart-item" data-id="${item.id}" style="animation-delay: ${index * 0.1}s;">
                 <div class="item-details">
                     <h3>${item.title}</h3>
                     <div class="item-price">$${(item.price * item.quantity).toFixed(2)}</div>
                 </div>
                 <div class="item-controls">
                     <input type="number" value="${item.quantity}" min="1" 
-                           onchange="cartManager.updateQuantity('${item.id}', this.value)">
-                    <button onclick="cartManager.removeItem('${item.id}')" class="btn-remove">
+                           data-book-id="${item.id}" class="quantity-input">
+                    <button data-book-id="${item.id}" class="btn-remove">
                         Remove
                     </button>
                 </div>
             </div>
         `).join('');
 
-        document.getElementById('cart-total').textContent = this.getTotal();
+        // Add event listeners to the newly created elements
+        cartContainer.querySelectorAll('.quantity-input').forEach(input => {
+            input.addEventListener('change', function() {
+                const bookId = this.dataset.bookId;
+                self.updateQuantity(bookId, this.value);
+            });
+        });
+
+        cartContainer.querySelectorAll('.btn-remove').forEach(button => {
+            button.addEventListener('change', function() {
+                const bookId = this.dataset.bookId;
+                self.removeItem(bookId);
+            });
+        });
+
+        if (totalElement) {
+            totalElement.textContent = this.getTotal();
+        }
     }
 
     showAlert(message, type = 'info') {
-        const alertDiv = document.createElement('div');
-        alertDiv.className = `alert alert-${type}`;
-        alertDiv.textContent = message;
-
+        const alertEl = document.createElement('div');
+        alertEl.className = `alert alert-${type}`;
+        alertEl.textContent = message;
+        
+        // Remove any existing alerts
+        document.querySelectorAll('.alert').forEach(el => el.remove());
+        
         const container = document.querySelector('.container');
-        container.insertBefore(alertDiv, container.firstChild);
-
+        if (container) {
+            container.insertBefore(alertEl, container.firstChild);
+        } else {
+            document.body.appendChild(alertEl);
+        }
+        
+        // Animate
+        setTimeout(() => alertEl.classList.add('show'), 10);
+        
+        // Remove after delay
         setTimeout(() => {
-            alertDiv.remove();
+            alertEl.classList.remove('show');
+            setTimeout(() => alertEl.remove(), 300);
         }, 3000);
     }
 }
