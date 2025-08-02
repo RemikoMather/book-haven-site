@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Haven - Your Literary Paradise</title>
+    <title>Book Haven - Your Literary Paradise<    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Mobile menu toggle
+            document.querySelector('.nav-toggle').addEventListener('click', () => {
+                document.querySelector('.nav-menu').classList.toggle('active');
+            });
     <link rel="stylesheet" href="css/design-system.css">
     <link rel="stylesheet" href="css/cart.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -235,6 +240,29 @@
 
             // Make cart manager available globally for legacy support
             window.cartManager = cartManager;
+        });
+
+        // Initialize cart functionality
+        const cartManager = new CartManager();
+            
+        // Add event listeners to all "Add to Cart" buttons
+        document.querySelectorAll('.add-to-cart').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const card = e.target.closest('.feature-box, .book-card');
+                if (!card) return;
+                
+                const bookData = {
+                    id: card.dataset.bookId,
+                    title: card.querySelector('h3').textContent,
+                    price: parseFloat(card.dataset.price || '0'),
+                    image: card.querySelector('img')?.src || ''
+                };
+
+                console.log('Adding to cart:', bookData); // Debug log
+                if (bookData.id && bookData.title && bookData.price) {
+                    cartManager.addItem(bookData);
+                }
+            });
         });
     </script>
 </body>
