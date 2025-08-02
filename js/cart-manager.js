@@ -2,6 +2,8 @@ class CartManager {
     constructor() {
         this.cart = JSON.parse(sessionStorage.getItem('bookCart')) || [];
         this.listeners = new Set();
+        this.lastOrder = JSON.parse(sessionStorage.getItem('lastOrder') || 'null');
+        this.isProcessing = false;
         this.updateCartDisplay();
         
         // Listen for storage events to sync cart across tabs
@@ -10,6 +12,9 @@ class CartManager {
                 this.cart = JSON.parse(e.newValue || '[]');
                 this.notifyListeners();
                 this.updateCartDisplay();
+            }
+            if (e.key === 'lastOrder') {
+                this.lastOrder = JSON.parse(e.newValue || 'null');
             }
         });
     }
@@ -30,20 +35,27 @@ class CartManager {
     }
 
     addItem(book) {
+        if (!book || !book.id) {
+            this.showAlert('Invalid book data', 'error');
+            return;
+        }
+
         const existingItem = this.cart.find(item => item.id === book.id);
         if (existingItem) {
             existingItem.quantity += 1;
+            this.showAlert(`Increased quantity of "${book.title}" (${existingItem.quantity} in cart)`, 'success');
         } else {
             this.cart.push({
                 id: book.id,
                 title: book.title,
                 price: book.price,
+                image: book.image,
                 quantity: 1
             });
+            this.showAlert(`"${book.title}" added to cart!`, 'success');
         }
         this.saveCart();
         this.notifyListeners();
-        this.showAlert('Item added to cart!', 'success');
     }
 
     removeItem(bookId) {
@@ -62,9 +74,14 @@ class CartManager {
     }
 
     clearCart() {
+        if (this.cart.length === 0) {
+            this.showAlert('Cart is already empty', 'info');
+            return;
+        }
+        const itemCount = this.cart.reduce((total, item) => total + item.quantity, 0);
         this.cart = [];
         this.saveCart();
-        this.showAlert('Cart has been cleared', 'info');
+        this.showAlert(`Cart cleared - ${itemCount} item${itemCount !== 1 ? 's' : ''} removed`, 'info');
         this.updateCartDisplay();
     }
 
@@ -73,6 +90,11 @@ class CartManager {
     }
 
     async processOrder() {
+        if (this.isProcessing) {
+            this.showAlert('Order is already being processed...', 'info');
+            return;
+        }
+
         if (this.cart.length === 0) {
             this.showAlert('Your cart is empty!', 'error');
             return;
@@ -85,13 +107,29 @@ class CartManager {
         };
 
         try {
+            this.isProcessing = true;
+            this.showAlert('Processing your order...', 'info');
+            
             // In a real app, this would make an API call to process the order
             await this.simulateOrderProcessing();
-            sessionStorage.setItem('lastOrder', JSON.stringify(orderDetails));
-            this.clearCart();
-            this.showAlert('Order processed successfully!', 'success');
+            
+            // Store order details in session storage
+            this.lastOrder = {
+                ...orderDetails,
+                orderId: 'ORD-' + Date.now(),
+                status: 'completed'
+            };
+            sessionStorage.setItem('lastOrder', JSON.stringify(this.lastOrder));
+            
+            // Clear the cart
+            this.cart = [];
+            this.saveCart();
+            
+            this.showAlert(`Order #${this.lastOrder.orderId} processed successfully! Total: $${this.lastOrder.total}`, 'success');
         } catch (error) {
             this.showAlert('Error processing order. Please try again.', 'error');
+        } finally {
+            this.isProcessing = false;
         }
     }
 
@@ -120,16 +158,49 @@ class CartManager {
         });
     }
 
+    showAlert(message, type = 'info') {
+        const alertEl = document.createElement('div');
+        alertEl.className = `alert alert-${type}`;
+        alertEl.textContent = message;
+        
+        // Remove any existing alerts
+        document.querySelectorAll('.alert').forEach(el => el.remove());
+        
+        // Add new alert
+        document.body.appendChild(alertEl);
+        
+        // Animate
+        setTimeout(() => alertEl.classList.add('show'), 10);
+        
+        // Remove after delay
+        setTimeout(() => {
+            alertEl.classList.remove('show');
+            setTimeout(() => alertEl.remove(), 300);
+        }, 3000);
+    }
+
     updateCartDisplay() {
         const cartContainer = document.getElementById('cart-items');
+        const cartSidebar = document.getElementById('cart-sidebar');
         if (!cartContainer) return;
 
+        // Update cart visibility
+        if (cartSidebar) {
+            cartSidebar.classList.toggle('empty', this.cart.length === 0);
+        }
+
+        // Show empty cart message
         if (this.cart.length === 0) {
-            cartContainer.innerHTML = '<p class="empty-cart-message">Your cart is empty</p>';
+            cartContainer.innerHTML = `
+                <div class="empty-cart">
+                    <p class="empty-cart-message">Your cart is empty</p>
+                    <p class="empty-cart-sub">Add some books to get started!</p>
+                </div>`;
             document.getElementById('cart-total').textContent = '0.00';
             return;
         }
 
+        // Show cart items
         cartContainer.innerHTML = this.cart.map(item => `
             <div class="cart-item" data-id="${item.id}">
                 <div class="item-details">
