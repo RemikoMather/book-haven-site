@@ -10,33 +10,17 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 export const localStore = new StorageManager('local');
 export const sessionStore = new StorageManager('session');
 export const cartManager = new CartManager();
-    if (cartCount) {
-        cartCount.textContent = cart.length
-    }
-}
 
-function addToCart(item) {
-    cart.push(item)
-    sessionStorage.setItem('cart', JSON.stringify(cart))
-    updateCartCount()
-    showAlert('Item added to cart!')
-}
-
-function clearCart() {
-    cart = []
-    sessionStorage.removeItem('cart')
-    updateCartCount()
-    showAlert('Cart cleared!')
-}
-
-function processOrder() {
+// Process order using cart manager
+async function processOrder() {
+    const cart = cartManager.getCart();
     if (cart.length === 0) {
         showAlert('Your cart is empty!')
         return
     }
     // Here you would typically integrate with a payment processor
     showAlert('Order processed successfully!')
-    clearCart()
+    cartManager.clearCart();
 }
 
 // Newsletter subscription
@@ -93,8 +77,6 @@ function showAlert(message) {
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
-    updateCartCount()
-    
     // Setup event listeners
     const subscribeForm = document.getElementById('subscribe-form')
     if (subscribeForm) {
