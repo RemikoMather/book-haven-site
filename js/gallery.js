@@ -5,8 +5,8 @@ const books = [
         name: "The Great Gatsby",
         price: 19.99,
         category: "fiction",
-        image: "/images/books/great-gatsby.webp",
-        thumbnail: "/images/books/thumbnails/great-gatsby.webp",
+        image: "https://cdn.pixabay.com/photo/2015/11/19/21/14/book-1052014_1280.jpg",
+        thumbnail: "https://cdn.pixabay.com/photo/2015/11/19/21/14/book-1052014_640.jpg",
         description: "A classic novel by F. Scott Fitzgerald"
     },
     {
@@ -14,7 +14,8 @@ const books = [
         name: "Sapiens",
         price: 24.99,
         category: "non-fiction",
-        image: "https://via.placeholder.com/300x400/2E4057/ffffff?text=Sapiens",
+        image: "https://cdn.pixabay.com/photo/2018/07/01/20/01/book-3510326_1280.jpg",
+        thumbnail: "https://cdn.pixabay.com/photo/2018/07/01/20/01/book-3510326_640.jpg",
         description: "A brief history of humankind"
     },
     {
@@ -22,7 +23,8 @@ const books = [
         name: "The Cat in the Hat",
         price: 14.99,
         category: "children",
-        image: "https://via.placeholder.com/300x400/2E4057/ffffff?text=Cat+in+the+Hat",
+        image: "https://cdn.pixabay.com/photo/2016/09/10/17/18/book-1659717_1280.jpg",
+        thumbnail: "https://cdn.pixabay.com/photo/2016/09/10/17/18/book-1659717_640.jpg",
         description: "Dr. Seuss classic children's book"
     },
     {
@@ -30,7 +32,8 @@ const books = [
         name: "Milk and Honey",
         price: 16.99,
         category: "poetry",
-        image: "https://via.placeholder.com/300x400/2E4057/ffffff?text=Milk+and+Honey",
+        image: "https://cdn.pixabay.com/photo/2015/11/19/21/11/book-1052010_1280.jpg",
+        thumbnail: "https://cdn.pixabay.com/photo/2015/11/19/21/11/book-1052010_640.jpg",
         description: "Modern poetry collection"
     },
     {

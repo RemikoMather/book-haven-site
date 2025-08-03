@@ -1,0 +1,83 @@
+/* Book Image Styles */
+.book-image {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.book-image:hover {
+    transform: scale(1.02);
+    box-shadow: var(--shadow-lg);
+}
+
+.book-thumbnail {
+    width: 100%;
+    max-width: 150px;
+    height: auto;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+}
+
+/* Loading State */
+.book-image.loading {
+    background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s linear infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Lazy Loading */
+.book-image[loading="lazy"] {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.book-image[loading="lazy"].loaded {
+    opacity: 1;
+}
+
+/* Fallback */
+.book-image-fallback {
+    background-color: var(--inkwell-blue);
+    color: var(--parchment-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 1rem;
+    min-height: 200px;
+}
+
+/* Error State */
+.book-image-error {
+    position: relative;
+}
+
+.book-image-error::after {
+    content: "Image not available";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--inkwell-blue);
+    color: var(--parchment-white);
+    font-size: 0.875rem;
+    border-radius: var(--radius-md);
+}
