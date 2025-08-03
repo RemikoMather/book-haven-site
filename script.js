@@ -200,24 +200,6 @@ function showAlert(message, type = 'info') {
     }
 }
 
-// Cart UI management
-function setupCartUI() {
-    const cartToggle = document.querySelector('.cart-toggle');
-    const cartDropdown = document.querySelector('.cart-dropdown');
-    
-    if (cartToggle && cartDropdown) {
-        cartToggle.addEventListener('click', () => {
-            cartDropdown.classList.toggle('active');
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!cartToggle.contains(e.target) && !cartDropdown.contains(e.target)) {
-                cartDropdown.classList.remove('active');
-            }
-        });
-    }
-}
-
 // Cart UI management with error handling
 function setupCartUI() {
     try {
