@@ -1,4 +1,4 @@
-import { config } from './config.js';
+import SUPABASE_CONFIG from './supabase-config.js';
 
 export class ProductService {
     static instance = null;
@@ -7,8 +7,7 @@ export class ProductService {
         if (ProductService.instance) {
             return ProductService.instance;
         }
-        this.SUPABASE_URL = config.get('SUPABASE_URL');
-        this.SUPABASE_ANON_KEY = config.get('SUPABASE_ANON_KEY');
+        this.supabase = null;
         this.retryAttempts = 3;
         this.retryDelay = 1000;
         this.initSupabase();
@@ -17,13 +16,13 @@ export class ProductService {
 
     initSupabase() {
         try {
-            console.log('DEBUG: Initializing Supabase with URL:', this.SUPABASE_URL);
-            if (!this.SUPABASE_URL || !this.SUPABASE_ANON_KEY) {
+            console.log('DEBUG: Initializing Supabase with URL:', SUPABASE_CONFIG.url);
+            if (!SUPABASE_CONFIG.url || !SUPABASE_CONFIG.anonKey) {
                 console.warn('DEBUG: Missing Supabase credentials, falling back to mock data');
                 this.supabase = null;
                 return;
             }
-            this.supabase = supabase.createClient(this.SUPABASE_URL, this.SUPABASE_ANON_KEY);
+            this.supabase = supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
             console.log('DEBUG: Supabase client initialized successfully');
         } catch (error) {
             console.error('DEBUG: Failed to initialize Supabase:', error);
