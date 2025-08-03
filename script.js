@@ -13,55 +13,111 @@ export const sessionStore = new StorageManager('session');
 export const cartManager = new CartManager();
 
 // Process order using cart manager
-async function processOrder() {
-    const cart = cartManager.getCart();
-    if (cart.length === 0) {
-        showAlert('Your cart is empty!')
-        return
+export async function processOrder() {
+    try {
+        const cart = cartManager.getCart();
+        if (cart.length === 0) {
+            showAlert('Your cart is empty!')
+            return
+        }
+        // Calculate total
+        const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        
+        // Here you would typically integrate with a payment processor
+        // Simulating payment process
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        showAlert('Order processed successfully!')
+        cartManager.clearCart();
+        return true;
+    } catch (error) {
+        console.error('Order processing failed:', error)
+        showAlert('Failed to process order. Please try again.')
+        return false;
     }
-    // Here you would typically integrate with a payment processor
-    showAlert('Order processed successfully!')
-    cartManager.clearCart();
 }
 
 // Newsletter subscription
-async function subscribeToNewsletter(email) {
-    try {
-        const { data, error } = await supabase
-            .from('subscriptions')
-            .insert([{ email: email }])
-        
-        if (error) throw error
-        showAlert('Thank you for subscribing!')
-    } catch (error) {
-        showAlert('Error subscribing. Please try again.')
-        console.error('Error:', error)
+export async function subscribeToNewsletter(email) {
+    if (!email || !email.includes('@')) {
+        throw new Error('Invalid email address');
     }
+
+    const { data, error } = await supabase
+        .from('subscriptions')
+        .insert([{ 
+            email,
+            subscribed_at: new Date().toISOString()
+        }]);
+    
+    if (error) {
+        console.error('Subscription error:', error);
+        throw new Error('Failed to subscribe');
+    }
+
+    showAlert('Thank you for subscribing!');
+    return data;
 }
 
 // Contact form
-async function submitContactForm(formData) {
-    try {
-        const { data, error } = await supabase
-            .from('contact_messages')
-            .insert([{
-                name: formData.name,
-                email: formData.email,
-                message: formData.message
-            }])
-        
-        if (error) throw error
-        showAlert('Thank you for your message!')
-    } catch (error) {
-        showAlert('Error sending message. Please try again.')
-        console.error('Error:', error)
+export async function submitContactForm(formData) {
+    // Validate form data
+    if (!formData.name || !formData.email || !formData.message) {
+        throw new Error('All fields are required');
     }
+
+    if (!formData.email.includes('@')) {
+        throw new Error('Invalid email address');
+    }
+
+    const { data, error } = await supabase
+        .from('contact_messages')
+        .insert([{
+            name: formData.name,
+            email: formData.email,
+            message: formData.message,
+            submitted_at: new Date().toISOString()
+        }]);
+    
+    if (error) {
+        console.error('Contact form error:', error);
+        throw new Error('Failed to send message');
+    }
+
+    showAlert('Thank you for your message!');
+    return data;
 }
 
 // Custom orders
-function saveCustomOrder(orderDetails) {
-    localStore.set('customOrder', orderDetails)
-    showAlert('Custom order details saved!')
+export function saveCustomOrder(orderDetails) {
+    try {
+        // Validate order details
+        if (!orderDetails || typeof orderDetails !== 'object') {
+            throw new Error('Invalid order details');
+        }
+
+        const requiredFields = ['title', 'description', 'email'];
+        for (const field of requiredFields) {
+            if (!orderDetails[field]) {
+                throw new Error(`Missing required field: ${field}`);
+            }
+        }
+
+        // Add timestamp and format data
+        const customOrder = {
+            ...orderDetails,
+            saved_at: new Date().toISOString(),
+            status: 'pending'
+        };
+
+        localStore.set('customOrder', customOrder);
+        showAlert('Custom order details saved!');
+        return true;
+    } catch (error) {
+        console.error('Failed to save custom order:', error);
+        showAlert('Failed to save custom order. Please try again.');
+        return false;
+    }
 }
 
 // Utility functions
@@ -102,23 +158,33 @@ document.addEventListener('DOMContentLoaded', () => {
     // Setup event listeners
     const subscribeForm = document.getElementById('subscribe-form')
     if (subscribeForm) {
-        subscribeForm.addEventListener('submit', (e) => {
+        subscribeForm.addEventListener('submit', async (e) => {
             e.preventDefault()
-            const email = e.target.email.value
-            subscribeToNewsletter(email)
+            const emailInput = e.target.email
+            try {
+                await subscribeToNewsletter(emailInput.value)
+                e.target.reset()
+            } catch (error) {
+                console.error('Newsletter subscription failed:', error)
+            }
         })
     }
     
     const contactForm = document.getElementById('contact-form')
     if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
+        contactForm.addEventListener('submit', async (e) => {
             e.preventDefault()
             const formData = {
                 name: e.target.name.value,
                 email: e.target.email.value,
                 message: e.target.message.value
             }
-            submitContactForm(formData)
+            try {
+                await submitContactForm(formData)
+                e.target.reset()
+            } catch (error) {
+                console.error('Contact form submission failed:', error)
+            }
         })
     }
 })
