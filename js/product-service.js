@@ -148,6 +148,7 @@ export class ProductService {
         // Hardcoded fallback data
         return [
             {
+                id: 1,
                 name: "The Great Gatsby",
                 description: "F. Scott Fitzgerald's masterpiece of American fiction, capturing the essence of the Jazz Age",
                 price: 15.99,
@@ -156,6 +157,7 @@ export class ProductService {
                 image: "https://cdn.pixabay.com/photo/2015/11/19/21/14/book-1052014_640.jpg"
             },
             {
+                id: 2,
                 name: "To Kill a Mockingbird",
                 description: "Harper Lee's timeless classic about justice and racial inequality in the American South",
                 price: 12.99,
@@ -164,6 +166,7 @@ export class ProductService {
                 image: "https://cdn.pixabay.com/photo/2015/11/19/21/14/book-1052014_640.jpg"
             },
             {
+                id: 3,
                 name: "A Brief History of Time",
                 description: "Stephen Hawking's landmark exploration of cosmic mysteries",
                 price: 18.99,
@@ -172,6 +175,7 @@ export class ProductService {
                 image: "https://cdn.pixabay.com/photo/2015/11/19/21/14/book-1052014_640.jpg"
             },
             {
+                id: 4,
                 name: "Where the Wild Things Are",
                 description: "Maurice Sendak's beloved children's tale of imagination and adventure",
                 price: 9.99,
@@ -180,6 +184,7 @@ export class ProductService {
                 image: "https://cdn.pixabay.com/photo/2015/11/19/21/14/book-1052014_640.jpg"
             },
             {
+                id: 5,
                 name: "Milk and Honey",
                 description: "Rupi Kaur's collection of poetry and prose about survival",
                 price: 14.99,
