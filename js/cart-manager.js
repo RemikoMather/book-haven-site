@@ -46,57 +46,163 @@ export class CartManager {
         }
     }
 
-    // Add item to cart
+    // Add item to cart with enhanced validation and quantity limits
     addItem(item) {
-        if (!item || typeof item !== 'object') {
+        if (!this._validateItem(item)) {
             console.error('Invalid item:', item);
-            return false;
+            return { success: false, error: 'Invalid item data' };
         }
 
         try {
             const existingItem = this.cart.find(cartItem => cartItem.id === item.id);
-            if (existingItem) {
-                existingItem.quantity += item.quantity || 1;
-            } else {
-                this.cart.push({
-                    id: Number(item.id),
-                    name: String(item.name),
-                    price: Number(item.price),
-                    image: String(item.image),
-                    quantity: Math.max(1, Number(item.quantity || 1))
-                });
+            const newQuantity = (existingItem?.quantity || 0) + (item.quantity || 1);
+            
+            // Check quantity limits
+            if (newQuantity > 10) {
+                return { 
+                    success: false, 
+                    error: 'Maximum quantity limit reached (10 items)' 
+                };
             }
+
+            if (existingItem) {
+                existingItem.quantity = newQuantity;
+            } else {
+                const sanitizedItem = {
+                    id: Number(item.id),
+                    name: String(item.name).trim(),
+                    price: Number(parseFloat(item.price).toFixed(2)),
+                    image: String(item.image),
+                    quantity: Math.max(1, Math.min(10, Number(item.quantity || 1))),
+                    added_at: new Date().toISOString()
+                };
+
+                if (this._calculateCartTotal() + sanitizedItem.price > 10000) {
+                    return { 
+                        success: false, 
+                        error: 'Cart total exceeds maximum limit ($10,000)' 
+                    };
+                }
+
+                this.cart.push(sanitizedItem);
+            }
+
             this._saveCart();
             this._updateCartUI();
-            return true;
+            return { success: true, cart: this.getCartSummary() };
         } catch (error) {
             console.error('Error adding item to cart:', error);
-            return false;
+            return { success: false, error: 'Failed to add item to cart' };
         }
     }
 
-    // Remove item from cart
-    removeItem(itemId) {
-        this.cart = this.cart.filter(item => item.id !== itemId);
-        this._saveCart();
-        this._updateCartUI();
-    }
+    // Validate item data
+    _validateItem(item) {
+        if (!item || typeof item !== 'object') return false;
+        
+        const requiredFields = {
+            id: 'number',
+            name: 'string',
+            price: 'number',
+            image: 'string'
+        };
 
-    // Update item quantity
-    updateQuantity(itemId, quantity) {
-        const item = this.cart.find(item => item.id === itemId);
-        if (item) {
-            item.quantity = quantity;
-            if (quantity <= 0) {
-                this.removeItem(itemId);
-            } else {
-                this._saveCart();
-                this._updateCartUI();
+        for (const [field, type] of Object.entries(requiredFields)) {
+            if (!item[field] || typeof item[field] !== type) {
+                return false;
             }
         }
+
+        if (item.price <= 0 || !isFinite(item.price)) {
+            return false;
+        }
+
+        return true;
     }
 
-    // Clear the entire cart
+    // Calculate cart total
+    _calculateCartTotal() {
+        return this.cart.reduce((total, item) => 
+            total + (item.price * item.quantity), 0
+        );
+    }
+
+    // Get cart summary
+    getCartSummary() {
+        const total = this._calculateCartTotal();
+        const itemCount = this.cart.reduce((count, item) => 
+            count + item.quantity, 0
+        );
+
+        return {
+            items: this.cart,
+            itemCount,
+            total: parseFloat(total.toFixed(2)),
+            lastUpdated: new Date().toISOString()
+        };
+    }
+
+    // Remove item from cart with validation
+    removeItem(itemId) {
+        if (!itemId || !this.cart.some(item => item.id === itemId)) {
+            return { success: false, error: 'Item not found in cart' };
+        }
+
+        try {
+            this.cart = this.cart.filter(item => item.id !== itemId);
+            this._saveCart();
+            this._updateCartUI();
+            return { success: true, cart: this.getCartSummary() };
+        } catch (error) {
+            console.error('Error removing item from cart:', error);
+            return { success: false, error: 'Failed to remove item from cart' };
+        }
+    }
+
+    // Update item quantity with validation
+    updateQuantity(itemId, quantity) {
+        if (!itemId || typeof quantity !== 'number' || quantity < 0 || quantity > 10) {
+            return { 
+                success: false, 
+                error: 'Invalid quantity. Must be between 0 and 10.' 
+            };
+        }
+
+        try {
+            const item = this.cart.find(item => item.id === itemId);
+            if (!item) {
+                return { success: false, error: 'Item not found in cart' };
+            }
+
+            if (quantity === 0) {
+                return this.removeItem(itemId);
+            }
+
+            // Calculate new cart total with updated quantity
+            const currentTotal = this._calculateCartTotal();
+            const newTotal = currentTotal - (item.price * item.quantity) + (item.price * quantity);
+
+            if (newTotal > 10000) {
+                return { 
+                    success: false, 
+                    error: 'Cart total would exceed maximum limit ($10,000)' 
+                };
+            }
+
+            item.quantity = quantity;
+            item.updated_at = new Date().toISOString();
+
+            this._saveCart();
+            this._updateCartUI();
+            
+            return { success: true, cart: this.getCartSummary() };
+        } catch (error) {
+            console.error('Error updating quantity:', error);
+            return { success: false, error: 'Failed to update quantity' };
+        }
+    }
+
+    // Clear the entire cart with confirmation
     clearCart() {
         this.cart = [];
         this._saveCart();
