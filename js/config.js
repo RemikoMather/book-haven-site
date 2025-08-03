@@ -1,10 +1,15 @@
-import { createClient } from '@supabase/supabase-js';
+class Config {
+    constructor() {
+        this.configs = {
+            SUPABASE_URL: 'https://qeoyopgtolnmtdaahdvn.supabase.co',
+            SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFlb3lvcGd0b2xubXRkYWFoZHZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQxNjY0MTUsImV4cCI6MjA2OTc0MjQxNX0.wqSrr2lLHO0JzG3426dVlMEaJne3gKbn8nqibn57FgM',
+            NODE_ENV: 'development'
+        };
+    }
 
-// Supabase Configuration
-const SUPABASE_URL = 'https://qeoyopgtolnmtdaahdvn.supabase.co';
-const SUPABASE_KEY = process.env.SUPABASE_KEY;
+    get(key) {
+        return this.configs[key];
+    }
+}
 
-// Initialize Supabase client
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-
-export { supabase };
+export const config = new Config();

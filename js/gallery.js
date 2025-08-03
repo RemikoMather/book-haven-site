@@ -31,6 +31,7 @@ export class ProductManager {
 
         try {
             console.log('Starting to load products...');
+            console.log('ProductService instance:', productService);
             this.isLoading = true;
             this.setVisibility({ loading: true, error: false, empty: false });
 
@@ -55,6 +56,18 @@ export class ProductManager {
             console.error('Error loading products:', error);
             this.hasError = true;
             this.setVisibility({ loading: false, error: true, empty: false });
+            
+            // Show error message to user
+            const errorMessage = document.querySelector('.error-message p');
+            if (errorMessage) {
+                errorMessage.textContent = `Error loading products: ${error.message}. Please try again.`;
+            }
+            
+            // Enable retry button
+            const retryButton = document.querySelector('.error-actions button');
+            if (retryButton) {
+                retryButton.addEventListener('click', () => this.loadProducts(true));
+            }
         } finally {
             this.isLoading = false;
         }
@@ -198,7 +211,21 @@ export class ProductManager {
         info.textContent = `Showing products ${startIndex}-${endIndex} of ${total}`;
     }
 
-    // Removed incomplete setVisibility arrow function to fix syntax error.
+    setVisibility({ loading, error, empty }) {
+        const states = {
+            loadingState: loading,
+            errorState: error,
+            emptyState: empty,
+            productsContainer: !loading && !error && !empty
+        };
+
+        Object.entries(states).forEach(([id, visible]) => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.hidden = !visible;
+            }
+        });
+    }
 
     updatePagination() {
         const pageNumbers = document.querySelector('.page-numbers');
