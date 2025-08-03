@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' https://cdn.pixabay.com data:;">
     <title>Book Haven - Your Literary Sanctuary</title>
     <meta name="description" content="Discover your next great read at Book Haven - a curated bookstore experience">
     
@@ -19,9 +20,6 @@
     <link rel="stylesheet" href="css/notifications.css">
     <link rel="stylesheet" href="css/breadcrumb.css">
     <link rel="stylesheet" href="css/quick-actions.css">
-    
-    <!-- Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <!-- Structured Data -->
     <script type="application/ld+json">
@@ -230,7 +228,14 @@
     </footer>
 
     <!-- Scripts -->
+    <!-- External Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Application Scripts -->
+    <script src="js/debug.js" type="module"></script>
+    <script src="js/config.js" type="module"></script>
     <script src="js/storage-manager.js" type="module"></script>
+    <script src="js/product-service.js" type="module"></script>
     <script src="js/cart-manager.js" type="module"></script>
     <script src="js/gallery.js" type="module"></script>
     <script src="js/common.js" type="module"></script>
