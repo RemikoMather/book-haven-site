@@ -25,19 +25,23 @@
             <div class="nav-cart">
                 <button class="cart-toggle" aria-label="Open cart">
                     <i class="fas fa-shopping-cart"></i>
-                    <span id="cart-count">0</span>
+                    <span class="cart-count" data-cart-count aria-live="polite" hidden>0</span>
                 </button>
                 <div class="cart-dropdown">
                     <div class="cart-header">
                         <h3>Shopping Cart</h3>
-                        <button class="close-cart">&times;</button>
+                        <button class="close-cart" aria-label="Close cart">&times;</button>
                     </div>
-                    <div id="cart-items" class="cart-items"></div>
+                    <div id="cart-items" class="cart-items" aria-live="polite">
+                        <!-- Cart items will be dynamically inserted here -->
+                    </div>
                     <div class="cart-footer">
                         <div class="cart-total">
-                            Total: $<span id="cart-total">0.00</span>
+                            Total: $<span data-cart-total>0.00</span>
                         </div>
-                        <button class="btn btn-primary checkout-btn">Checkout</button>
+                        <button class="btn btn-primary checkout-btn" disabled>
+                            Proceed to Checkout
+                        </button>
                     </div>
                 </div>
             </div>

@@ -218,6 +218,66 @@ function setupCartUI() {
     }
 }
 
+// Cart UI management with error handling
+function setupCartUI() {
+    try {
+        const cartToggles = document.querySelectorAll('.cart-toggle');
+        const cartDropdowns = document.querySelectorAll('.cart-dropdown');
+        const closeButtons = document.querySelectorAll('.close-cart');
+        
+        cartToggles.forEach((toggle, index) => {
+            const dropdown = cartDropdowns[index];
+            if (toggle && dropdown) {
+                toggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    cartDropdowns.forEach((d, i) => {
+                        if (i !== index) d.classList.remove('active');
+                    });
+                    dropdown.classList.toggle('active');
+                });
+            }
+        });
+
+        closeButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                cartDropdowns.forEach(dropdown => dropdown.classList.remove('active'));
+            });
+        });
+
+        // Close cart when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.nav-cart')) {
+                cartDropdowns.forEach(dropdown => dropdown.classList.remove('active'));
+            }
+        });
+
+        // Handle checkout button clicks
+        document.querySelectorAll('.checkout-btn').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                try {
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                    
+                    const result = await processOrder();
+                    
+                    if (result.success) {
+                        cartDropdowns.forEach(dropdown => dropdown.classList.remove('active'));
+                    }
+                } catch (error) {
+                    console.error('Checkout error:', error);
+                    showAlert('Failed to process order. Please try again.', 'error');
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = 'Proceed to Checkout';
+                }
+            });
+        });
+    } catch (error) {
+        console.error('Error setting up cart UI:', error);
+    }
+}
+
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
     // Setup cart UI
