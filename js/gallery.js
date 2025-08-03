@@ -2,42 +2,45 @@ import { productService } from './product-service.js';
 import { CartManager } from './cart-manager.js';
 
 export class ProductManager {
-    static init() {
-        window.productManager = new ProductManager();
-        console.log('DEBUG: ProductManager initialized');
-    }
-    constructor() {
-        this.products = [];
-        this.filteredProducts = [];
-        this.currentPage = 1;
-        this.itemsPerPage = 6;
-        this.cartManager = new CartManager();
-        this.retryCount = 0;
-        this.isLoading = false;
-        this.hasError = false;
-        this.lastFilters = {
-            category: '',
-            searchQuery: '',
-            sortBy: 'newest'
-        };
+    #products = [];
+    #filteredProducts = [];
+    #currentPage = 1;
+    #itemsPerPage = 6;
+    #cartManager;
+    #retryCount = 0;
+    #isLoading = false;
+    #hasError = false;
+    #lastFilters = {
+        category: '',
+        searchQuery: '',
+        sortBy: 'newest'
+    };
 
+    constructor() {
+        this.#cartManager = new CartManager();
         this.setupEventListeners();
         this.setupFilters();
         this.setupPagination();
         this.loadProducts();
     }
 
+    static init() {
+        window.productManager = new ProductManager();
+        console.log('DEBUG: ProductManager initialized');
+    }
+
     async loadProducts(isRetry = false) {
-        if (this.isLoading && !isRetry) return;
+        if (this.#isLoading && !isRetry) return;
 
         try {
             console.log('DEBUG: Starting to load products...');
             console.log('DEBUG: ProductService instance:', productService);
-            this.isLoading = true;
+            this.#isLoading = true;
             this.setVisibility({ loading: true, error: false, empty: false });
 
             if (!productService) {
                 throw new Error('ProductService is not initialized');
+            }
 
             const products = await productService.fetchProducts();
             console.log('Products received:', products);
@@ -46,19 +49,19 @@ export class ProductManager {
                 throw new Error('Invalid products data received');
             }
 
-            this.products = products;
-            this.retryCount = 0;
-            this.hasError = false;
-            console.log('Products loaded successfully:', this.products.length, 'items');
+            this.#products = products;
+            this.#retryCount = 0;
+            this.#hasError = false;
+            console.log('Products loaded successfully:', this.#products.length, 'items');
             
-            this.filteredProducts = [...this.products];
+            this.#filteredProducts = [...this.#products];
             this.renderProducts();
             this.updatePagination();
             
             await this.applyFilters();
         } catch (error) {
             console.error('DEBUG: Error in loadProducts:', error);
-            this.hasError = true;
+            this.#hasError = true;
             this.setVisibility({ loading: false, error: true, empty: false });
             
             // Show detailed error message to user
@@ -82,9 +85,9 @@ export class ProductManager {
             try {
                 const mockProducts = await productService.fetchMockProducts();
                 if (mockProducts && mockProducts.length > 0) {
-                    this.products = mockProducts;
-                    this.filteredProducts = [...this.products];
-                    this.hasError = false;
+                    this.#products = mockProducts;
+                    this.#filteredProducts = [...this.#products];
+                    this.#hasError = false;
                     this.setVisibility({ loading: false, error: false, empty: false });
                     this.renderProducts();
                     this.updatePagination();
@@ -93,32 +96,30 @@ export class ProductManager {
                 console.error('DEBUG: Fallback to mock products also failed:', fallbackError);
             }
         } finally {
-            this.isLoading = false;
+            this.#isLoading = false;
         }
     }
 
-    // Removed duplicate setupEventListeners method to resolve syntax error.
-
     async applyFilters() {
-        if (this.isLoading) return;
+        if (this.#isLoading) return;
 
         try {
-            this.isLoading = true;
+            this.#isLoading = true;
             this.setVisibility({ loading: true, error: false, empty: false });
 
-            const category = document.getElementById('categoryFilter').value;
-            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
-            const sortBy = document.getElementById('sortFilter').value;
+            const category = document.getElementById('categoryFilter')?.value;
+            const searchQuery = document.getElementById('searchInput')?.value?.toLowerCase();
+            const sortBy = document.getElementById('sortFilter')?.value;
 
             // Save current filter state
-            this.lastFilters = { category, searchQuery, sortBy };
+            this.#lastFilters = { category, searchQuery, sortBy };
 
             let filteredProducts = [];
 
             if (category) {
                 filteredProducts = await productService.fetchProductsByCategory(category);
             } else {
-                filteredProducts = [...this.products];
+                filteredProducts = [...this.#products];
             }
 
             // Apply search filter
@@ -147,8 +148,8 @@ export class ProductManager {
                 }
             });
 
-            this.filteredProducts = filteredProducts;
-            this.currentPage = 1;
+            this.#filteredProducts = filteredProducts;
+            this.#currentPage = 1;
 
             if (filteredProducts.length === 0) {
                 this.setVisibility({ loading: false, error: false, empty: true });
@@ -160,7 +161,7 @@ export class ProductManager {
             console.error('Error applying filters:', error);
             this.setVisibility({ loading: false, error: true, empty: false });
         } finally {
-            this.isLoading = false;
+            this.#isLoading = false;
         }
     }
 
@@ -173,7 +174,7 @@ export class ProductManager {
         if (searchInput) searchInput.value = '';
         if (sortFilter) sortFilter.value = 'newest';
 
-        this.lastFilters = {
+        this.#lastFilters = {
             category: '',
             searchQuery: '',
             sortBy: 'newest'
@@ -206,31 +207,50 @@ export class ProductManager {
         const pagination = document.querySelector('.pagination');
         if (!pagination) return;
 
-        pagination.addEventListener('click', (e) => {
-            if (e.target.classList.contains('btn')) {
-                if (e.target.getAttribute('aria-label') === 'Previous page') {
-                    this.currentPage = Math.max(1, this.currentPage - 1);
-                } else if (e.target.getAttribute('aria-label') === 'Next page') {
-                    const maxPage = Math.ceil(this.filteredProducts.length / this.itemsPerPage);
-                    this.currentPage = Math.min(maxPage, this.currentPage + 1);
-                } else {
-                    this.currentPage = parseInt(e.target.textContent);
+        const pageNumbers = document.querySelector('.page-numbers');
+        const prevButton = document.getElementById('prevPage');
+        const nextButton = document.getElementById('nextPage');
+        
+        if (prevButton) {
+            prevButton.addEventListener('click', () => {
+                if (this.#currentPage > 1) {
+                    this.#currentPage--;
+                    this.renderProducts();
+                    this.updatePagination();
                 }
-                this.renderProducts();
-                this.updatePagination();
-            }
-        });
+            });
+        }
+
+        if (nextButton) {
+            nextButton.addEventListener('click', () => {
+                const totalPages = Math.ceil(this.#filteredProducts.length / this.#itemsPerPage);
+                if (this.#currentPage < totalPages) {
+                    this.#currentPage++;
+                    this.renderProducts();
+                    this.updatePagination();
+                }
+            });
+        }
+
+        if (pageNumbers) {
+            pageNumbers.addEventListener('click', (e) => {
+                const pageButton = e.target.closest('button');
+                if (pageButton && !pageButton.classList.contains('active')) {
+                    this.#currentPage = parseInt(pageButton.textContent);
+                    this.renderProducts();
+                    this.updatePagination();
+                }
+            });
+        }
     }
 
-    // Removed duplicate updatePagination arrow function to fix syntax error.
-
-    updatePaginationInfo = () => {
+    updatePaginationInfo() {
         const info = document.getElementById('paginationInfo');
         if (!info) return;
 
-        const startIndex = (this.currentPage - 1) * this.itemsPerPage + 1;
-        const endIndex = Math.min(startIndex + this.itemsPerPage - 1, this.filteredProducts.length);
-        const total = this.filteredProducts.length;
+        const startIndex = (this.#currentPage - 1) * this.#itemsPerPage + 1;
+        const endIndex = Math.min(startIndex + this.#itemsPerPage - 1, this.#filteredProducts.length);
+        const total = this.#filteredProducts.length;
 
         info.textContent = `Showing products ${startIndex}-${endIndex} of ${total}`;
     }
@@ -255,72 +275,30 @@ export class ProductManager {
         const pageNumbers = document.querySelector('.page-numbers');
         const prevButton = document.getElementById('prevPage');
         const nextButton = document.getElementById('nextPage');
+        
         if (!pageNumbers) return;
 
-        const totalPages = Math.ceil(this.filteredProducts.length / this.itemsPerPage);
+        const totalPages = Math.ceil(this.#filteredProducts.length / this.#itemsPerPage);
         let paginationHTML = '';
 
         for (let i = 1; i <= totalPages; i++) {
             paginationHTML += `
                 <button 
-                    class="btn ${i === this.currentPage ? 'active' : ''}"
+                    class="btn ${i === this.#currentPage ? 'active' : ''}"
                     aria-label="Page ${i}"
-                    aria-current="${i === this.currentPage ? 'page' : 'false'}"
+                    aria-current="${i === this.#currentPage ? 'page' : 'false'}"
                 >${i}</button>
             `;
         }
 
         pageNumbers.innerHTML = paginationHTML;
 
-        // Update prev/next buttons
         if (prevButton) {
-            prevButton.disabled = this.currentPage === 1;
+            prevButton.disabled = this.#currentPage === 1;
         }
         if (nextButton) {
-            nextButton.disabled = this.currentPage === totalPages;
+            nextButton.disabled = this.#currentPage === totalPages;
         }
-    }
-
-    updatePaginationInfo() {
-        const info = document.getElementById('paginationInfo');
-        if (!info) return;
-
-        const startIndex = (this.currentPage - 1) * this.itemsPerPage + 1;
-        const endIndex = Math.min(startIndex + this.itemsPerPage - 1, this.filteredProducts.length);
-        const total = this.filteredProducts.length;
-
-        info.textContent = `Showing products ${startIndex}-${endIndex} of ${total}`;
-    }
-
-    setVisibility({ loading, error, empty }) {
-        const states = {
-            loadingState: loading,
-            errorState: error,
-            emptyState: empty,
-            productsContainer: !loading && !error && !empty
-        };
-
-        Object.entries(states).forEach(([id, visible]) => {
-            const element = document.getElementById(id);
-            if (element) {
-                element.hidden = !visible;
-            }
-        });
-    }
-
-    resetFilters() {
-        const categoryFilter = document.getElementById('categoryFilter');
-        const sortFilter = document.getElementById('sortFilter');
-        const searchInput = document.getElementById('searchInput');
-
-        if (categoryFilter) categoryFilter.value = '';
-        if (sortFilter) sortFilter.value = 'newest';
-        if (searchInput) searchInput.value = '';
-
-        this.filteredProducts = [...this.products];
-        this.currentPage = 1;
-        this.renderProducts();
-        this.updatePagination();
     }
 
     renderProducts() {
@@ -330,16 +308,11 @@ export class ProductManager {
             return;
         }
 
-        console.log('Rendering products:', this.filteredProducts.length, 'total items');
+        const startIndex = (this.#currentPage - 1) * this.#itemsPerPage;
+        const endIndex = startIndex + this.#itemsPerPage;
+        const currentProducts = this.#filteredProducts.slice(startIndex, endIndex);
 
-        // Get the current page's products
-        const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-        const endIndex = startIndex + this.itemsPerPage;
-        const currentProducts = this.filteredProducts.slice(startIndex, endIndex);
-
-        console.log('Current page products:', currentProducts.length, 'items');
-
-        if (this.filteredProducts.length === 0) {
+        if (this.#filteredProducts.length === 0) {
             this.setVisibility({ loading: false, error: false, empty: true });
             return;
         }
@@ -349,7 +322,6 @@ export class ProductManager {
         this.setVisibility({ loading: false, error: false, empty: false });
     }
 
-    // Add a stub for getProductCard if missing
     getProductCard(product) {
         return `
             <article class="product-card">
@@ -392,7 +364,7 @@ export class ProductManager {
             if (retryButton) {
                 retryButton.addEventListener('click', (e) => {
                     e.preventDefault();
-                    this.retryCount = 0; // Reset retry count on manual retry
+                    this.#retryCount = 0; // Reset retry count on manual retry
                     this.loadProducts();
                 });
             }
@@ -406,7 +378,7 @@ export class ProductManager {
                 if (!addToCartBtn) return;
 
                 const productId = Number(addToCartBtn.dataset.productId);
-                const product = this.products.find(p => p.id === productId);
+                const product = this.#products.find(p => p.id === productId);
 
                 if (!product) {
                     console.error('Product not found:', productId);
@@ -419,7 +391,7 @@ export class ProductManager {
                 addToCartBtn.innerHTML = '<i class="fas fa-spinner fa-spin" aria-hidden="true"></i> Adding...';
 
                 try {
-                    this.cartManager.addItem({
+                    this.#cartManager.addItem({
                         id: product.id,
                         name: product.name,
                         price: product.price,
