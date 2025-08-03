@@ -327,10 +327,10 @@ export class ProductManager {
             <article class="product-card">
                 <div class="product-image">
                     <img 
-                        src="${product.thumbnail || product.image || window.getAssetUrl('/images/placeholder-book.jpg')}" 
+                        src="${product.thumbnail || product.image || BookHaven.getAssetUrl('/images/placeholder-book.jpg')}" 
                         alt="${product.name}"
                         loading="lazy"
-                        onerror="this.onerror=null; this.src=window.getAssetUrl('/images/placeholder-book.jpg');"
+                        onerror="this.onerror=null; this.src=BookHaven.getAssetUrl('/images/placeholder-book.jpg');"
                     />
                 </div>
                 <div class="product-details">
