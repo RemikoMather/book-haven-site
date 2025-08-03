@@ -266,22 +266,27 @@ class ProductManager {
     }
 
     renderProducts() {
-        const grid = document.getElementById('productGrid');
-        if (!grid) return;
+        const productsContainer = document.getElementById('productsContainer');
+        if (!productsContainer) {
+            console.error('Products container not found');
+            return;
+        }
+
+        console.log('Rendering products:', this.filteredProducts.length, 'total items');
 
         // Get the current page's products
         const startIndex = (this.currentPage - 1) * this.itemsPerPage;
         const endIndex = startIndex + this.itemsPerPage;
         const currentProducts = this.filteredProducts.slice(startIndex, endIndex);
 
-        grid.innerHTML = currentProducts.map(product => this.getProductCard(product)).join('');
+        console.log('Current page products:', currentProducts.length, 'items');
 
-        // Handle empty results
         if (this.filteredProducts.length === 0) {
             this.setVisibility({ loading: false, error: false, empty: true });
             return;
         }
 
+        productsContainer.innerHTML = currentProducts.map(product => this.getProductCard(product)).join('');
         this.updatePaginationInfo();
         this.setVisibility({ loading: false, error: false, empty: false });
     }

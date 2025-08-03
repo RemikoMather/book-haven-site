@@ -129,10 +129,15 @@ export class ProductService {
                 throw new Error(`Failed to fetch mock data: ${response.status} ${response.statusText}`);
             }
             const data = await response.json();
-            console.log('Mock products loaded:', data.products);
+            if (!data || !Array.isArray(data.products)) {
+                console.error('Invalid mock data format:', data);
+                throw new Error('Invalid mock data format');
+            }
+            console.log('Mock products loaded successfully:', data.products.length, 'items');
             return data.products;
         } catch (error) {
             console.error('Failed to fetch mock products:', error);
+            console.error('Stack trace:', error.stack);
             throw error;
         }
     }
