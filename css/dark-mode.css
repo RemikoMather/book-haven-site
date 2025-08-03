@@ -1,0 +1,91 @@
+/* Dark Mode Support */
+:root {
+    color-scheme: light dark;
+}
+
+/* Light Theme (Default) */
+:root {
+    --background-primary: var(--parchment-white);
+    --text-primary: var(--bookish-black);
+    --accent-primary: var(--inkwell-blue);
+    --accent-secondary: var(--aged-gold);
+    --surface-primary: #ffffff;
+    --surface-secondary: #f5f5f5;
+    --border-color: rgba(0, 0, 0, 0.1);
+    --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Dark Theme */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-primary: #1a1a1a;
+        --text-primary: #e0e0e0;
+        --accent-primary: #3d5a7d;
+        --accent-secondary: #d4c676;
+        --surface-primary: #2d2d2d;
+        --surface-secondary: #333333;
+        --border-color: rgba(255, 255, 255, 0.1);
+        --shadow-color: rgba(0, 0, 0, 0.3);
+    }
+
+    /* Dark Mode Image Adjustments */
+    img {
+        filter: brightness(.8) contrast(1.2);
+    }
+
+    /* Dark Mode-specific Shadows */
+    .card {
+        box-shadow: 0 2px 4px var(--shadow-color);
+    }
+
+    /* Enhanced Contrast for Important Elements */
+    .btn-primary {
+        background-color: var(--accent-secondary);
+        color: var(--background-primary);
+    }
+
+    /* Code Blocks */
+    pre, code {
+        background-color: #2d2d2d;
+        color: #e0e0e0;
+    }
+
+    /* Form Elements */
+    input, textarea, select {
+        background-color: var(--surface-primary);
+        color: var(--text-primary);
+        border-color: var(--border-color);
+    }
+
+    /* Focus States */
+    :focus-visible {
+        outline-color: var(--accent-secondary);
+    }
+}
+
+/* Manual Theme Toggle */
+[data-theme="dark"] {
+    --background-primary: #1a1a1a;
+    --text-primary: #e0e0e0;
+    --accent-primary: #3d5a7d;
+    --accent-secondary: #d4c676;
+    --surface-primary: #2d2d2d;
+    --surface-secondary: #333333;
+    --border-color: rgba(255, 255, 255, 0.1);
+    --shadow-color: rgba(0, 0, 0, 0.3);
+}
+
+/* High Contrast Adjustments */
+@media (forced-colors: active) {
+    * {
+        border-color: ButtonBorder;
+    }
+    
+    .btn {
+        border: 1px solid ButtonText;
+    }
+    
+    a {
+        color: LinkText;
+    }
+}

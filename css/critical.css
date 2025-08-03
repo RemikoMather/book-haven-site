@@ -1,0 +1,66 @@
+/* Critical CSS */
+:root {
+    --inkwell-blue: #2E4057;
+    --aged-gold: #C7B65E;
+    --parchment-white: #FFF7EE;
+    --bookish-black: #131C26;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: var(--bookish-black);
+    background: var(--parchment-white);
+}
+
+.container {
+    width: min(100% - 2rem, 75rem);
+    margin-inline: auto;
+}
+
+/* Above-the-fold Content */
+.nav-container {
+    background: var(--inkwell-blue);
+    padding: 1rem;
+}
+
+.hero {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--inkwell-blue);
+    color: white;
+    text-align: center;
+}
+
+/* Performance Optimizations */
+@media (prefers-reduced-motion: no-preference) {
+    .animated {
+        will-change: transform;
+    }
+}
+
+/* Font Display */
+@font-face {
+    font-family: 'Lora';
+    font-display: swap;
+    src: local('Lora'),
+         url('/fonts/lora.woff2') format('woff2');
+}
+
+/* Image Optimization */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Content Visibility */
+.below-fold {
+    content-visibility: auto;
+    contain-intrinsic-size: 0 500px;
+}
+
+/* Layer Optimization */
+@layer reset, base, components, utilities;

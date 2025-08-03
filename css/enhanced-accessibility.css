@@ -1,0 +1,146 @@
+/* Enhanced Accessibility System */
+:root {
+    /* Accessibility Variables */
+    --focus-outline-color: #2E4057;
+    --focus-outline-width: 3px;
+    --focus-outline-offset: 2px;
+    --focus-ring-color: rgba(46, 64, 87, 0.25);
+    --high-contrast-text: #000;
+    --high-contrast-bg: #fff;
+}
+
+/* Skip Links */
+.skip-links {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.skip-link {
+    background: var(--inkwell-blue);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    text-decoration: none;
+    border-radius: 0 0 4px 4px;
+    transform: translateY(-100%);
+    transition: transform 0.2s ease;
+    pointer-events: auto;
+}
+
+.skip-link:focus {
+    transform: translateY(0);
+    outline: var(--focus-outline-width) solid var(--focus-outline-color);
+    outline-offset: var(--focus-outline-offset);
+}
+
+/* Focus Management */
+:focus-visible {
+    outline: var(--focus-outline-width) solid var(--focus-outline-color);
+    outline-offset: var(--focus-outline-offset);
+    box-shadow: 0 0 0 4px var(--focus-ring-color);
+}
+
+/* High Contrast Mode */
+@media (forced-colors: active) {
+    :root {
+        --inkwell-blue: CanvasText;
+        --aged-gold: Highlight;
+        --parchment-white: Canvas;
+        --bookish-black: CanvasText;
+    }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .skip-link {
+        transition: none !important;
+    }
+}
+
+/* ARIA Landmarks */
+[role="banner"],
+[role="navigation"],
+[role="main"],
+[role="complementary"],
+[role="contentinfo"] {
+    outline: none;
+}
+
+/* Screen Reader Announcements */
+.sr-announce {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.sr-announce[aria-live="polite"],
+.sr-announce[aria-live="assertive"] {
+    position: fixed;
+}
+
+/* Focus Trap for Modals */
+.focus-trap {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Print Styles */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+
+    a[href]::after {
+        content: " (" attr(href) ")";
+    }
+
+    abbr[title]::after {
+        content: " (" attr(title) ")";
+    }
+
+    pre, blockquote {
+        page-break-inside: avoid;
+    }
+
+    thead {
+        display: table-header-group;
+    }
+
+    tr, img {
+        page-break-inside: avoid;
+    }
+
+    p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+    }
+
+    h2, h3 {
+        page-break-after: avoid;
+    }
+}

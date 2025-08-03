@@ -1,0 +1,189 @@
+/* Enhanced Responsive Design System */
+:root {
+    /* Responsive Spacing Scale */
+    --space-unit: clamp(0.5rem, 0.5rem + 0.5vw, 1rem);
+    --space-xs: calc(var(--space-unit) * 0.5);
+    --space-sm: var(--space-unit);
+    --space-md: calc(var(--space-unit) * 2);
+    --space-lg: calc(var(--space-unit) * 3);
+    --space-xl: calc(var(--space-unit) * 4);
+
+    /* Fluid Typography */
+    --text-base-size: clamp(1rem, 1vw + 0.75rem, 1.125rem);
+    --ratio: 1.25;
+    --line-height: 1.6;
+    
+    /* Derived Font Sizes */
+    --text-xs: calc(var(--text-base-size) / var(--ratio));
+    --text-sm: calc(var(--text-base-size) / (var(--ratio) * 0.5));
+    --text-md: var(--text-base-size);
+    --text-lg: calc(var(--text-base-size) * var(--ratio));
+    --text-xl: calc(var(--text-base-size) * var(--ratio) * var(--ratio));
+    --text-2xl: calc(var(--text-base-size) * var(--ratio) * var(--ratio) * var(--ratio));
+
+    /* Container Sizes */
+    --container-padding: clamp(1rem, 3vw, 2rem);
+    --container-max-width: 75rem;
+    --container-narrow-max-width: 60rem;
+}
+
+/* Container Queries */
+.book-card {
+    container-type: inline-size;
+    container-name: book-card;
+}
+
+@container book-card (min-width: 300px) {
+    .book-card__content {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: var(--space-md);
+    }
+}
+
+/* Responsive Grid System */
+.grid {
+    display: grid;
+    gap: var(--space-md);
+    grid-template-columns: repeat(
+        auto-fit,
+        minmax(min(100%, var(--grid-min-item-width, 16rem)), 1fr)
+    );
+}
+
+/* Aspect Ratio Boxes */
+.aspect-ratio-box {
+    position: relative;
+    width: 100%;
+}
+
+.aspect-ratio-box::before {
+    content: "";
+    display: block;
+    padding-bottom: var(--aspect-ratio, 56.25%); /* Default 16:9 */
+}
+
+.aspect-ratio-box > * {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Responsive Tables */
+.table-wrapper {
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: var(--space-md) 0;
+}
+
+@media (max-width: 768px) {
+    .responsive-table {
+        display: block;
+    }
+
+    .responsive-table thead {
+        display: none;
+    }
+
+    .responsive-table tbody tr {
+        display: block;
+        margin-bottom: var(--space-md);
+        border: 1px solid var(--aged-gold);
+    }
+
+    .responsive-table tbody td {
+        display: block;
+        text-align: right;
+        padding: var(--space-sm);
+    }
+
+    .responsive-table tbody td::before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+    }
+}
+
+/* Enhanced Mobile Navigation */
+.nav-container {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: var(--inkwell-blue);
+    transition: transform 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .nav-hidden {
+        transform: translateY(-100%);
+    }
+
+    .nav-menu {
+        position: fixed;
+        top: var(--nav-height);
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--inkwell-blue);
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+
+    .nav-menu.active {
+        transform: translateX(0);
+    }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --parchment-white: #1a1a1a;
+        --bookish-black: #e0e0e0;
+        --inkwell-blue: #3d5a7d;
+        --aged-gold: #d4c676;
+    }
+}
+
+/* Layout Primitives */
+.stack {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: var(--space-stack, var(--space-md));
+}
+
+.cluster {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-cluster, var(--space-sm));
+    justify-content: flex-start;
+    align-items: center;
+}
+
+/* Performance Optimizations */
+@media (prefers-reduced-motion: no-preference) {
+    .reveal {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Image Loading */
+.lazy-image {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.lazy-image.loaded {
+    opacity: 1;
+}
