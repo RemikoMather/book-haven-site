@@ -17,75 +17,131 @@ export async function processOrder() {
     try {
         const cart = cartManager.getCart();
         if (cart.length === 0) {
-            showAlert('Your cart is empty!')
-            return
+            showAlert('Your cart is empty!', 'warning');
+            return { success: false, error: 'Cart is empty' };
         }
-        // Calculate total
-        const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+        // Calculate total with error checking
+        let total = 0;
+        try {
+            total = cart.reduce((sum, item) => {
+                if (!item.price || !item.quantity) {
+                    throw new Error(`Invalid item in cart: ${JSON.stringify(item)}`);
+                }
+                return sum + (item.price * item.quantity);
+            }, 0);
+        } catch (error) {
+            console.error('Error calculating total:', error);
+            showAlert('Error processing cart items', 'error');
+            return { success: false, error: 'Invalid cart items' };
+        }
         
         // Here you would typically integrate with a payment processor
         // Simulating payment process
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        showAlert('Order processed successfully!')
-        cartManager.clearCart();
-        return true;
+        try {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            // Save order to local storage for reference
+            const orderDetails = {
+                items: cart,
+                total,
+                orderId: `ORD-${Date.now()}`,
+                orderDate: new Date().toISOString()
+            };
+            localStore.set(`order_${orderDetails.orderId}`, orderDetails);
+            
+            showAlert('Order processed successfully!', 'success');
+            cartManager.clearCart();
+            return { success: true, orderId: orderDetails.orderId };
+        } catch (error) {
+            throw new Error('Payment processing failed');
+        }
     } catch (error) {
-        console.error('Order processing failed:', error)
-        showAlert('Failed to process order. Please try again.')
-        return false;
+        console.error('Order processing failed:', error);
+        showAlert('Failed to process order. Please try again.', 'error');
+        return { success: false, error: error.message };
     }
 }
 
 // Newsletter subscription
 export async function subscribeToNewsletter(email) {
-    if (!email || !email.includes('@')) {
-        throw new Error('Invalid email address');
+    if (!email) {
+        throw new Error('Email is required');
     }
 
-    const { data, error } = await supabase
-        .from('subscriptions')
-        .insert([{ 
-            email,
-            subscribed_at: new Date().toISOString()
-        }]);
-    
-    if (error) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        throw new Error('Please enter a valid email address');
+    }
+
+    try {
+        // Check if already subscribed
+        const { data: existing } = await supabase
+            .from('subscriptions')
+            .select('email')
+            .eq('email', email)
+            .single();
+
+        if (existing) {
+            throw new Error('This email is already subscribed');
+        }
+
+        const { data, error } = await supabase
+            .from('subscriptions')
+            .insert([{ 
+                email,
+                subscribed_at: new Date().toISOString(),
+                status: 'active'
+            }]);
+        
+        if (error) {
+            throw new Error(error.message);
+        }
+
+        showAlert('Thank you for subscribing!', 'success');
+        return { success: true, data };
+    } catch (error) {
         console.error('Subscription error:', error);
-        throw new Error('Failed to subscribe');
+        throw new Error(error.message || 'Failed to subscribe');
     }
-
-    showAlert('Thank you for subscribing!');
-    return data;
 }
 
 // Contact form
 export async function submitContactForm(formData) {
     // Validate form data
-    if (!formData.name || !formData.email || !formData.message) {
-        throw new Error('All fields are required');
+    const required = ['name', 'email', 'message'];
+    for (const field of required) {
+        if (!formData[field]?.trim()) {
+            throw new Error(`${field.charAt(0).toUpperCase() + field.slice(1)} is required`);
+        }
     }
 
-    if (!formData.email.includes('@')) {
-        throw new Error('Invalid email address');
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+        throw new Error('Please enter a valid email address');
     }
 
-    const { data, error } = await supabase
-        .from('contact_messages')
-        .insert([{
-            name: formData.name,
-            email: formData.email,
-            message: formData.message,
-            submitted_at: new Date().toISOString()
-        }]);
-    
-    if (error) {
+    try {
+        const { data, error } = await supabase
+            .from('contact_messages')
+            .insert([{
+                name: formData.name.trim(),
+                email: formData.email.trim(),
+                message: formData.message.trim(),
+                submitted_at: new Date().toISOString(),
+                status: 'unread'
+            }]);
+        
+        if (error) {
+            throw new Error(error.message);
+        }
+
+        showAlert('Thank you for your message!', 'success');
+        return { success: true, data };
+    } catch (error) {
         console.error('Contact form error:', error);
-        throw new Error('Failed to send message');
+        throw new Error(error.message || 'Failed to send message');
     }
-
-    showAlert('Thank you for your message!');
-    return data;
 }
 
 // Custom orders
@@ -121,15 +177,27 @@ export function saveCustomOrder(orderDetails) {
 }
 
 // Utility functions
-function showAlert(message) {
-    const alert = document.createElement('div')
-    alert.className = 'alert'
-    alert.textContent = message
-    document.body.appendChild(alert)
+function showAlert(message, type = 'info') {
+    const alert = document.createElement('div');
+    alert.className = `alert alert-${type}`;
+    alert.textContent = message;
+
+    // Remove existing alerts
+    const existingAlerts = document.querySelectorAll('.alert');
+    existingAlerts.forEach(alert => alert.remove());
+
+    document.body.appendChild(alert);
     
-    setTimeout(() => {
-        alert.remove()
-    }, 3000)
+    // Ensure alert is always removed
+    try {
+        setTimeout(() => {
+            if (alert && alert.parentNode) {
+                alert.remove();
+            }
+        }, 3000);
+    } catch (error) {
+        console.error('Error removing alert:', error);
+    }
 }
 
 // Cart UI management
@@ -159,32 +227,46 @@ document.addEventListener('DOMContentLoaded', () => {
     const subscribeForm = document.getElementById('subscribe-form')
     if (subscribeForm) {
         subscribeForm.addEventListener('submit', async (e) => {
-            e.preventDefault()
-            const emailInput = e.target.email
+            e.preventDefault();
+            const submitButton = e.target.querySelector('button[type="submit"]');
+            const emailInput = e.target.email;
+
             try {
-                await subscribeToNewsletter(emailInput.value)
-                e.target.reset()
+                if (submitButton) submitButton.disabled = true;
+                await subscribeToNewsletter(emailInput.value);
+                e.target.reset();
+                showAlert('Successfully subscribed to newsletter!', 'success');
             } catch (error) {
-                console.error('Newsletter subscription failed:', error)
+                console.error('Newsletter subscription failed:', error);
+                showAlert(error.message || 'Failed to subscribe. Please try again.', 'error');
+            } finally {
+                if (submitButton) submitButton.disabled = false;
             }
-        })
+        });
     }
     
     const contactForm = document.getElementById('contact-form')
     if (contactForm) {
         contactForm.addEventListener('submit', async (e) => {
-            e.preventDefault()
+            e.preventDefault();
+            const submitButton = e.target.querySelector('button[type="submit"]');
             const formData = {
                 name: e.target.name.value,
                 email: e.target.email.value,
                 message: e.target.message.value
-            }
+            };
+
             try {
-                await submitContactForm(formData)
-                e.target.reset()
+                if (submitButton) submitButton.disabled = true;
+                await submitContactForm(formData);
+                e.target.reset();
+                showAlert('Message sent successfully!', 'success');
             } catch (error) {
-                console.error('Contact form submission failed:', error)
+                console.error('Contact form submission failed:', error);
+                showAlert(error.message || 'Failed to send message. Please try again.', 'error');
+            } finally {
+                if (submitButton) submitButton.disabled = false;
             }
-        })
+        });
     }
 })
