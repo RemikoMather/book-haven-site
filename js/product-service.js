@@ -163,7 +163,7 @@ export class ProductService {
                 price: 15.99,
                 category: "fiction",
                 stock: 50,
-                image: "https://cdn.pixabay.com/photo/2015/11/19/21/14/book-1052014_640.jpg"
+                image: BookHaven.getAssetUrl('/images/placeholder-book.jpg')
             },
             {
                 id: 2,
@@ -172,7 +172,7 @@ export class ProductService {
                 price: 12.99,
                 category: "fiction",
                 stock: 45,
-                image: "https://cdn.pixabay.com/photo/2015/11/19/21/14/book-1052014_640.jpg"
+                image: BookHaven.getAssetUrl('/images/placeholder-book.jpg')
             },
             {
                 id: 3,
@@ -181,7 +181,7 @@ export class ProductService {
                 price: 18.99,
                 category: "non-fiction",
                 stock: 30,
-                image: "https://cdn.pixabay.com/photo/2015/11/19/21/14/book-1052014_640.jpg"
+                image: BookHaven.getAssetUrl('/images/placeholder-book.jpg')
             },
             {
                 id: 4,
@@ -190,7 +190,7 @@ export class ProductService {
                 price: 9.99,
                 category: "children",
                 stock: 60,
-                image: "https://cdn.pixabay.com/photo/2015/11/19/21/14/book-1052014_640.jpg"
+                image: BookHaven.getAssetUrl('/images/placeholder-book.jpg')
             },
             {
                 id: 5,
