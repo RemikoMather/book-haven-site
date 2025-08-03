@@ -1,0 +1,26 @@
+{
+    "products": [
+        {
+            "id": 1,
+            "name": "The Great Gatsby",
+            "price": 19.99,
+            "category": "fiction",
+            "image": "https://cdn.pixabay.com/photo/2015/11/19/21/14/book-1052014_1280.jpg",
+            "thumbnail": "https://cdn.pixabay.com/photo/2015/11/19/21/14/book-1052014_640.jpg",
+            "description": "A classic novel by F. Scott Fitzgerald",
+            "created_at": "2025-08-01T10:00:00Z",
+            "stock": 15
+        },
+        {
+            "id": 2,
+            "name": "Sapiens",
+            "price": 24.99,
+            "category": "non-fiction",
+            "image": "https://cdn.pixabay.com/photo/2018/07/01/20/01/book-3510326_1280.jpg",
+            "thumbnail": "https://cdn.pixabay.com/photo/2018/07/01/20/01/book-3510326_640.jpg",
+            "description": "A brief history of humankind",
+            "created_at": "2025-08-01T11:00:00Z",
+            "stock": 20
+        }
+    ]
+}

@@ -1,71 +1,130 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Initialize Supabase Client
-const SUPABASE_URL = 'https://qeoyopgtolnmtdaahdvn.supabase.co';
-const SUPABASE_ANON_KEY = process.env.SUPABASE_KEY;
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
 export class ProductService {
     static instance = null;
-
+    
     constructor() {
         if (ProductService.instance) {
             return ProductService.instance;
         }
+        this.SUPABASE_URL = 'https://qeoyopgtolnmtdaahdvn.supabase.co';
+        this.SUPABASE_ANON_KEY = process.env.SUPABASE_KEY;
+        this.retryAttempts = 3;
+        this.retryDelay = 1000;
+        this.initSupabase();
         ProductService.instance = this;
+    }
+
+    initSupabase() {
+        try {
+            this.supabase = createClient(this.SUPABASE_URL, this.SUPABASE_ANON_KEY);
+        } catch (error) {
+            console.error('Failed to initialize Supabase:', error);
+            this.supabase = null;
+        }
+    }
+
+    async fetchWithRetry(operation) {
+        let lastError;
+        
+        for (let attempt = 1; attempt <= this.retryAttempts; attempt++) {
+            try {
+                return await operation();
+            } catch (error) {
+                lastError = error;
+                console.warn(`Attempt ${attempt} failed:`, error);
+                
+                if (attempt < this.retryAttempts) {
+                    await new Promise(resolve => setTimeout(resolve, this.retryDelay * attempt));
+                }
+            }
+        }
+        
+        throw lastError;
     }
 
     async fetchProducts() {
         try {
-            const { data, error } = await supabase
-                .from('products')
-                .select('*')
-                .order('created_at', { ascending: false });
-
-            if (error) {
-                throw new Error(`Failed to fetch products: ${error.message}`);
+            if (!this.supabase) {
+                return await this.fetchMockProducts();
             }
 
-            return data;
+            return await this.fetchWithRetry(async () => {
+                const { data, error } = await this.supabase
+                    .from('products')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw new Error(`Failed to fetch products: ${error.message}`);
+                return data;
+            });
         } catch (error) {
-            console.error('Product fetch error:', error);
-            throw error;
+            console.error('Failed to fetch products from Supabase:', error);
+            return await this.fetchMockProducts();
         }
     }
 
     async fetchProductsByCategory(category) {
         try {
-            const { data, error } = await supabase
-                .from('products')
-                .select('*')
-                .eq('category', category)
-                .order('created_at', { ascending: false });
-
-            if (error) {
-                throw new Error(`Failed to fetch products by category: ${error.message}`);
+            if (!this.supabase) {
+                const products = await this.fetchMockProducts();
+                return products.filter(p => p.category === category);
             }
 
-            return data;
+            return await this.fetchWithRetry(async () => {
+                const { data, error } = await this.supabase
+                    .from('products')
+                    .select('*')
+                    .eq('category', category)
+                    .order('created_at', { ascending: false });
+
+                if (error) throw new Error(`Failed to fetch products by category: ${error.message}`);
+                return data;
+            });
         } catch (error) {
-            console.error('Product category fetch error:', error);
-            throw error;
+            console.error('Failed to fetch products by category:', error);
+            const products = await this.fetchMockProducts();
+            return products.filter(p => p.category === category);
         }
     }
 
     async searchProducts(query) {
         try {
-            const { data, error } = await supabase
-                .from('products')
-                .select('*')
-                .or(`name.ilike.%${query}%,description.ilike.%${query}%`);
-
-            if (error) {
-                throw new Error(`Failed to search products: ${error.message}`);
+            if (!this.supabase) {
+                const products = await this.fetchMockProducts();
+                return products.filter(p => 
+                    p.name.toLowerCase().includes(query.toLowerCase()) ||
+                    p.description.toLowerCase().includes(query.toLowerCase())
+                );
             }
 
-            return data;
+            return await this.fetchWithRetry(async () => {
+                const { data, error } = await this.supabase
+                    .from('products')
+                    .select('*')
+                    .or(`name.ilike.%${query}%,description.ilike.%${query}%`);
+
+                if (error) throw new Error(`Failed to search products: ${error.message}`);
+                return data;
+            });
         } catch (error) {
-            console.error('Product search error:', error);
+            console.error('Failed to search products:', error);
+            const products = await this.fetchMockProducts();
+            return products.filter(p => 
+                p.name.toLowerCase().includes(query.toLowerCase()) ||
+                p.description.toLowerCase().includes(query.toLowerCase())
+            );
+        }
+    }
+
+    async fetchMockProducts() {
+        try {
+            const response = await fetch('/data/mock-products.json');
+            if (!response.ok) throw new Error('Failed to fetch mock data');
+            const data = await response.json();
+            return data.products;
+        } catch (error) {
+            console.error('Failed to fetch mock products:', error);
             throw error;
         }
     }

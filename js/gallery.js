@@ -1,15 +1,5 @@
 import { productService } from './product-service.js';
-
-// Retry configuration
-const RETRY_DELAY = 2000; // 2 seconds
-const MAX_RETRIES = 3;
-        price: 18.99,
-        category: "non-fiction",
-        image: "https://cdn.pixabay.com/photo/2015/11/19/21/11/book-1052010_1280.jpg",
-        thumbnail: "https://cdn.pixabay.com/photo/2015/11/19/21/11/book-1052010_640.jpg",
-        description: "Napoleon Hill's success principles"
-    }
-];
+import { CartManager } from './cart-manager.js';
 
 class ProductManager {
     constructor() {
@@ -21,6 +11,11 @@ class ProductManager {
         this.retryCount = 0;
         this.isLoading = false;
         this.hasError = false;
+        this.lastFilters = {
+            category: '',
+            searchQuery: '',
+            sortBy: 'newest'
+        };
 
         this.setupEventListeners();
         this.setupFilters();
@@ -28,7 +23,53 @@ class ProductManager {
         this.loadProducts();
     }
 
-    filterProducts = async () => {
+    async loadProducts(isRetry = false) {
+        if (this.isLoading && !isRetry) return;
+
+        try {
+            this.isLoading = true;
+            this.setVisibility({ loading: true, error: false, empty: false });
+
+            const products = await productService.fetchProducts();
+            
+            if (!products || !Array.isArray(products)) {
+                throw new Error('Invalid products data received');
+            }
+
+            this.products = products;
+            this.retryCount = 0;
+            this.hasError = false;
+            
+            await this.applyFilters();
+        } catch (error) {
+            console.error('Error loading products:', error);
+            this.hasError = true;
+            this.setVisibility({ loading: false, error: true, empty: false });
+        } finally {
+            this.isLoading = false;
+        }
+    }
+
+    setupEventListeners() {
+        // Retry button handler
+        const retryButton = document.querySelector('.retry-button');
+        if (retryButton) {
+            retryButton.addEventListener('click', async () => {
+                this.retryCount = 0;
+                await this.loadProducts(true);
+            });
+        }
+
+        // Clear filters button handler
+        const clearFiltersButton = document.querySelector('.clear-filters');
+        if (clearFiltersButton) {
+            clearFiltersButton.addEventListener('click', () => {
+                this.clearFilters();
+            });
+        }
+    }
+
+    async applyFilters() {
         if (this.isLoading) return;
 
         try {
@@ -39,21 +80,27 @@ class ProductManager {
             const searchQuery = document.getElementById('searchInput').value.toLowerCase();
             const sortBy = document.getElementById('sortFilter').value;
 
-            let filteredProducts = [...this.products];
+            // Save current filter state
+            this.lastFilters = { category, searchQuery, sortBy };
 
-            // Apply category filter
+            let filteredProducts = [];
+
             if (category) {
-                filteredProducts = filteredProducts.filter(product => 
-                    product.category === category
-                );
+                filteredProducts = await productService.fetchProductsByCategory(category);
+            } else {
+                filteredProducts = [...this.products];
             }
 
             // Apply search filter
             if (searchQuery) {
-                filteredProducts = filteredProducts.filter(product =>
-                    product.name.toLowerCase().includes(searchQuery) || 
-                    product.description.toLowerCase().includes(searchQuery)
-                );
+                if (category) {
+                    filteredProducts = filteredProducts.filter(product =>
+                        product.name.toLowerCase().includes(searchQuery) || 
+                        product.description.toLowerCase().includes(searchQuery)
+                    );
+                } else {
+                    filteredProducts = await productService.searchProducts(searchQuery);
+                }
             }
 
             // Sort products
@@ -80,10 +127,48 @@ class ProductManager {
                 this.updatePagination();
             }
         } catch (error) {
-            console.error('Error filtering products:', error);
+            console.error('Error applying filters:', error);
             this.setVisibility({ loading: false, error: true, empty: false });
         } finally {
             this.isLoading = false;
+        }
+    }
+
+    clearFilters() {
+        const categoryFilter = document.getElementById('categoryFilter');
+        const searchInput = document.getElementById('searchInput');
+        const sortFilter = document.getElementById('sortFilter');
+
+        if (categoryFilter) categoryFilter.value = '';
+        if (searchInput) searchInput.value = '';
+        if (sortFilter) sortFilter.value = 'newest';
+
+        this.lastFilters = {
+            category: '',
+            searchQuery: '',
+            sortBy: 'newest'
+        };
+
+        this.loadProducts(true);
+    }
+
+    setupFilters() {
+        const filters = ['categoryFilter', 'searchInput', 'sortFilter'];
+        filters.forEach(filterId => {
+            const element = document.getElementById(filterId);
+            if (element) {
+                element.addEventListener('change', () => this.applyFilters());
+            }
+        });
+
+        // Add input event listener for search with debounce
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            let debounceTimeout;
+            searchInput.addEventListener('input', () => {
+                clearTimeout(debounceTimeout);
+                debounceTimeout = setTimeout(() => this.applyFilters(), 300);
+            });
         }
     }
 
@@ -140,14 +225,43 @@ class ProductManager {
     }
     }
 
+    setVisibility({ loading, error, empty }) {
+        const elements = {
+            loading: document.getElementById('loadingState'),
+            error: document.getElementById('errorState'),
+            empty: document.getElementById('emptyState'),
+            products: document.getElementById('productsContainer')
+        };
+
+        // Hide all states first
+        Object.values(elements).forEach(element => {
+            if (element) {
+                element.style.display = 'none';
+            }
+        });
+
+        // Show appropriate state
+        if (loading && elements.loading) {
+            elements.loading.style.display = 'flex';
+        } else if (error && elements.error) {
+            elements.error.style.display = 'flex';
+        } else if (empty && elements.empty) {
+            elements.empty.style.display = 'flex';
+        } else if (elements.products) {
+            elements.products.style.display = 'block';
+        }
+    }
+
     renderProducts = () => {
         const grid = document.getElementById('productGrid');
-        const productsContainer = document.getElementById('productsContainer');
-        const loadingState = document.getElementById('loadingState');
-        const errorState = document.getElementById('errorState');
-        const emptyState = document.getElementById('emptyState');
-        
-        if (!grid || !productsContainer) return;
+        if (!grid) return;
+
+        // Get the current page's products
+        const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+        const endIndex = startIndex + this.itemsPerPage;
+        const currentProducts = this.filteredProducts.slice(startIndex, endIndex);
+
+        grid.innerHTML = currentProducts.map(product => this.getProductCard(product)).join('');
 
         // Show loading state
         this.setVisibility({ loading: true, error: false, empty: false });
