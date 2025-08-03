@@ -263,7 +263,7 @@ export class CartManager {
                             <div class="cart-item-image">
                                 <img src="${item.image}" alt="${item.name}" 
                                      loading="lazy"
-                                     onerror="this.onerror=null; this.src='images/placeholder-book.jpg';">
+                                     onerror="this.onerror=null; this.src='./images/placeholder-book.jpg';">
                             </div>
                             <div class="cart-item-details">
                                 <h4 class="cart-item-title">${item.name}</h4>
