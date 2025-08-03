@@ -181,8 +181,6 @@ export class ProductService {
                 image: "https://cdn.pixabay.com/photo/2015/11/19/21/14/book-1052014_640.jpg"
             }
         ];
-            throw error;
-        }
     }
 }
 
