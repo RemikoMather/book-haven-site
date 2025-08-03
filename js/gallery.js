@@ -41,7 +41,8 @@ const books = [
         name: "1984",
         price: 21.99,
         category: "fiction",
-        image: "https://via.placeholder.com/300x400/2E4057/ffffff?text=1984",
+        image: "https://cdn.pixabay.com/photo/2016/09/10/17/18/book-1659717_1280.jpg",
+        thumbnail: "https://cdn.pixabay.com/photo/2016/09/10/17/18/book-1659717_640.jpg",
         description: "George Orwell's dystopian masterpiece"
     },
     {
@@ -49,7 +50,8 @@ const books = [
         name: "Think and Grow Rich",
         price: 18.99,
         category: "non-fiction",
-        image: "https://via.placeholder.com/300x400/2E4057/ffffff?text=Think+and+Grow+Rich",
+        image: "https://cdn.pixabay.com/photo/2015/11/19/21/11/book-1052010_1280.jpg",
+        thumbnail: "https://cdn.pixabay.com/photo/2015/11/19/21/11/book-1052010_640.jpg",
         description: "Napoleon Hill's success principles"
     }
 ];
@@ -106,11 +108,12 @@ class ProductManager {
                     <p class="description">${product.description}</p>
                     <p class="price">$${product.price.toFixed(2)}</p>
                     <button class="btn btn-secondary add-to-cart" 
-                            onclick="window.cart.addItem({
+                            onclick="cartManager.addItem({
                                 id: ${product.id},
                                 name: '${product.name.replace("'", "\\'")}',
                                 price: ${product.price},
-                                image: '${product.image}'
+                                image: '${product.image}',
+                                quantity: 1
                             })">
                         Add to Cart
                     </button>
@@ -190,7 +193,10 @@ function debounce(func, wait) {
     };
 }
 
+// Export the ProductManager class
+export { ProductManager };
+
 // Initialize Products when the DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    new ProductManager();
+    window.productManager = new ProductManager();
 });
