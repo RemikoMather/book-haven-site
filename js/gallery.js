@@ -62,9 +62,12 @@ class ProductManager {
         this.filteredProducts = [...this.products];
         this.currentPage = 1;
         this.itemsPerPage = 6;
-        this.renderProducts();
+        this.cartManager = new CartManager();
+        
+        this.setupEventListeners();
         this.setupFilters();
         this.setupPagination();
+        this.renderProducts();
     }
 
     filterProducts() {
@@ -99,30 +102,60 @@ class ProductManager {
         this.updatePagination();
     }
 
-    getProductCard(product) {
+    getProductCard = (product) => {
+        // Sanitize product data
+        const sanitizedProduct = {
+            id: Number(product.id),
+            name: this.escapeHtml(product.name),
+            description: this.escapeHtml(product.description),
+            price: Number(product.price),
+            image: this.escapeHtml(product.image),
+            category: this.escapeHtml(product.category)
+        };
+
         return `
-            <div class="product-card fade-in">
-                <img src="${product.image}" alt="${product.name}" class="product-image">
+            <article class="product-card fade-in" data-product-id="${sanitizedProduct.id}">
+                <div class="product-image-container">
+                    <img 
+                        src="${sanitizedProduct.image}" 
+                        alt="${sanitizedProduct.name}" 
+                        class="product-image"
+                        loading="lazy"
+                        onerror="this.onerror=null; this.src='images/placeholder-book.jpg';"
+                    >
+                    <div class="product-category-badge">${sanitizedProduct.category}</div>
+                </div>
                 <div class="product-info">
-                    <h3>${product.name}</h3>
-                    <p class="description">${product.description}</p>
-                    <p class="price">$${product.price.toFixed(2)}</p>
-                    <button class="btn btn-secondary add-to-cart" 
-                            onclick="cartManager.addItem({
-                                id: ${product.id},
-                                name: '${product.name.replace("'", "\\'")}',
-                                price: ${product.price},
-                                image: '${product.image}',
-                                quantity: 1
-                            })">
+                    <h3 class="product-title">${sanitizedProduct.name}</h3>
+                    <p class="description">${sanitizedProduct.description}</p>
+                    <p class="price" aria-label="Price: $${sanitizedProduct.price.toFixed(2)}">
+                        $${sanitizedProduct.price.toFixed(2)}
+                    </p>
+                    <button 
+                        class="btn btn-secondary add-to-cart" 
+                        data-product-id="${sanitizedProduct.id}"
+                        aria-label="Add ${sanitizedProduct.name} to cart"
+                    >
+                        <i class="fas fa-cart-plus" aria-hidden="true"></i>
                         Add to Cart
                     </button>
                 </div>
-            </div>
+            </article>
         `;
     }
 
-    renderProducts() {
+    escapeHtml(unsafe) {
+        if (typeof unsafe !== 'string') return '';
+        return unsafe
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+    }
+
+    renderProducts = () => {
         const grid = document.getElementById('productGrid');
         const productsContainer = document.getElementById('productsContainer');
         const loadingState = document.getElementById('loadingState');
@@ -154,7 +187,7 @@ class ProductManager {
         }
     }
 
-    setupFilters() {
+    setupFilters = () => {
         ['categoryFilter', 'searchInput', 'sortFilter'].forEach(id => {
             document.getElementById(id)?.addEventListener('change', () => this.filterProducts());
         });
@@ -164,7 +197,7 @@ class ProductManager {
         );
     }
 
-    setupPagination() {
+    setupPagination = () => {
         const pagination = document.querySelector('.pagination');
         if (!pagination) return;
 
@@ -184,7 +217,7 @@ class ProductManager {
         });
     }
 
-    updatePagination() {
+    updatePagination = () => {
         const pageNumbers = document.querySelector('.page-numbers');
         const prevButton = document.getElementById('prevPage');
         const nextButton = document.getElementById('nextPage');
@@ -214,7 +247,7 @@ class ProductManager {
         }
     }
 
-    updatePaginationInfo() {
+    updatePaginationInfo = () => {
         const info = document.getElementById('paginationInfo');
         if (!info) return;
 
@@ -225,7 +258,7 @@ class ProductManager {
         info.textContent = `Showing products ${startIndex}-${endIndex} of ${total}`;
     }
 
-    setVisibility({ loading, error, empty }) {
+    setVisibility = ({ loading, error, empty }) => {
         const states = {
             loadingState: loading,
             errorState: error,
@@ -241,7 +274,7 @@ class ProductManager {
         });
     }
 
-    resetFilters() {
+    resetFilters = () => {
         const categoryFilter = document.getElementById('categoryFilter');
         const sortFilter = document.getElementById('sortFilter');
         const searchInput = document.getElementById('searchInput');
@@ -254,6 +287,51 @@ class ProductManager {
         this.currentPage = 1;
         this.renderProducts();
         this.updatePagination();
+    }
+
+    setupEventListeners = () => {
+        // Delegate event handling for add to cart buttons
+        this.productsContainer.addEventListener('click', (e) => {
+            const addToCartBtn = e.target.closest('.add-to-cart');
+            if (!addToCartBtn) return;
+
+            const productId = Number(addToCartBtn.dataset.productId);
+            const product = this.products.find(p => p.id === productId);
+            
+            if (!product) {
+                console.error('Product not found:', productId);
+                return;
+            }
+
+            // Show loading state
+            const originalText = addToCartBtn.innerHTML;
+            addToCartBtn.disabled = true;
+            addToCartBtn.innerHTML = '<i class="fas fa-spinner fa-spin" aria-hidden="true"></i> Adding...';
+
+            try {
+                this.cartManager.addItem({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    image: product.image,
+                    quantity: 1
+                });
+
+                // Show success state
+                addToCartBtn.innerHTML = '<i class="fas fa-check" aria-hidden="true"></i> Added';
+                setTimeout(() => {
+                    addToCartBtn.disabled = false;
+                    addToCartBtn.innerHTML = originalText;
+                }, 2000);
+            } catch (error) {
+                console.error('Error adding item to cart:', error);
+                addToCartBtn.innerHTML = '<i class="fas fa-exclamation-triangle" aria-hidden="true"></i> Error';
+                setTimeout(() => {
+                    addToCartBtn.disabled = false;
+                    addToCartBtn.innerHTML = originalText;
+                }, 2000);
+            }
+        });
     }
 }
 
