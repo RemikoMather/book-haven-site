@@ -1,53 +1,8 @@
-// Book data
-const books = [
-    {
-        id: 1,
-        name: "The Great Gatsby",
-        price: 19.99,
-        category: "fiction",
-        image: "https://cdn.pixabay.com/photo/2015/11/19/21/14/book-1052014_1280.jpg",
-        thumbnail: "https://cdn.pixabay.com/photo/2015/11/19/21/14/book-1052014_640.jpg",
-        description: "A classic novel by F. Scott Fitzgerald"
-    },
-    {
-        id: 2,
-        name: "Sapiens",
-        price: 24.99,
-        category: "non-fiction",
-        image: "https://cdn.pixabay.com/photo/2018/07/01/20/01/book-3510326_1280.jpg",
-        thumbnail: "https://cdn.pixabay.com/photo/2018/07/01/20/01/book-3510326_640.jpg",
-        description: "A brief history of humankind"
-    },
-    {
-        id: 3,
-        name: "The Cat in the Hat",
-        price: 14.99,
-        category: "children",
-        image: "https://cdn.pixabay.com/photo/2016/09/10/17/18/book-1659717_1280.jpg",
-        thumbnail: "https://cdn.pixabay.com/photo/2016/09/10/17/18/book-1659717_640.jpg",
-        description: "Dr. Seuss classic children's book"
-    },
-    {
-        id: 4,
-        name: "Milk and Honey",
-        price: 16.99,
-        category: "poetry",
-        image: "https://cdn.pixabay.com/photo/2015/11/19/21/11/book-1052010_1280.jpg",
-        thumbnail: "https://cdn.pixabay.com/photo/2015/11/19/21/11/book-1052010_640.jpg",
-        description: "Modern poetry collection"
-    },
-    {
-        id: 5,
-        name: "1984",
-        price: 21.99,
-        category: "fiction",
-        image: "https://cdn.pixabay.com/photo/2016/09/10/17/18/book-1659717_1280.jpg",
-        thumbnail: "https://cdn.pixabay.com/photo/2016/09/10/17/18/book-1659717_640.jpg",
-        description: "George Orwell's dystopian masterpiece"
-    },
-    {
-        id: 6,
-        name: "Think and Grow Rich",
+import { productService } from './product-service.js';
+
+// Retry configuration
+const RETRY_DELAY = 2000; // 2 seconds
+const MAX_RETRIES = 3;
         price: 18.99,
         category: "non-fiction",
         image: "https://cdn.pixabay.com/photo/2015/11/19/21/11/book-1052010_1280.jpg",
@@ -58,48 +13,78 @@ const books = [
 
 class ProductManager {
     constructor() {
-        this.products = books;
-        this.filteredProducts = [...this.products];
+        this.products = [];
+        this.filteredProducts = [];
         this.currentPage = 1;
         this.itemsPerPage = 6;
         this.cartManager = new CartManager();
-        
+        this.retryCount = 0;
+        this.isLoading = false;
+        this.hasError = false;
+
         this.setupEventListeners();
         this.setupFilters();
         this.setupPagination();
-        this.renderProducts();
+        this.loadProducts();
     }
 
-    filterProducts() {
-        const category = document.getElementById('categoryFilter').value;
-        const searchQuery = document.getElementById('searchInput').value.toLowerCase();
-        const sortBy = document.getElementById('sortFilter').value;
+    filterProducts = async () => {
+        if (this.isLoading) return;
 
-        this.filteredProducts = this.products.filter(product => {
-            const matchesCategory = !category || product.category === category;
-            const matchesSearch = !searchQuery || 
-                product.name.toLowerCase().includes(searchQuery) || 
-                product.description.toLowerCase().includes(searchQuery);
-            return matchesCategory && matchesSearch;
-        });
+        try {
+            this.isLoading = true;
+            this.setVisibility({ loading: true, error: false, empty: false });
 
-        // Sort products
-        this.filteredProducts.sort((a, b) => {
-            switch(sortBy) {
-                case 'price-low':
-                    return a.price - b.price;
-                case 'price-high':
-                    return b.price - a.price;
-                case 'name':
-                    return a.name.localeCompare(b.name);
-                default: // newest
-                    return b.id - a.id;
+            const category = document.getElementById('categoryFilter').value;
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+            const sortBy = document.getElementById('sortFilter').value;
+
+            let filteredProducts = [...this.products];
+
+            // Apply category filter
+            if (category) {
+                filteredProducts = filteredProducts.filter(product => 
+                    product.category === category
+                );
             }
-        });
 
-        this.currentPage = 1;
-        this.renderProducts();
-        this.updatePagination();
+            // Apply search filter
+            if (searchQuery) {
+                filteredProducts = filteredProducts.filter(product =>
+                    product.name.toLowerCase().includes(searchQuery) || 
+                    product.description.toLowerCase().includes(searchQuery)
+                );
+            }
+
+            // Sort products
+            filteredProducts.sort((a, b) => {
+                switch(sortBy) {
+                    case 'price-low':
+                        return a.price - b.price;
+                    case 'price-high':
+                        return b.price - a.price;
+                    case 'name':
+                        return a.name.localeCompare(b.name);
+                    default: // newest
+                        return new Date(b.created_at) - new Date(a.created_at);
+                }
+            });
+
+            this.filteredProducts = filteredProducts;
+            this.currentPage = 1;
+
+            if (filteredProducts.length === 0) {
+                this.setVisibility({ loading: false, error: false, empty: true });
+            } else {
+                this.renderProducts();
+                this.updatePagination();
+            }
+        } catch (error) {
+            console.error('Error filtering products:', error);
+            this.setVisibility({ loading: false, error: true, empty: false });
+        } finally {
+            this.isLoading = false;
+        }
     }
 
     getProductCard = (product) => {
@@ -289,7 +274,59 @@ class ProductManager {
         this.updatePagination();
     }
 
+    loadProducts = async () => {
+        if (this.isLoading) return;
+
+        try {
+            this.isLoading = true;
+            this.hasError = false;
+            this.setVisibility({ loading: true, error: false, empty: false });
+
+            const products = await productService.fetchProducts();
+            
+            if (!Array.isArray(products)) {
+                throw new Error('Invalid product data received');
+            }
+
+            this.products = products;
+            this.filteredProducts = [...products];
+            this.currentPage = 1;
+            
+            if (products.length === 0) {
+                this.setVisibility({ loading: false, error: false, empty: true });
+            } else {
+                this.renderProducts();
+            }
+
+            this.retryCount = 0; // Reset retry count on success
+        } catch (error) {
+            console.error('Error loading products:', error);
+            this.hasError = true;
+            this.setVisibility({ loading: false, error: true, empty: false });
+
+            if (this.retryCount < MAX_RETRIES) {
+                this.retryCount++;
+                setTimeout(() => this.loadProducts(), RETRY_DELAY);
+            }
+        } finally {
+            this.isLoading = false;
+        }
+    }
+
     setupEventListeners = () => {
+        // Retry button click handler
+        const errorState = document.getElementById('errorState');
+        if (errorState) {
+            const retryButton = errorState.querySelector('button');
+            if (retryButton) {
+                retryButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.retryCount = 0; // Reset retry count on manual retry
+                    this.loadProducts();
+                });
+            }
+        }
+
         // Delegate event handling for add to cart buttons
         this.productsContainer.addEventListener('click', (e) => {
             const addToCartBtn = e.target.closest('.add-to-cart');

@@ -109,29 +109,51 @@
     <main class="container section-padding">
         <div class="product-grid" id="productGrid" aria-live="polite">
             <!-- Loading State -->
-            <div class="loading-state" id="loadingState">
+            <div class="loading-state" id="loadingState" aria-live="polite">
                 <div class="spinner" role="status" aria-label="Loading products">
-                    <span class="sr-only">Loading...</span>
+                    <span class="sr-only">Loading your books...</span>
                 </div>
-                <p>Loading products...</p>
+                <div class="loading-message">
+                    <h2>Loading Books</h2>
+                    <p>Please wait while we fetch our collection...</p>
+                </div>
             </div>
             
             <!-- Error State -->
-            <div class="error-state" id="errorState" hidden>
-                <i class="fas fa-exclamation-circle"></i>
-                <p>Failed to load products. Please try again.</p>
-                <button class="btn btn-primary" onclick="window.productManager?.renderProducts()">
-                    Retry
-                </button>
+            <div class="error-state" id="errorState" hidden aria-live="polite">
+                <i class="fas fa-exclamation-circle" aria-hidden="true"></i>
+                <div class="error-message">
+                    <h2>Oops! Something went wrong</h2>
+                    <p>We're having trouble loading the books. This might be due to:</p>
+                    <ul>
+                        <li>Network connectivity issues</li>
+                        <li>Server temporary unavailability</li>
+                        <li>Database connection problems</li>
+                    </ul>
+                </div>
+                <div class="error-actions">
+                    <button class="btn btn-primary" type="button" aria-label="Retry loading products">
+                        <i class="fas fa-sync" aria-hidden="true"></i>
+                        Retry Loading
+                    </button>
+                    <p class="error-help">If the problem persists, please try again later or contact support.</p>
+                </div>
             </div>
 
             <!-- Empty State -->
-            <div class="empty-state" id="emptyState" hidden>
-                <i class="fas fa-book-open"></i>
-                <p>No products match your search criteria.</p>
-                <button class="btn btn-secondary" onclick="window.productManager?.resetFilters()">
-                    Clear Filters
-                </button>
+            <div class="empty-state" id="emptyState" hidden aria-live="polite">
+                <i class="fas fa-book-open" aria-hidden="true"></i>
+                <div class="empty-message">
+                    <h2>No Books Found</h2>
+                    <p>We couldn't find any books matching your criteria.</p>
+                </div>
+                <div class="empty-actions">
+                    <button class="btn btn-secondary" type="button" aria-label="Clear all filters">
+                        <i class="fas fa-times" aria-hidden="true"></i>
+                        Clear All Filters
+                    </button>
+                    <p class="empty-help">Try adjusting your filters or search terms.</p>
+                </div>
             </div>
 
             <!-- Products will be populated by JavaScript -->
