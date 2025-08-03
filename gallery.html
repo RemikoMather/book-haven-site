@@ -213,14 +213,35 @@
     </footer>
 
     <!-- Scripts -->
+    <script src="js/debug.js" type="module"></script>
     <script src="js/storage-manager.js" type="module"></script>
     <script src="js/cart-manager.js" type="module"></script>
     <script src="js/common.js" type="module"></script>
     <script src="js/gallery.js" type="module"></script>
     <script type="module">
         import { ProductManager } from './js/gallery.js';
+        import { debug } from './js/debug.js';
+
+        window.onerror = function(msg, url, line, col, error) {
+            debug.error('Global error:', { msg, url, line, col, error });
+            return false;
+        };
+
         document.addEventListener('DOMContentLoaded', () => {
-            ProductManager.init();
+            debug.log('Initializing gallery page...');
+            try {
+                ProductManager.init();
+                debug.log('ProductManager initialized successfully');
+            } catch (error) {
+                debug.error('Failed to initialize ProductManager:', error);
+                // Show error UI
+                const errorState = document.getElementById('errorState');
+                const loadingState = document.getElementById('loadingState');
+                if (errorState && loadingState) {
+                    loadingState.hidden = true;
+                    errorState.hidden = false;
+                }
+            }
         });
     </script>
 </body>

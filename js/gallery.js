@@ -4,6 +4,7 @@ import { CartManager } from './cart-manager.js';
 export class ProductManager {
     static init() {
         window.productManager = new ProductManager();
+        console.log('DEBUG: ProductManager initialized');
     }
     constructor() {
         this.products = [];
@@ -30,10 +31,13 @@ export class ProductManager {
         if (this.isLoading && !isRetry) return;
 
         try {
-            console.log('Starting to load products...');
-            console.log('ProductService instance:', productService);
+            console.log('DEBUG: Starting to load products...');
+            console.log('DEBUG: ProductService instance:', productService);
             this.isLoading = true;
             this.setVisibility({ loading: true, error: false, empty: false });
+
+            if (!productService) {
+                throw new Error('ProductService is not initialized');
 
             const products = await productService.fetchProducts();
             console.log('Products received:', products);
@@ -53,20 +57,40 @@ export class ProductManager {
             
             await this.applyFilters();
         } catch (error) {
-            console.error('Error loading products:', error);
+            console.error('DEBUG: Error in loadProducts:', error);
             this.hasError = true;
             this.setVisibility({ loading: false, error: true, empty: false });
             
-            // Show error message to user
+            // Show detailed error message to user
             const errorMessage = document.querySelector('.error-message p');
             if (errorMessage) {
-                errorMessage.textContent = `Error loading products: ${error.message}. Please try again.`;
+                errorMessage.textContent = `Error loading products: ${error.message}. `;
+                errorMessage.textContent += 'We are currently experiencing technical difficulties. ';
+                errorMessage.textContent += 'The system will try to load from our backup data source.';
             }
             
-            // Enable retry button
+            // Enable retry button with fallback
             const retryButton = document.querySelector('.error-actions button');
             if (retryButton) {
-                retryButton.addEventListener('click', () => this.loadProducts(true));
+                retryButton.onclick = () => {
+                    console.log('DEBUG: Retry button clicked');
+                    this.loadProducts(true);
+                };
+            }
+
+            // Try to load mock products as fallback
+            try {
+                const mockProducts = await productService.fetchMockProducts();
+                if (mockProducts && mockProducts.length > 0) {
+                    this.products = mockProducts;
+                    this.filteredProducts = [...this.products];
+                    this.hasError = false;
+                    this.setVisibility({ loading: false, error: false, empty: false });
+                    this.renderProducts();
+                    this.updatePagination();
+                }
+            } catch (fallbackError) {
+                console.error('DEBUG: Fallback to mock products also failed:', fallbackError);
             }
         } finally {
             this.isLoading = false;
