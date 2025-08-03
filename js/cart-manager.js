@@ -1,9 +1,10 @@
 import { StorageManager } from './storage-manager.js';
+import { config } from './config.js';
 
 // Cart Manager for handling shopping cart operations
 export class CartManager {
     constructor() {
-        this.cartStorage = new StorageManager('local'); // Changed to local for persistence
+        this.cartStorage = new StorageManager('local'); // Change                                     onerror="this.onerror=null; this.src=config.getAssetUrl('/images/placeholder-book.jpg');"; to local for persistence
         this.CART_KEY = 'book_haven_cart';
         this.cart = this.loadCart();
         
@@ -263,7 +264,7 @@ export class CartManager {
                             <div class="cart-item-image">
                                 <img src="${item.image}" alt="${item.name}" 
                                      loading="lazy"
-                                     onerror="this.onerror=null; this.src='./images/placeholder-book.jpg';">
+                                     onerror="this.onerror=null; this.src='/book-haven-site/images/placeholder-book.jpg';">
                             </div>
                             <div class="cart-item-details">
                                 <h4 class="cart-item-title">${item.name}</h4>
