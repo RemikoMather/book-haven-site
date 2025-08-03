@@ -122,9 +122,14 @@ export class ProductService {
 
     async fetchMockProducts() {
         try {
-            const response = await fetch('/data/mock-products.json');
-            if (!response.ok) throw new Error('Failed to fetch mock data');
+            console.log('Fetching mock products...');
+            const response = await fetch('./data/mock-products.json');
+            if (!response.ok) {
+                console.error('Mock data response not OK:', response.status, response.statusText);
+                throw new Error(`Failed to fetch mock data: ${response.status} ${response.statusText}`);
+            }
             const data = await response.json();
+            console.log('Mock products loaded:', data.products);
             return data.products;
         } catch (error) {
             console.error('Failed to fetch mock products:', error);

@@ -60,8 +60,8 @@
             "name": "A Brief History of Time",
             "price": 27.99,
             "category": "non-fiction",
-            "image": "https://cdn.pixabay.com/photo/2015/07/27/20/16/book-863418_1280.jpg",
-            "thumbnail": "https://cdn.pixabay.com/photo/2015/07/27/20/16/book-863418_640.jpg",
+            "image": "https://cdn.pixabay.com/photo/2017/02/01/11/19/science-2029340_1280.jpg",
+            "thumbnail": "https://cdn.pixabay.com/photo/2017/02/01/11/19/science-2029340_640.jpg",
             "description": "Stephen Hawking's landmark exploration of the universe's biggest questions",
             "created_at": "2025-08-02T12:00:00Z",
             "stock": 15
@@ -93,8 +93,8 @@
             "name": "1984",
             "price": 20.99,
             "category": "fiction",
-            "image": "https://cdn.pixabay.com/photo/2015/11/19/21/14/book-1052014_1280.jpg",
-            "thumbnail": "https://cdn.pixabay.com/photo/2015/11/19/21/14/book-1052014_640.jpg",
+            "image": "https://cdn.pixabay.com/photo/2016/09/08/22/43/books-1655783_1280.jpg",
+            "thumbnail": "https://cdn.pixabay.com/photo/2016/09/08/22/43/books-1655783_640.jpg",
             "description": "George Orwell's dystopian masterpiece about surveillance and control",
             "created_at": "2025-08-02T15:00:00Z",
             "stock": 22
@@ -104,8 +104,8 @@
             "name": "Cosmos",
             "price": 23.99,
             "category": "non-fiction",
-            "image": "https://cdn.pixabay.com/photo/2018/07/01/20/01/book-3510326_1280.jpg",
-            "thumbnail": "https://cdn.pixabay.com/photo/2018/07/01/20/01/book-3510326_640.jpg",
+            "image": "https://cdn.pixabay.com/photo/2016/10/30/12/22/space-1783247_1280.jpg",
+            "thumbnail": "https://cdn.pixabay.com/photo/2016/10/30/12/22/space-1783247_640.jpg",
             "description": "Carl Sagan's beloved exploration of the universe and our place in it",
             "created_at": "2025-08-02T16:00:00Z",
             "stock": 17

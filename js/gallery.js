@@ -27,10 +27,12 @@ class ProductManager {
         if (this.isLoading && !isRetry) return;
 
         try {
+            console.log('Starting to load products...');
             this.isLoading = true;
             this.setVisibility({ loading: true, error: false, empty: false });
 
             const products = await productService.fetchProducts();
+            console.log('Products received:', products);
             
             if (!products || !Array.isArray(products)) {
                 throw new Error('Invalid products data received');
@@ -39,6 +41,7 @@ class ProductManager {
             this.products = products;
             this.retryCount = 0;
             this.hasError = false;
+            console.log('Products loaded successfully:', this.products.length, 'items');
             
             await this.applyFilters();
         } catch (error) {
@@ -285,14 +288,30 @@ class ProductManager {
 
     // Add a stub for getProductCard if missing
     getProductCard(product) {
-        // Implement your product card rendering logic here
         return `
             <div class="product-card">
-                <img src="${product.image}" alt="${product.name}" />
-                <h3>${product.name}</h3>
-                <p>${product.description}</p>
-                <span>$${product.price}</span>
-                <button class="add-to-cart" data-product-id="${product.id}">Add to Cart</button>
+                <div class="product-image">
+                    <img 
+                        src="${product.thumbnail || product.image}" 
+                        alt="${product.name}"
+                        loading="lazy"
+                        onerror="this.onerror=null; this.src='https://cdn.pixabay.com/photo/2015/11/19/21/14/book-1052014_640.jpg'"
+                    />
+                </div>
+                <div class="product-details">
+                    <h3 class="product-title">${product.name}</h3>
+                    <p class="product-description">${product.description}</p>
+                    <div class="product-footer">
+                        <span class="product-price">$${product.price.toFixed(2)}</span>
+                        <button 
+                            class="btn btn-primary add-to-cart" 
+                            data-product-id="${product.id}"
+                            aria-label="Add ${product.name} to cart"
+                        >
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
             </div>
         `;
     }
