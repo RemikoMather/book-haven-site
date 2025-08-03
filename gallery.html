@@ -217,5 +217,11 @@
     <script src="js/cart-manager.js" type="module"></script>
     <script src="js/common.js" type="module"></script>
     <script src="js/gallery.js" type="module"></script>
+    <script type="module">
+        import { ProductManager } from './js/gallery.js';
+        document.addEventListener('DOMContentLoaded', () => {
+            ProductManager.init();
+        });
+    </script>
 </body>
 </html>

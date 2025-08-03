@@ -1,7 +1,10 @@
 import { productService } from './product-service.js';
 import { CartManager } from './cart-manager.js';
 
-class ProductManager {
+export class ProductManager {
+    static init() {
+        window.productManager = new ProductManager();
+    }
     constructor() {
         this.products = [];
         this.filteredProducts = [];
@@ -42,6 +45,10 @@ class ProductManager {
             this.retryCount = 0;
             this.hasError = false;
             console.log('Products loaded successfully:', this.products.length, 'items');
+            
+            this.filteredProducts = [...this.products];
+            this.renderProducts();
+            this.updatePagination();
             
             await this.applyFilters();
         } catch (error) {
@@ -294,7 +301,7 @@ class ProductManager {
     // Add a stub for getProductCard if missing
     getProductCard(product) {
         return `
-            <div class="product-card">
+            <article class="product-card">
                 <div class="product-image">
                     <img 
                         src="${product.thumbnail || product.image}" 
@@ -306,18 +313,23 @@ class ProductManager {
                 <div class="product-details">
                     <h3 class="product-title">${product.name}</h3>
                     <p class="product-description">${product.description}</p>
+                    <div class="product-info">
+                        <span class="product-category">${product.category}</span>
+                        <span class="product-stock">Stock: ${product.stock}</span>
+                    </div>
                     <div class="product-footer">
                         <span class="product-price">$${product.price.toFixed(2)}</span>
                         <button 
                             class="btn btn-primary add-to-cart" 
                             data-product-id="${product.id}"
                             aria-label="Add ${product.name} to cart"
+                            ${product.stock <= 0 ? 'disabled' : ''}
                         >
-                            Add to Cart
+                            ${product.stock <= 0 ? 'Out of Stock' : 'Add to Cart'}
                         </button>
                     </div>
                 </div>
-            </div>
+            </article>
         `;
     }
 
