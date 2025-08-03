@@ -124,13 +124,34 @@ class ProductManager {
 
     renderProducts() {
         const grid = document.getElementById('productGrid');
-        if (!grid) return;
+        const productsContainer = document.getElementById('productsContainer');
+        const loadingState = document.getElementById('loadingState');
+        const errorState = document.getElementById('errorState');
+        const emptyState = document.getElementById('emptyState');
+        
+        if (!grid || !productsContainer) return;
 
-        const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-        const endIndex = startIndex + this.itemsPerPage;
-        const pageProducts = this.filteredProducts.slice(startIndex, endIndex);
+        // Show loading state
+        this.setVisibility({ loading: true, error: false, empty: false });
+        
+        try {
+            const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+            const endIndex = startIndex + this.itemsPerPage;
+            const pageProducts = this.filteredProducts.slice(startIndex, endIndex);
 
-        grid.innerHTML = pageProducts.map(product => this.getProductCard(product)).join('');
+            // Handle empty results
+            if (this.filteredProducts.length === 0) {
+                this.setVisibility({ loading: false, error: false, empty: true });
+                return;
+            }
+
+            productsContainer.innerHTML = pageProducts.map(product => this.getProductCard(product)).join('');
+            this.updatePaginationInfo();
+            this.setVisibility({ loading: false, error: false, empty: false });
+        } catch (error) {
+            console.error('Error rendering products:', error);
+            this.setVisibility({ loading: false, error: true, empty: false });
+        }
     }
 
     setupFilters() {
@@ -165,6 +186,8 @@ class ProductManager {
 
     updatePagination() {
         const pageNumbers = document.querySelector('.page-numbers');
+        const prevButton = document.getElementById('prevPage');
+        const nextButton = document.getElementById('nextPage');
         if (!pageNumbers) return;
 
         const totalPages = Math.ceil(this.filteredProducts.length / this.itemsPerPage);
@@ -172,11 +195,65 @@ class ProductManager {
 
         for (let i = 1; i <= totalPages; i++) {
             paginationHTML += `
-                <button class="btn ${i === this.currentPage ? 'active' : ''}">${i}</button>
+                <button 
+                    class="btn ${i === this.currentPage ? 'active' : ''}"
+                    aria-label="Page ${i}"
+                    aria-current="${i === this.currentPage ? 'page' : 'false'}"
+                >${i}</button>
             `;
         }
 
         pageNumbers.innerHTML = paginationHTML;
+
+        // Update prev/next buttons
+        if (prevButton) {
+            prevButton.disabled = this.currentPage === 1;
+        }
+        if (nextButton) {
+            nextButton.disabled = this.currentPage === totalPages;
+        }
+    }
+
+    updatePaginationInfo() {
+        const info = document.getElementById('paginationInfo');
+        if (!info) return;
+
+        const startIndex = (this.currentPage - 1) * this.itemsPerPage + 1;
+        const endIndex = Math.min(startIndex + this.itemsPerPage - 1, this.filteredProducts.length);
+        const total = this.filteredProducts.length;
+
+        info.textContent = `Showing products ${startIndex}-${endIndex} of ${total}`;
+    }
+
+    setVisibility({ loading, error, empty }) {
+        const states = {
+            loadingState: loading,
+            errorState: error,
+            emptyState: empty,
+            productsContainer: !loading && !error && !empty
+        };
+
+        Object.entries(states).forEach(([id, visible]) => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.hidden = !visible;
+            }
+        });
+    }
+
+    resetFilters() {
+        const categoryFilter = document.getElementById('categoryFilter');
+        const sortFilter = document.getElementById('sortFilter');
+        const searchInput = document.getElementById('searchInput');
+
+        if (categoryFilter) categoryFilter.value = '';
+        if (sortFilter) sortFilter.value = 'newest';
+        if (searchInput) searchInput.value = '';
+
+        this.filteredProducts = [...this.products];
+        this.currentPage = 1;
+        this.renderProducts();
+        this.updatePagination();
     }
 }
 

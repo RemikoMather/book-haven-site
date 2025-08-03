@@ -53,11 +53,11 @@
     </header>
 
     <!-- Filter Section -->
-    <section class="filters container">
-        <div class="filter-grid">
+    <section class="filters container" aria-label="Product filters">
+        <div class="filter-grid" role="search">
             <div class="filter-group">
                 <label for="categoryFilter" class="caption">Category</label>
-                <select id="categoryFilter" class="form-input">
+                <select id="categoryFilter" class="form-input" aria-label="Filter by category">
                     <option value="">All Categories</option>
                     <option value="fiction">Fiction</option>
                     <option value="non-fiction">Non-Fiction</option>
@@ -68,7 +68,7 @@
 
             <div class="filter-group">
                 <label for="sortFilter" class="caption">Sort By</label>
-                <select id="sortFilter" class="form-input">
+                <select id="sortFilter" class="form-input" aria-label="Sort products">
                     <option value="newest">Newest First</option>
                     <option value="price-low">Price: Low to High</option>
                     <option value="price-high">Price: High to Low</option>
@@ -78,26 +78,85 @@
 
             <div class="filter-group">
                 <label for="searchInput" class="caption">Search</label>
-                <input type="search" id="searchInput" class="form-input" placeholder="Search books...">
+                <div class="search-wrapper">
+                    <input 
+                        type="search" 
+                        id="searchInput" 
+                        class="form-input" 
+                        placeholder="Search books..." 
+                        aria-label="Search books"
+                        autocomplete="off"
+                    >
+                    <button 
+                        type="button" 
+                        class="clear-search" 
+                        id="clearSearch" 
+                        aria-label="Clear search"
+                        hidden
+                    >
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Product Grid -->
     <main class="container section-padding">
-        <div class="product-grid" id="productGrid">
-            <div class="loading-state" aria-hidden="true">
-                <div class="spinner"></div>
+        <div class="product-grid" id="productGrid" aria-live="polite">
+            <!-- Loading State -->
+            <div class="loading-state" id="loadingState">
+                <div class="spinner" role="status" aria-label="Loading products">
+                    <span class="sr-only">Loading...</span>
+                </div>
                 <p>Loading products...</p>
             </div>
+            
+            <!-- Error State -->
+            <div class="error-state" id="errorState" hidden>
+                <i class="fas fa-exclamation-circle"></i>
+                <p>Failed to load products. Please try again.</p>
+                <button class="btn btn-primary" onclick="window.productManager?.renderProducts()">
+                    Retry
+                </button>
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state" id="emptyState" hidden>
+                <i class="fas fa-book-open"></i>
+                <p>No products match your search criteria.</p>
+                <button class="btn btn-secondary" onclick="window.productManager?.resetFilters()">
+                    Clear Filters
+                </button>
+            </div>
+
             <!-- Products will be populated by JavaScript -->
+            <div class="products-container" id="productsContainer"></div>
         </div>
 
         <!-- Pagination -->
-        <nav class="pagination" aria-label="Page navigation">
-            <button class="btn btn-secondary" aria-label="Previous page">
-                <i class="fas fa-chevron-left"></i>
-            </button>
+        <nav class="pagination" aria-label="Product page navigation">
+            <div class="pagination-info" aria-live="polite">
+                <span id="paginationInfo">Showing products 1-6 of 24</span>
+            </div>
+            <div class="pagination-controls">
+                <button 
+                    class="btn btn-secondary" 
+                    id="prevPage" 
+                    aria-label="Previous page" 
+                    disabled
+                >
+                    <i class="fas fa-chevron-left" aria-hidden="true"></i>
+                </button>
+                <div class="page-numbers" role="group" aria-label="Page numbers"></div>
+                <button 
+                    class="btn btn-secondary" 
+                    id="nextPage" 
+                    aria-label="Next page"
+                >
+                    <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                </button>
+            </div>
             <div class="page-numbers">
                 <button class="btn active">1</button>
                 <button class="btn">2</button>
