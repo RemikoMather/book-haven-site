@@ -1,5 +1,6 @@
 import { StorageManager } from './storage-manager.js';
 import { CartManager } from './cart-manager.js';
+import { createClient } from '@supabase/supabase-js';
 
 // Initialize Supabase Client
 const SUPABASE_URL = 'https://qeoyopgtolnmtdaahdvn.supabase.co'
@@ -59,7 +60,7 @@ async function submitContactForm(formData) {
 
 // Custom orders
 function saveCustomOrder(orderDetails) {
-    localStorage.setItem('customOrder', JSON.stringify(orderDetails))
+    localStore.set('customOrder', orderDetails)
     showAlert('Custom order details saved!')
 }
 
@@ -75,8 +76,29 @@ function showAlert(message) {
     }, 3000)
 }
 
+// Cart UI management
+function setupCartUI() {
+    const cartToggle = document.querySelector('.cart-toggle');
+    const cartDropdown = document.querySelector('.cart-dropdown');
+    
+    if (cartToggle && cartDropdown) {
+        cartToggle.addEventListener('click', () => {
+            cartDropdown.classList.toggle('active');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!cartToggle.contains(e.target) && !cartDropdown.contains(e.target)) {
+                cartDropdown.classList.remove('active');
+            }
+        });
+    }
+}
+
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
+    // Setup cart UI
+    setupCartUI();
+    
     // Setup event listeners
     const subscribeForm = document.getElementById('subscribe-form')
     if (subscribeForm) {
