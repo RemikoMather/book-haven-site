@@ -327,7 +327,8 @@ export class ProductManager {
             <article class="product-card">
                 <div class="product-image">
                     <img 
-                        src="${product.thumbnail || product.image}" 
+                        src="${product.thumbnail || product.image || '/images/placeholder-book.jpg'}" 
+                        onerror="this.onerror=null; this.src='/images/placeholder-book.jpg'" 
                         alt="${product.name}"
                         loading="lazy"
                         onerror="this.onerror=null; this.src='https://cdn.pixabay.com/photo/2015/11/19/21/14/book-1052014_640.jpg'"
