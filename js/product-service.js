@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { config } from './config.js';
 
 export class ProductService {
     static instance = null;
@@ -7,8 +8,8 @@ export class ProductService {
         if (ProductService.instance) {
             return ProductService.instance;
         }
-        this.SUPABASE_URL = 'https://qeoyopgtolnmtdaahdvn.supabase.co';
-        this.SUPABASE_ANON_KEY = process.env.SUPABASE_KEY;
+        this.SUPABASE_URL = config.get('SUPABASE_URL');
+        this.SUPABASE_ANON_KEY = config.get('SUPABASE_ANON_KEY');
         this.retryAttempts = 3;
         this.retryDelay = 1000;
         this.initSupabase();
@@ -17,7 +18,9 @@ export class ProductService {
 
     initSupabase() {
         try {
+            console.log('Initializing Supabase with URL:', this.SUPABASE_URL);
             this.supabase = createClient(this.SUPABASE_URL, this.SUPABASE_ANON_KEY);
+            console.log('Supabase client initialized successfully');
         } catch (error) {
             console.error('Failed to initialize Supabase:', error);
             this.supabase = null;
