@@ -10,7 +10,16 @@ export class ProductService {
         this.supabase = null;
         this.retryAttempts = 3;
         this.retryDelay = 1000;
+        
+        // Try initial initialization
         this.initSupabase();
+        
+        // Listen for Supabase initialization
+        window.addEventListener('supabaseReady', () => {
+            console.log('DEBUG: ProductService detected Supabase ready event');
+            this.initSupabase();
+        });
+        
         ProductService.instance = this;
     }
 
@@ -23,14 +32,14 @@ export class ProductService {
                 return;
             }
             
-            // Check if Supabase client is available globally
-            if (typeof window.supabase !== 'undefined') {
-                this.supabase = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
-            } else if (typeof window.Supabase !== 'undefined') {
-                this.supabase = window.Supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
-            } else {
-                throw new Error('Supabase client not found. Make sure the CDN script is loaded.');
+            // Check if Supabase is ready
+            if (!window.supabase) {
+                console.log('DEBUG: Waiting for Supabase to be initialized...');
+                return; // Will retry when supabaseReady event fires
             }
+            
+            // Create client instance
+            this.supabase = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
             
             console.log('DEBUG: Supabase client initialized successfully');
         } catch (error) {
