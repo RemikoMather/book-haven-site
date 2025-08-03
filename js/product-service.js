@@ -22,7 +22,16 @@ export class ProductService {
                 this.supabase = null;
                 return;
             }
-            this.supabase = supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+            
+            // Check if Supabase client is available globally
+            if (typeof window.supabase !== 'undefined') {
+                this.supabase = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+            } else if (typeof window.Supabase !== 'undefined') {
+                this.supabase = window.Supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+            } else {
+                throw new Error('Supabase client not found. Make sure the CDN script is loaded.');
+            }
+            
             console.log('DEBUG: Supabase client initialized successfully');
         } catch (error) {
             console.error('DEBUG: Failed to initialize Supabase:', error);
