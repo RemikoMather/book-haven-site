@@ -4,7 +4,7 @@ import { config } from './config.js';
 // Cart Manager for handling shopping cart operations
 export class CartManager {
     constructor() {
-        this.cartStorage = new StorageManager('local'); // Change                                     onerror="this.onerror=null; this.src=config.getAssetUrl('/images/placeholder-book.jpg');"; to local for persistence
+        this.cartStorage = new StorageManager('local'); // Change                                     onerror="this.onerror=null; this.src=window.getAssetUrl('/images/placeholder-book.jpg');"; to local for persistence
         this.CART_KEY = 'book_haven_cart';
         this.cart = this.loadCart();
         
