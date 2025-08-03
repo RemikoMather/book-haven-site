@@ -1,13 +1,15 @@
+import { StorageManager } from './storage-manager.js';
+import { CartManager } from './cart-manager.js';
+
 // Initialize Supabase Client
 const SUPABASE_URL = 'https://qeoyopgtolnmtdaahdvn.supabase.co'
 const SUPABASE_ANON_KEY = process.env.SUPABASE_KEY
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
-// Cart functionality
-let cart = JSON.parse(sessionStorage.getItem('cart')) || []
-
-function updateCartCount() {
-    const cartCount = document.getElementById('cart-count')
+// Initialize storage and cart managers
+export const localStore = new StorageManager('local');
+export const sessionStore = new StorageManager('session');
+export const cartManager = new CartManager();
     if (cartCount) {
         cartCount.textContent = cart.length
     }
