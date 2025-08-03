@@ -1,4 +1,3 @@
-import { createClient } from '@supabase/supabase-js';
 import { config } from './config.js';
 
 export class ProductService {
@@ -24,7 +23,7 @@ export class ProductService {
                 this.supabase = null;
                 return;
             }
-            this.supabase = createClient(this.SUPABASE_URL, this.SUPABASE_ANON_KEY);
+            this.supabase = supabase.createClient(this.SUPABASE_URL, this.SUPABASE_ANON_KEY);
             console.log('DEBUG: Supabase client initialized successfully');
         } catch (error) {
             console.error('DEBUG: Failed to initialize Supabase:', error);
