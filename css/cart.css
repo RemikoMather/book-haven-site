@@ -161,16 +161,18 @@
     padding: 0.75rem;
 }
 
-    @media (min-width: 480px) {
+/* Cart Sidebar Responsive Styles */
+@media (min-width: 480px) {
+    .cart-sidebar {
         width: var(--cart-width);
         right: -400px;
+        box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+        transition: transform var(--cart-animation-duration) ease;
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        transform: translateX(var(--cart-width));
     }
-    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
-    transition: transform var(--cart-animation-duration) ease;
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    transform: translateX(var(--cart-width));
 }
 
 .cart-sidebar.open {
