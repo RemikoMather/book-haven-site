@@ -5,10 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Gallery - Book Haven</title>
     <meta name="description" content="Browse our extensive collection of books - from classic literature to contemporary bestsellers at Book Haven">
+    <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/design.css">
     <link rel="stylesheet" href="css/gallery.css">
     <link rel="stylesheet" href="css/cart.css">
     <link rel="stylesheet" href="css/book-images.css">
+    <link rel="stylesheet" href="css/loading-states.css">
+    <link rel="stylesheet" href="css/image-placeholders.css">
+    <link rel="stylesheet" href="css/collections.css">
+    <link rel="stylesheet" href="css/gallery-items.css">
+    <link rel="stylesheet" href="css/gallery-new.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
@@ -105,60 +111,58 @@
         </div>
     </section>
 
-    <!-- Product Grid -->
+    <!-- Main Content -->
     <main class="container section-padding">
-        <div class="product-grid" id="productGrid" aria-live="polite">
-            <!-- Loading State -->
-            <div class="loading-state" id="loadingState" aria-live="polite">
-                <div class="spinner" role="status" aria-label="Loading products">
-                    <span class="sr-only">Loading your books...</span>
-                </div>
-                <div class="loading-message">
-                    <h2>Loading Books</h2>
-                    <p>Please wait while we fetch our collection...</p>
-                </div>
+        <!-- State Containers -->
+        <div class="loading-state" id="loadingState" aria-live="polite" hidden>
+            <div class="spinner" role="status" aria-label="Loading products">
+                <span class="sr-only">Loading your books...</span>
             </div>
-            
-            <!-- Error State -->
-            <div class="error-state" id="errorState" hidden aria-live="polite">
-                <i class="fas fa-exclamation-circle" aria-hidden="true"></i>
-                <div class="error-message">
-                    <h2>Oops! Something went wrong</h2>
-                    <p>We're having trouble loading the books. This might be due to:</p>
-                    <ul>
-                        <li>Network connectivity issues</li>
-                        <li>Server temporary unavailability</li>
-                        <li>Database connection problems</li>
-                    </ul>
-                </div>
-                <div class="error-actions">
-                    <button class="btn btn-primary" type="button" aria-label="Retry loading products">
-                        <i class="fas fa-sync" aria-hidden="true"></i>
-                        Retry Loading
-                    </button>
-                    <p class="error-help">If the problem persists, please try again later or contact support.</p>
-                </div>
+            <div class="loading-message">
+                <h2>Loading Books</h2>
+                <p>Please wait while we fetch our collection...</p>
             </div>
-
-            <!-- Empty State -->
-            <div class="empty-state" id="emptyState" hidden aria-live="polite">
-                <i class="fas fa-book-open" aria-hidden="true"></i>
-                <div class="empty-message">
-                    <h2>No Books Found</h2>
-                    <p>We couldn't find any books matching your criteria.</p>
-                </div>
-                <div class="empty-actions">
-                    <button class="btn btn-secondary" type="button" aria-label="Clear all filters">
-                        <i class="fas fa-times" aria-hidden="true"></i>
-                        Clear All Filters
-                    </button>
-                    <p class="empty-help">Try adjusting your filters or search terms.</p>
-                </div>
-            </div>
-
-            <!-- Products will be populated by JavaScript -->
-            <div class="products-container" id="productsContainer"></div>
         </div>
+            
+        <div class="error-state" id="errorState" hidden aria-live="polite">
+            <i class="fas fa-exclamation-circle" aria-hidden="true"></i>
+            <div class="error-message">
+                <h2>Oops! Something went wrong</h2>
+                <p>We're having trouble loading the books. This might be due to:</p>
+                <ul>
+                    <li>Network connectivity issues</li>
+                    <li>Server temporary unavailability</li>
+                    <li>Database connection problems</li>
+                </ul>
+            </div>
+            <div class="error-actions">
+                <button class="btn btn-primary" type="button" aria-label="Retry loading products">
+                    <i class="fas fa-sync" aria-hidden="true"></i>
+                    Retry Loading
+                </button>
+                <p class="error-help">If the problem persists, please try again later or contact support.</p>
+            </div>
+        </div>
+
+        <div class="empty-state" id="emptyState" hidden aria-live="polite">
+            <i class="fas fa-book-open" aria-hidden="true"></i>
+            <div class="empty-message">
+                <h2>No Books Found</h2>
+                <p>We couldn't find any books matching your criteria.</p>
+            </div>
+            <div class="empty-actions">
+                <button class="btn btn-secondary" type="button" aria-label="Clear all filters">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                    Clear All Filters
+                </button>
+                <p class="empty-help">Try adjusting your filters or search terms.</p>
+            </div>
+        </div>
+
+        <!-- Product Grid Section -->
+        <section class="products-section">
+            <div class="product-grid" id="productsContainer" aria-live="polite"></div>
+        </section>
 
         <!-- Pagination -->
         <nav class="pagination" aria-label="Product page navigation">
@@ -183,13 +187,12 @@
                     <i class="fas fa-chevron-right" aria-hidden="true"></i>
                 </button>
             </div>
-            <div class="page-numbers" role="group" aria-label="Page numbers"></div>
         </nav>
     </main>
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="footer-content">
+        <div class="footer-content container">
             <div class="footer-section">
                 <h3>Book Haven</h3>
                 <p>Your Literary Sanctuary</p>
@@ -212,39 +215,47 @@
         </div>
     </footer>
 
-    <!-- Scripts -->
-    <script src="js/init.js"></script>
-    <script src="js/config.js" type="module"></script>
-    <script src="js/debug.js" type="module"></script>
+    <!-- Core Scripts -->
     <script src="js/storage-manager.js" type="module"></script>
     <script src="js/cart-manager.js" type="module"></script>
-    <script src="js/common.js" type="module"></script>
-    <script src="js/gallery.js" type="module"></script>
+    
+    <!-- Main Gallery Script -->
     <script type="module">
-        import { ProductManager } from './js/gallery.js';
-        import { debug } from './js/debug.js';
-
-        window.onerror = function(msg, url, line, col, error) {
-            debug.error('Global error:', { msg, url, line, col, error });
-            return false;
-        };
-
-        document.addEventListener('DOMContentLoaded', () => {
-            debug.log('Initializing gallery page...');
+        import { ProductManager } from './js/gallery-new.js';
+        
+        async function initGallery() {
             try {
-                ProductManager.init();
-                debug.log('ProductManager initialized successfully');
-            } catch (error) {
-                debug.error('Failed to initialize ProductManager:', error);
-                // Show error UI
-                const errorState = document.getElementById('errorState');
-                const loadingState = document.getElementById('loadingState');
-                if (errorState && loadingState) {
-                    loadingState.hidden = true;
-                    errorState.hidden = false;
+                console.log('DEBUG: Starting gallery initialization');
+                const manager = await ProductManager.init();
+                console.log('DEBUG: Gallery initialized successfully');
+                
+                // Add retry functionality to the error state button
+                const retryButton = document.querySelector('#errorState button');
+                if (retryButton) {
+                    retryButton.addEventListener('click', () => {
+                        console.log('DEBUG: Retry button clicked');
+                        initGallery().catch(console.error);
+                    });
                 }
+            } catch (error) {
+                console.error('DEBUG: Gallery initialization failed:', error);
+                document.getElementById('loadingState')?.setAttribute('hidden', 'true');
+                document.getElementById('errorState')?.removeAttribute('hidden');
+                document.getElementById('productsContainer')?.style.display = 'none';
+                document.querySelector('.pagination')?.setAttribute('hidden', 'true');
             }
-        });
+        }
+
+        // Start initialization when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                console.log('DEBUG: DOMContentLoaded fired, starting initialization');
+                initGallery();
+            });
+        } else {
+            console.log('DEBUG: Document already loaded, starting initialization');
+            initGallery();
+        }
     </script>
 </body>
 </html>

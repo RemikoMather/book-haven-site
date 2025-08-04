@@ -1,0 +1,72 @@
+/* Product Grid */
+.product-grid {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: 1fr;
+    min-height: 400px;
+    position: relative;
+    margin-top: 2rem;
+}
+
+@media (min-width: 640px) {
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .product-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Gallery Item Styles */
+.gallery-item {
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+    display: flex;
+    flex-direction: column;
+}
+
+.gallery-item:hover {
+    transform: translateY(-4px);
+}
+
+.gallery-item .img-container {
+    aspect-ratio: 3/4;
+    overflow: hidden;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.gallery-item h3 {
+    margin: 0.5rem 0;
+    font-size: 1.1rem;
+    color: var(--inkwell-blue);
+}
+
+.gallery-item .book-author {
+    color: var(--text-muted);
+    margin: 0.25rem 0;
+}
+
+.gallery-item .price {
+    font-weight: bold;
+    color: var(--accent-color);
+    margin: 0.5rem 0;
+}
+
+.gallery-item .book-description {
+    font-size: 0.9rem;
+    margin: 0.5rem 0;
+    color: var(--text-muted);
+}

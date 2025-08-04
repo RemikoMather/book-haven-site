@@ -1,0 +1,64 @@
+/* Image Placeholder Styles */
+.gallery-item .img-container,
+.collection-card .img-container {
+    position: relative;
+    background-color: var(--parchment-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.gallery-item .img-container::before,
+.collection-card .img-container::before {
+    content: "📚";
+    position: absolute;
+    font-size: 2rem;
+    opacity: 0.5;
+    z-index: 1;
+}
+
+.gallery-item .img-container img,
+.collection-card .img-container img {
+    position: relative;
+    max-width: 100%;
+    height: auto;
+    object-fit: cover;
+    z-index: 2;
+}
+
+/* Loading State */
+.img-container.loading {
+    animation: shimmer 1.5s infinite;
+    background: linear-gradient(
+        90deg,
+        var(--parchment-white) 0%,
+        var(--shadow-color) 50%,
+        var(--parchment-white) 100%
+    );
+    background-size: 200% 100%;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+/* Error State */
+.img-container.error::before {
+    opacity: 0.7;
+}
+
+/* Image Loading Transitions */
+.img-container img {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.img-container.loaded img {
+    opacity: 1;
+}

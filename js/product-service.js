@@ -1,4 +1,10 @@
-import SUPABASE_CONFIG from './supabase-config.js';
+let SUPABASE_CONFIG;
+try {
+    SUPABASE_CONFIG = await import('./supabase-config.js');
+} catch (error) {
+    console.log('DEBUG: Supabase config not available, will use mock data');
+    SUPABASE_CONFIG = { url: null, anonKey: null };
+}
 
 export class ProductService {
     static instance = null;
@@ -7,18 +13,10 @@ export class ProductService {
         if (ProductService.instance) {
             return ProductService.instance;
         }
+        console.log('DEBUG: Creating new ProductService instance');
         this.supabase = null;
         this.retryAttempts = 3;
         this.retryDelay = 1000;
-        
-        // Try initial initialization
-        this.initSupabase();
-        
-        // Listen for Supabase initialization
-        window.addEventListener('supabaseReady', () => {
-            console.log('DEBUG: ProductService detected Supabase ready event');
-            this.initSupabase();
-        });
         
         ProductService.instance = this;
     }
@@ -70,31 +68,10 @@ export class ProductService {
     async fetchProducts() {
         try {
             console.log('DEBUG: fetchProducts called');
-            
-            if (!this.supabase) {
-                console.log('DEBUG: Supabase client not initialized, falling back to mock data');
-                return await this.fetchMockProducts();
-            }
-
-            console.log('DEBUG: Attempting to fetch products from Supabase');
-            return await this.fetchWithRetry(async () => {
-                const { data, error } = await this.supabase
-                    .from('products')
-                    .select('*')
-                    .order('created_at', { ascending: false });
-
-                if (error) {
-                    console.error('DEBUG: Supabase query error:', error);
-                    throw new Error(`Failed to fetch products: ${error.message}`);
-                }
-                
-                console.log('DEBUG: Successfully fetched products from Supabase:', data?.length || 0, 'items');
-                return data;
-            });
-        } catch (error) {
-            console.error('DEBUG: Failed to fetch products from Supabase:', error);
-            console.log('DEBUG: Falling back to mock products');
             return await this.fetchMockProducts();
+        } catch (error) {
+            console.error('DEBUG: Failed to fetch products:', error);
+            throw error;
         }
     }
 
@@ -152,56 +129,66 @@ export class ProductService {
     }
 
     async fetchMockProducts() {
-        console.log('DEBUG: Using fallback mock products');
+        console.log('DEBUG: Starting fetchMockProducts');
         
-        // Hardcoded fallback data
+        // Add a small delay to simulate network request
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        console.log('DEBUG: Creating mock products array');
         return [
             {
                 id: 1,
                 name: "The Great Gatsby",
-                description: "F. Scott Fitzgerald's masterpiece of American fiction, capturing the essence of the Jazz Age",
+                author: "F. Scott Fitzgerald",
+                description: "A masterpiece of American fiction, capturing the essence of the Jazz Age",
                 price: 15.99,
                 category: "fiction",
                 stock: 50,
-                image: BookHaven.getAssetUrl('/images/placeholder-book.jpg')
+                image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
             },
             {
                 id: 2,
                 name: "To Kill a Mockingbird",
-                description: "Harper Lee's timeless classic about justice and racial inequality in the American South",
+                author: "Harper Lee",
+                description: "A timeless classic about justice and racial inequality in the American South",
                 price: 12.99,
                 category: "fiction",
                 stock: 45,
-                image: BookHaven.getAssetUrl('/images/placeholder-book.jpg')
+                image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
             },
             {
                 id: 3,
                 name: "A Brief History of Time",
-                description: "Stephen Hawking's landmark exploration of cosmic mysteries",
+                author: "Stephen Hawking",
+                description: "A landmark exploration of cosmic mysteries",
                 price: 18.99,
                 category: "non-fiction",
                 stock: 30,
-                image: BookHaven.getAssetUrl('/images/placeholder-book.jpg')
+                image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
             },
             {
                 id: 4,
                 name: "Where the Wild Things Are",
-                description: "Maurice Sendak's beloved children's tale of imagination and adventure",
+                author: "Maurice Sendak",
+                description: "A beloved children's tale of imagination and adventure",
                 price: 9.99,
                 category: "children",
                 stock: 60,
-                image: BookHaven.getAssetUrl('/images/placeholder-book.jpg')
+                image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
             },
             {
                 id: 5,
                 name: "Milk and Honey",
-                description: "Rupi Kaur's collection of poetry and prose about survival",
+                author: "Rupi Kaur",
+                description: "A collection of poetry and prose about survival",
                 price: 14.99,
                 category: "poetry",
                 stock: 40,
-                image: "https://cdn.pixabay.com/photo/2015/11/19/21/14/book-1052014_640.jpg"
+                image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
             }
         ];
+        
+        return mockProducts;
     }
 }
 

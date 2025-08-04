@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.supabase.co; connect-src 'self' https://*.supabase.co; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' https://cdn.pixabay.com data:;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.supabase.co; connect-src 'self' https://*.supabase.co; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src * 'self' data: https:;">
     <title>Book Haven - Your Literary Sanctuary</title>
     <meta name="description" content="Discover your next great read at Book Haven - a curated bookstore experience">
     
@@ -14,11 +14,16 @@
     <meta name="twitter:card" content="summary_large_image">
     
     <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/design.css">
     <link rel="stylesheet" href="css/cart.css">
+    <link rel="stylesheet" href="css/book-images.css">
+    <link rel="stylesheet" href="css/loading-states.css">
+    <link rel="stylesheet" href="css/image-placeholders.css">
+    <link rel="stylesheet" href="css/collections.css">
+    <link rel="stylesheet" href="css/gallery-items.css">
     <link rel="stylesheet" href="css/forms.css">
     <link rel="stylesheet" href="css/notifications.css">
-    <link rel="stylesheet" href="css/breadcrumb.css">
     <link rel="stylesheet" href="css/quick-actions.css">
     
     <!-- Structured Data -->
@@ -39,40 +44,22 @@
         "telephone": "+1-555-123-4567"
     }
     </script>
+    <script src="js/image-loader.js" defer></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
     <a href="#main" class="skip-link">Skip to main content</a>
 
-    <nav class="nav-container" role="navigation" aria-label="Main navigation">
+    <nav class="nav-container">
         <div class="nav-content">
-            <a href="index.html" class="logo" aria-label="Book Haven Homepage">Book Haven</a>
-            <button class="menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-menu">
-                <i class="fas fa-bars"></i>
-                <span class="visually-hidden">Menu</span>
-            </button>
-            <div id="nav-menu" class="nav-links" aria-label="Site menu">
-                <a href="index.html" aria-current="page">
-                    <i class="fas fa-home" aria-hidden="true"></i>
-                    <span>Home</span>
-                </a>
-                <a href="gallery.html">
-                    <i class="fas fa-book" aria-hidden="true"></i>
-                    <span>Gallery</span>
-                </a>
-                <a href="about.html">
-                    <i class="fas fa-info-circle" aria-hidden="true"></i>
-                    <span>About</span>
-                </a>
-                <a href="custom.html">
-                    <i class="fas fa-cog" aria-hidden="true"></i>
-                    <span>Custom</span>
-                </a>
-                <a href="contact.html">
-                    <i class="fas fa-envelope" aria-hidden="true"></i>
-                    <span>Contact</span>
-                </a>
+            <a href="index.html" class="logo">Book Haven</a>
+            <div class="nav-links">
+                <a href="index.html" aria-current="page">Home</a>
+                <a href="gallery.html">Gallery</a>
+                <a href="about.html">About</a>
+                <a href="custom.html">Custom</a>
+                <a href="contact.html">Contact</a>
             </div>
             <div class="nav-cart">
                 <button class="cart-toggle" aria-label="Open cart">
@@ -111,44 +98,62 @@
             </div>
         </section>
 
-        <section class="featured-collections">
+        <section class="featured-collections section-padding">
             <div class="container">
                 <h2 class="section-title">Featured Collections</h2>
-                <div class="collection-grid">
-                    <div class="gallery-item" data-category="fiction" data-id="1" data-price="24.99">
-                        <img src="https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg" 
-                             alt="The Great Adventure" 
-                             loading="lazy"
-                             onerror="this.onerror=null; this.src='https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg';">
-                        <h3>The Great Adventure</h3>
-                        <p class="book-author">By Jane Smith</p>
-                        <p class="price">$24.99</p>
-                        <button class="btn add-to-cart">Add to Cart</button>
-                        <figcaption class="book-description">A thrilling journey through uncharted territories</figcaption>
+                <div class="product-grid">
+                    <div class="gallery-item">
+                        <div class="img-container">
+                            <img src="https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg" 
+                                 alt="The Great Adventure" 
+                                 loading="lazy">
+                        </div>
+                        <div class="product-details">
+                            <h3>The Great Adventure</h3>
+                            <p class="book-author">By Jane Smith</p>
+                            <p class="price">$24.99</p>
+                            <button class="btn add-to-cart" data-product-id="1">Add to Cart</button>
+                        </div>
                     </div>
-                    <article class="collection-card">
-                        <img src="https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg" 
-                             alt="Rare Books Collection" 
-                             loading="lazy"
-                             width="400"
-                             height="300"
-                             onerror="this.src='https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg'">
-                        <h3>Rare Finds</h3>
-                        <p>Discover our curated selection of rare and first editions</p>
-                        <a href="gallery.html?category=rare" class="btn btn-secondary">View Collection</a>
-                    </article>
-                    <article class="collection-card">
-                        <img src="https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg" alt="New Releases" loading="lazy">
-                        <h3>New Arrivals</h3>
-                        <p>Fresh off the press: This month's latest releases</p>
-                        <a href="gallery.html?category=new" class="btn btn-secondary">Browse New</a>
-                    </article>
-                    <article class="collection-card">
-                        <img src="https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg" alt="Local Authors" loading="lazy">
-                        <h3>Local Authors</h3>
-                        <p>Supporting our community's literary voices</p>
-                        <a href="gallery.html?category=local" class="btn btn-secondary">Meet Authors</a>
-                    </article>
+                    <div class="gallery-item">
+                        <div class="img-container">
+                            <img src="https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg" 
+                                 alt="Rare Books Collection" 
+                                 loading="lazy">
+                        </div>
+                        <div class="product-details">
+                            <h3>Rare Finds</h3>
+                            <p class="book-author">First Editions</p>
+                            <p class="price">From $49.99</p>
+                            <a href="gallery.html?category=rare" class="btn btn-secondary">View Collection</a>
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <div class="img-container">
+                            <img src="https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg" 
+                                 alt="New Releases" 
+                                 loading="lazy">
+                        </div>
+                        <div class="product-details">
+                            <h3>New Arrivals</h3>
+                            <p class="book-author">Fresh off the press</p>
+                            <p class="price">This month's latest releases</p>
+                            <a href="gallery.html?category=new" class="btn btn-secondary">Browse New</a>
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <div class="img-container">
+                            <img src="https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg" 
+                                 alt="Local Authors" 
+                                 loading="lazy">
+                        </div>
+                        <div class="product-details">
+                            <h3>Local Authors</h3>
+                            <p class="book-author">Community Voices</p>
+                            <p class="price">Supporting local talent</p>
+                            <a href="gallery.html?category=local" class="btn btn-secondary">Meet Authors</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -194,34 +199,24 @@
     </div>
 
     <footer class="footer">
-        <div class="footer-content">
+        <div class="footer-content container">
             <div class="footer-section">
                 <h3>Book Haven</h3>
                 <p>Your Literary Sanctuary</p>
                 <div class="social-links">
-                    <a href="#" class="social-link" aria-label="Follow us on Facebook"><i class="fab fa-facebook"></i></a>
-                    <a href="#" class="social-link" aria-label="Follow us on Twitter"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="social-link" aria-label="Follow us on Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
                 </div>
             </div>
 
             <div class="footer-section">
                 <h3>Newsletter</h3>
-                <form id="footer-subscribe-form" class="footer-newsletter-form" novalidate>
+                <form class="footer-newsletter-form">
                     <div class="form-group">
-                        <input type="email" 
-                               id="footer-email" 
-                               name="email" 
-                               class="form-input" 
-                               placeholder="Enter your email" 
-                               required 
-                               pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
-                        <div id="footer-email-error" class="error-message" aria-live="polite"></div>
+                        <input type="email" class="form-input" placeholder="Enter your email" required>
                     </div>
-                    <button type="submit" class="btn">
-                        Subscribe
-                        <span class="loading-indicator" aria-hidden="true"></span>
-                    </button>
+                    <button type="submit" class="btn">Subscribe</button>
                 </form>
             </div>
         </div>

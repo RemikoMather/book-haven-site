@@ -1,62 +1,84 @@
 import { productService } from './product-service.js';
-import { CartManager } from './cart-manager.js';
 
 export class ProductManager {
+    // Private fields
+    #isLoading = false;
+    #hasError = false;
     #products = [];
     #filteredProducts = [];
     #currentPage = 1;
     #itemsPerPage = 6;
-    #cartManager;
     #retryCount = 0;
-    #isLoading = false;
-    #hasError = false;
-    #lastFilters = {
-        category: '',
-        searchQuery: '',
-        sortBy: 'newest'
-    };
+    #lastFilters = {};
+    #cartManager = window.cartManager || null;
 
     constructor() {
-        this.#cartManager = new CartManager();
-        this.setupEventListeners();
-        this.setupFilters();
-        this.setupPagination();
-        this.loadProducts();
+        // Initialize with loading state
+        this.setVisibility({ loading: true, error: false, empty: false });
     }
 
-    static init() {
-        window.productManager = new ProductManager();
-        console.log('DEBUG: ProductManager initialized');
+    static async init() {
+        console.log('DEBUG: Starting ProductManager initialization');
+        if (window.productManager) {
+            console.log('DEBUG: ProductManager already initialized');
+            return window.productManager;
+        }
+        
+        try {
+            const manager = new ProductManager();
+            window.productManager = manager;
+            await manager.loadProducts();
+            console.log('DEBUG: ProductManager initialized');
+            return manager;
+        } catch (error) {
+            console.error('Failed to initialize ProductManager:', error);
+            throw error;
+        }
     }
 
     async loadProducts(isRetry = false) {
-        if (this.#isLoading && !isRetry) return;
+        console.log('DEBUG: loadProducts called, isRetry:', isRetry);
+        if (this.#isLoading && !isRetry) {
+            console.log('DEBUG: Already loading products, skipping');
+            return;
+        }
+
+        const grid = document.getElementById('productGrid');
+        if (!grid) {
+            console.error('Product grid element not found');
+            return;
+        }
 
         try {
             console.log('DEBUG: Starting to load products...');
-            console.log('DEBUG: ProductService instance:', productService);
             this.#isLoading = true;
-            this.setVisibility({ loading: true, error: false, empty: false });
-
-            if (!productService) {
-                throw new Error('ProductService is not initialized');
-            }
-
-            const products = await productService.fetchProducts();
-            console.log('Products received:', products);
             
-            if (!products || !Array.isArray(products)) {
+            // Show loading state, hide others
+            this.setVisibility({ loading: true, error: false, empty: false });
+            
+            const products = await productService.fetchProducts();
+            console.log('Products received:', products.length, 'items');
+            
+            if (!Array.isArray(products)) {
                 throw new Error('Invalid products data received');
             }
 
             this.#products = products;
+            this.#filteredProducts = [...products];
             this.#retryCount = 0;
             this.#hasError = false;
-            console.log('Products loaded successfully:', this.#products.length, 'items');
             
-            this.#filteredProducts = [...this.#products];
-            this.renderProducts();
-            this.updatePagination();
+            // Clear grid and render products
+            const productCards = grid.querySelectorAll('.product-card');
+            productCards.forEach(card => card.remove());
+            
+            if (products.length === 0) {
+                this.setVisibility({ loading: false, error: false, empty: true });
+            } else {
+                this.setVisibility({ loading: false, error: false, empty: false });
+                this.renderProducts();
+                this.updatePagination();
+            }
             
             await this.applyFilters();
         } catch (error) {
@@ -256,19 +278,26 @@ export class ProductManager {
     }
 
     setVisibility({ loading, error, empty }) {
-        const states = {
-            loadingState: loading,
-            errorState: error,
-            emptyState: empty,
-            productsContainer: !loading && !error && !empty
-        };
-
-        Object.entries(states).forEach(([id, visible]) => {
+        console.log('DEBUG: Setting visibility - loading:', loading, 'error:', error, 'empty:', empty);
+        
+        ['loadingState', 'errorState', 'emptyState'].forEach(id => {
             const element = document.getElementById(id);
             if (element) {
-                element.hidden = !visible;
+                const shouldShow = {
+                    loadingState: loading,
+                    errorState: error,
+                    emptyState: empty
+                }[id];
+                element.hidden = !shouldShow;
+                console.log(`DEBUG: Setting ${id} hidden:`, !shouldShow);
             }
         });
+        
+        const productsContainer = document.getElementById('productsContainer');
+        if (productsContainer) {
+            productsContainer.style.display = (!loading && !error && !empty) ? 'grid' : 'none';
+            console.log('DEBUG: Products container display:', productsContainer.style.display);
+        }
     }
 
     updatePagination() {
@@ -303,10 +332,7 @@ export class ProductManager {
 
     renderProducts() {
         const productsContainer = document.getElementById('productsContainer');
-        if (!productsContainer) {
-            console.error('Products container not found');
-            return;
-        }
+        if (!productsContainer) return;
 
         const startIndex = (this.#currentPage - 1) * this.#itemsPerPage;
         const endIndex = startIndex + this.#itemsPerPage;
@@ -317,43 +343,86 @@ export class ProductManager {
             return;
         }
 
-        productsContainer.innerHTML = currentProducts.map(product => this.getProductCard(product)).join('');
+        const productsHTML = currentProducts.map(product => {
+            return renderProductCard({
+                id: product.id,
+                imageUrl: product.image || '',
+                title: product.name,
+                author: product.author || 'Unknown Author',
+                price: product.price,
+                description: product.description
+            });
+        }).join('');
+
+        productsContainer.innerHTML = productsHTML;
+
         this.updatePaginationInfo();
         this.setVisibility({ loading: false, error: false, empty: false });
+
+        // Initialize image loading handlers
+        if (window.handleImageLoading) {
+            window.handleImageLoading();
+        }
     }
 
     getProductCard(product) {
-        return `
-            <article class="product-card">
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+            <div class="product-image">
+                <img src="${product.image || 'placeholder.jpg'}" 
+                     alt="${product.name}" 
+                     loading="lazy"
+                     onerror="this.src='placeholder.jpg'">
+            </div>
+            <div class="product-details">
+                <h3 class="product-title">${product.name}</h3>
+                <p class="product-author">${product.author || 'Unknown Author'}</p>
+                <p class="product-price">$${product.price.toFixed(2)}</p>
+                <p class="product-description">${product.description || ''}</p>
+                <button class="add-to-cart" data-product-id="${product.id}">
+                    Add to Cart
+                </button>
+            </div>
+        `;
+        return card;
+    }
+
+    renderProducts() {
+        const grid = document.getElementById('productGrid');
+        if (!grid) return;
+
+        // Calculate pagination
+        const startIndex = (this.#currentPage - 1) * this.#itemsPerPage;
+        const endIndex = startIndex + this.#itemsPerPage;
+        const productsToShow = this.#filteredProducts.slice(startIndex, endIndex);
+
+        // Create product grid content
+        const productElements = productsToShow.map(product => {
+            const productCard = document.createElement('div');
+            productCard.className = 'product-card';
+            
+            productCard.innerHTML = `
                 <div class="product-image">
-                    <img 
-                        src="${product.thumbnail || product.image || BookHaven.getAssetUrl('/images/placeholder-book.jpg')}" 
-                        alt="${product.name}"
-                        loading="lazy"
-                        onerror="this.onerror=null; this.src=BookHaven.getAssetUrl('/images/placeholder-book.jpg');"
-                    />
+                    <img src="${product.image || 'images/placeholder.jpg'}" 
+                         alt="${product.name}" 
+                         loading="lazy">
                 </div>
                 <div class="product-details">
                     <h3 class="product-title">${product.name}</h3>
-                    <p class="product-description">${product.description}</p>
-                    <div class="product-info">
-                        <span class="product-category">${product.category}</span>
-                        <span class="product-stock">Stock: ${product.stock}</span>
-                    </div>
-                    <div class="product-footer">
-                        <span class="product-price">$${product.price.toFixed(2)}</span>
-                        <button 
-                            class="btn btn-primary add-to-cart" 
-                            data-product-id="${product.id}"
-                            aria-label="Add ${product.name} to cart"
-                            ${product.stock <= 0 ? 'disabled' : ''}
-                        >
-                            ${product.stock <= 0 ? 'Out of Stock' : 'Add to Cart'}
-                        </button>
-                    </div>
+                    <p class="product-author">${product.author || 'Unknown Author'}</p>
+                    <p class="product-price">$${product.price.toFixed(2)}</p>
+                    <button class="add-to-cart" data-product-id="${product.id}">
+                        Add to Cart
+                    </button>
                 </div>
-            </article>
-        `;
+            `;
+            return productCard;
+        });
+
+        // Clear grid and add new products
+        grid.innerHTML = '';
+        productElements.forEach(element => grid.appendChild(element));
     }
 
     setupEventListeners() {
