@@ -1,10 +1,39 @@
 class SimpleGallery {
     constructor() {
         console.log('DEBUG: SimpleGallery constructor started');
+        // Initialize container elements
         this.productsContainer = document.getElementById('productsContainer');
         this.loadingState = document.getElementById('loadingState');
         this.errorState = document.getElementById('errorState');
         this.emptyState = document.getElementById('emptyState');
+        
+        // Initialize products data
+        this.products = [
+            {
+                name: 'The Great Gatsby',
+                author: 'F. Scott Fitzgerald',
+                price: 15.99,
+                description: 'A masterpiece of American fiction that captures the essence of the Jazz Age.',
+                category: 'fiction',
+                image: 'https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg'
+            },
+            {
+                name: 'To Kill a Mockingbird',
+                author: 'Harper Lee',
+                price: 14.99,
+                description: 'A timeless classic exploring racial injustice in a small Southern town.',
+                category: 'fiction',
+                image: 'https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg'
+            },
+            {
+                name: '1984',
+                author: 'George Orwell',
+                price: 12.99,
+                description: 'A dystopian social science fiction novel exploring totalitarianism.',
+                category: 'fiction',
+                image: 'https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg'
+            }
+        ];
         
         // Initialize cart
         this.cart = JSON.parse(localStorage.getItem('cart')) || [];
