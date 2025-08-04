@@ -2,7 +2,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const menuToggle = document.querySelector('.menu-toggle');
     const navLinks = document.querySelector('.nav-links');
 
-    menuToggle.addEventListener('click', function() {
+    // Only setup mobile nav if elements exist
+    if (menuToggle && navLinks) {
+        menuToggle.addEventListener('click', function() {
         navLinks.classList.toggle('active');
         const isExpanded = navLinks.classList.contains('active');
         menuToggle.setAttribute('aria-expanded', isExpanded);

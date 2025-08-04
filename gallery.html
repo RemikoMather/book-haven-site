@@ -3,22 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bo        <!-- Product Grid Section -->
-        <section class="products-section">
-            <h2 class="section-title">Featured Books</h2>
-            <div class="product-grid" id="productsContainer" aria-live="polite"></div>
-        </section>ry - Book Haven</title>
+    <title>Gallery - Book Haven</title>
     <meta name="description" content="Browse our extensive collection of books - from classic literature to contemporary bestsellers at Book Haven">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/gallery-simple.css">
+    <link rel="stylesheet" href="css/nav.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="js/gallery-simple.js" defer></script>
-    <script src="js/script.js" defer></script>
+    <!-- Load dependencies -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    
+    <!-- Load application scripts -->
+    <script src="js/config.js" type="module"></script>
+    <script src="js/gallery-simple.js" type="module"></script>
+    <script src="js/mobile-nav.js"></script>
+    <script src="js/script.js" type="module" defer></script>
 </head>
 <body>
     <nav class="nav-container">
         <div class="nav-content">
             <a href="index.html" class="logo">Book Haven</a>
+            <button class="menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+                <i class="fas fa-bars"></i>
+            </button>
             <div class="nav-links">
                 <a href="index.html">Home</a>
                 <a href="gallery.html" aria-current="page">Gallery</a>
@@ -165,9 +171,6 @@
         <!-- Product Grid Section -->
         <section class="products-section">
             <h2 class="section-title">Featured Books</h2>
-            <div id="loadingState" hidden>Loading...</div>
-            <div id="errorState" hidden>Error loading products. Please try again.</div>
-            <div id="emptyState" hidden>No products found.</div>
             <div class="product-grid" id="productsContainer" aria-live="polite"></div>
         </section>
 

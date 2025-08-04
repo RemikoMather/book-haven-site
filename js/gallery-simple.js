@@ -51,7 +51,12 @@ class SimpleGallery {
         console.log('DEBUG: init called');
         try {
             this.initializeElements();
-            this.renderProducts();
+            this.setupEventListeners();
+            this.showLoading();
+            this.renderProducts().catch(error => {
+                console.error('ERROR during product rendering:', error);
+                this.showError();
+            });
             console.log('DEBUG: initialization complete');
         } catch (error) {
             console.error('ERROR during initialization:', error);
@@ -66,8 +71,13 @@ class SimpleGallery {
         this.productsContainer = document.getElementById('productsContainer');
         console.log('DEBUG: productsContainer found:', !!this.productsContainer);
         
-        this.loadingState = document.querySelector('#loadingState');
-        this.errorState = document.querySelector('#errorState');
+        this.loadingState = document.getElementById('loadingState');
+        this.errorState = document.getElementById('errorState');
+        
+        // Verify all required elements are found
+        if (!this.productsContainer || !this.loadingState || !this.errorState) {
+            throw new Error('Required elements not found in the DOM');
+        }
         this.emptyState = document.querySelector('#emptyState');
         
         console.log('DEBUG: State elements found:', {
