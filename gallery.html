@@ -6,16 +6,10 @@
     <title>Book Gallery - Book Haven</title>
     <meta name="description" content="Browse our extensive collection of books - from classic literature to contemporary bestsellers at Book Haven">
     <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/design.css">
-    <link rel="stylesheet" href="css/gallery.css">
-    <link rel="stylesheet" href="css/cart.css">
-    <link rel="stylesheet" href="css/book-images.css">
-    <link rel="stylesheet" href="css/loading-states.css">
-    <link rel="stylesheet" href="css/image-placeholders.css">
-    <link rel="stylesheet" href="css/collections.css">
-    <link rel="stylesheet" href="css/gallery-items.css">
-    <link rel="stylesheet" href="css/gallery-new.css">
+    <link rel="stylesheet" href="css/gallery-simple.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="js/gallery-simple.js" defer></script>
+    <script src="js/script.js" defer></script>
 </head>
 <body>
     <nav class="nav-container">
@@ -45,9 +39,14 @@
                         <div class="cart-total">
                             Total: $<span data-cart-total>0.00</span>
                         </div>
-                        <button class="btn btn-primary checkout-btn" disabled>
-                            Proceed to Checkout
-                        </button>
+                        <div class="cart-actions">
+                            <button class="btn btn-secondary clear-cart">
+                                <i class="fas fa-trash"></i> Clear Cart
+                            </button>
+                            <button class="btn btn-primary checkout-btn" disabled>
+                                Proceed to Checkout
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -161,11 +160,12 @@
 
         <!-- Product Grid Section -->
         <section class="products-section">
+            <h2 class="section-title">Featured Books</h2>
             <div class="product-grid" id="productsContainer" aria-live="polite"></div>
         </section>
 
         <!-- Pagination -->
-        <nav class="pagination" aria-label="Product page navigation">
+        <nav class="pagination" aria-label="Product page navigation" hidden>
             <div class="pagination-info" aria-live="polite">
                 <span id="paginationInfo">Loading...</span>
             </div>
@@ -215,47 +215,8 @@
         </div>
     </footer>
 
-    <!-- Core Scripts -->
-    <script src="js/storage-manager.js" type="module"></script>
-    <script src="js/cart-manager.js" type="module"></script>
-    
-    <!-- Main Gallery Script -->
-    <script type="module">
-        import { ProductManager } from './js/gallery-new.js';
-        
-        async function initGallery() {
-            try {
-                console.log('DEBUG: Starting gallery initialization');
-                const manager = await ProductManager.init();
-                console.log('DEBUG: Gallery initialized successfully');
-                
-                // Add retry functionality to the error state button
-                const retryButton = document.querySelector('#errorState button');
-                if (retryButton) {
-                    retryButton.addEventListener('click', () => {
-                        console.log('DEBUG: Retry button clicked');
-                        initGallery().catch(console.error);
-                    });
-                }
-            } catch (error) {
-                console.error('DEBUG: Gallery initialization failed:', error);
-                document.getElementById('loadingState')?.setAttribute('hidden', 'true');
-                document.getElementById('errorState')?.removeAttribute('hidden');
-                document.getElementById('productsContainer')?.style.display = 'none';
-                document.querySelector('.pagination')?.setAttribute('hidden', 'true');
-            }
-        }
-
-        // Start initialization when DOM is ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => {
-                console.log('DEBUG: DOMContentLoaded fired, starting initialization');
-                initGallery();
-            });
-        } else {
-            console.log('DEBUG: Document already loaded, starting initialization');
-            initGallery();
-        }
+    <!-- Gallery Script -->
+    <script src="js/gallery-simple.js"></script>
     </script>
 </body>
 </html>
