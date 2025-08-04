@@ -7,7 +7,26 @@ export class SimpleGallery {
         
         // Initialize state variables
         this.initialized = false;
-        this.cart = [];
+        
+        // Initialize cart elements
+        this.cartCountElement = document.querySelector('[data-cart-count]');
+        this.cartDropdown = document.querySelector('.cart-dropdown');
+        this.cartItemsContainer = document.querySelector('#cart-items');
+        this.cartTotalElement = document.querySelector('[data-cart-total]');
+        this.checkoutButton = document.querySelector('.checkout-button');
+        
+        // Initialize cart from localStorage
+        this.cart = JSON.parse(localStorage.getItem('cart')) || [];
+        this.orderProcessed = false;
+        
+        // Debug logging for cart elements
+        console.log('Cart elements:', {
+            countElement: this.cartCountElement,
+            dropdown: this.cartDropdown,
+            itemsContainer: this.cartItemsContainer,
+            totalElement: this.cartTotalElement,
+            checkoutButton: this.checkoutButton
+        });
         
         // Initialize products data
         this.products = [
