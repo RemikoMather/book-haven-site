@@ -1,13 +1,10 @@
-class SimpleGallery {
+export class SimpleGallery {
     constructor() {
         console.log('DEBUG: SimpleGallery constructor started');
-        console.log('Document ready state:', document.readyState);
         
-        // Bind methods to this instance
-        this.init = this.init.bind(this);
-        this.showProducts = this.showProducts.bind(this);
-        this.createProductElement = this.createProductElement.bind(this);
-        this.renderProducts = this.renderProducts.bind(this);
+        // Initialize state variables
+        this.initialized = false;
+        this.cart = [];
         
         // Initialize products data
         this.products = [
@@ -47,44 +44,91 @@ class SimpleGallery {
         }
     }
 
-    init() {
+    async init() {
         console.log('DEBUG: init called');
         try {
-            this.initializeElements();
-            this.setupEventListeners();
+            // Initialize elements first
+            if (!this.initializeElements()) {
+                throw new Error('Failed to initialize elements');
+            }
+
+            // Hide error state and show loading
+            this.hideAllStates();
             this.showLoading();
-            this.renderProducts().catch(error => {
-                console.error('ERROR during product rendering:', error);
-                this.showError();
-            });
+            
+            // Setup event listeners and render
+            this.setupEventListeners();
+            await this.renderProducts();
+            
+            // Show products on success
+            this.showProducts();
             console.log('DEBUG: initialization complete');
+            return true;
         } catch (error) {
             console.error('ERROR during initialization:', error);
             this.showError();
+            throw error; // Re-throw to be caught by the caller
+        }
+    }
+
+    hideAllStates() {
+        this.loadingState?.setAttribute('hidden', 'true');
+        this.errorState?.setAttribute('hidden', 'true');
+        this.emptyState?.setAttribute('hidden', 'true');
+        if (this.productsContainer) {
+            this.productsContainer.style.display = 'none';
+        }
+    }
+
+    showProducts() {
+        this.loadingState?.setAttribute('hidden', 'true');
+        this.errorState?.setAttribute('hidden', 'true');
+        this.emptyState?.setAttribute('hidden', 'true');
+        if (this.productsContainer) {
+            this.productsContainer.style.display = 'grid';
         }
     }
 
     initializeElements() {
         console.log('DEBUG: initializeElements started');
         
-        // Initialize container elements
+        // Get required elements
         this.productsContainer = document.getElementById('productsContainer');
-        console.log('DEBUG: productsContainer found:', !!this.productsContainer);
-        
         this.loadingState = document.getElementById('loadingState');
         this.errorState = document.getElementById('errorState');
+        this.emptyState = document.getElementById('emptyState');
         
-        // Verify all required elements are found
-        if (!this.productsContainer || !this.loadingState || !this.errorState) {
-            throw new Error('Required elements not found in the DOM');
-        }
-        this.emptyState = document.querySelector('#emptyState');
-        
-        console.log('DEBUG: State elements found:', {
-            loading: !!this.loadingState,
-            error: !!this.errorState,
-            empty: !!this.emptyState
+        // Log element status
+        console.log('DEBUG: Elements found:', {
+            productsContainer: !!this.productsContainer,
+            loadingState: !!this.loadingState,
+            errorState: !!this.errorState,
+            emptyState: !!this.emptyState
         });
+        
+        // Verify required elements
+        if (!this.productsContainer || !this.loadingState || !this.errorState) {
+            console.error('Missing required elements');
+            return false;
+        }
+        
+        // Add retry functionality
+        const retryButton = this.errorState.querySelector('button');
+        if (retryButton) {
+            retryButton.addEventListener('click', async () => {
+                try {
+                    this.hideAllStates();
+                    this.showLoading();
+                    await this.renderProducts();
+                    this.showProducts();
+                } catch (error) {
+                    console.error('Retry failed:', error);
+                    this.showError();
+                }
+            });
+        }
+        
+        return true;
         
         // Initialize cart elements
         this.cartCountElement = document.querySelector('[data-cart-count]');
@@ -105,22 +149,18 @@ class SimpleGallery {
     }
 
     showError() {
-        console.error('ERROR: Showing error state');
-        this.loadingState?.setAttribute('hidden', 'true');
-        this.errorState?.removeAttribute('hidden');
-        this.emptyState?.setAttribute('hidden', 'true');
-        if (this.productsContainer) {
-            this.productsContainer.style.display = 'none';
+        console.log('Showing error state');
+        this.hideAllStates();
+        if (this.errorState) {
+            this.errorState.removeAttribute('hidden');
         }
     }
 
     showLoading() {
-        console.log('DEBUG: Showing loading state');
-        this.loadingState?.removeAttribute('hidden');
-        this.errorState?.setAttribute('hidden', 'true');
-        this.emptyState?.setAttribute('hidden', 'true');
-        if (this.productsContainer) {
-            this.productsContainer.style.display = 'none';
+        console.log('Showing loading state');
+        this.hideAllStates();
+        if (this.loadingState) {
+            this.loadingState.removeAttribute('hidden');
         }
     }
 
@@ -164,20 +204,35 @@ class SimpleGallery {
         return div;
     }
 
-    renderProducts() {
-        console.log('DEBUG: Starting renderProducts');
+    async renderProducts() {
+        console.log('DEBUG: Starting renderProducts', {
+            productsContainer: this.productsContainer,
+            products: this.products,
+            containerDisplay: this.productsContainer?.style.display,
+            loadingHidden: this.loadingState?.hasAttribute('hidden'),
+            errorHidden: this.errorState?.hasAttribute('hidden')
+        });
+        
         if (!this.productsContainer) {
             console.error('DEBUG: Products container not found');
             this.showError();
-            return;
+            return Promise.reject(new Error('Products container not found'));
         }
 
         try {
+            // Ensure error state is hidden before showing loading
+            this.errorState?.setAttribute('hidden', 'true');
             this.showLoading();
 
             // Clear container and show loading state
             this.productsContainer.innerHTML = '';
             
+            if (!Array.isArray(this.products) || this.products.length === 0) {
+                console.error('DEBUG: No products available');
+                this.showError();
+                return Promise.reject(new Error('No products available'));
+            }
+
             // Add each product to the container
             this.products.forEach((product, index) => {
                 console.log(`Creating product element ${index}:`, product);
