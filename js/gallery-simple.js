@@ -16,6 +16,7 @@ export class SimpleGallery {
                 author: "F. Scott Fitzgerald",
                 description: "A masterpiece of American fiction that captures the essence of the Jazz Age.",
                 price: 15.99,
+                category: "fiction",
                 image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
             },
             {
@@ -23,6 +24,7 @@ export class SimpleGallery {
                 author: "Harper Lee",
                 description: "A timeless classic exploring racial injustice in a small Southern town.",
                 price: 14.99,
+                category: "fiction",
                 image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
             },
             {
@@ -30,6 +32,103 @@ export class SimpleGallery {
                 author: "George Orwell",
                 description: "A dystopian social science fiction novel exploring totalitarianism.",
                 price: 12.99,
+                category: "fiction",
+                image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
+            },
+            {
+                name: "A Brief History of Time",
+                author: "Stephen Hawking",
+                description: "A landmark exploration of the universe and our place in it.",
+                price: 18.99,
+                category: "non-fiction",
+                image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
+            },
+            {
+                name: "The Origin of Species",
+                author: "Charles Darwin",
+                description: "The foundational work of evolutionary biology.",
+                price: 16.99,
+                category: "non-fiction",
+                image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
+            },
+            {
+                name: "Where the Wild Things Are",
+                author: "Maurice Sendak",
+                description: "A beloved children's tale of imagination and adventure.",
+                price: 11.99,
+                category: "children",
+                image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
+            },
+            {
+                name: "The Very Hungry Caterpillar",
+                author: "Eric Carle",
+                description: "A colorful journey through the week of a very hungry caterpillar.",
+                price: 9.99,
+                category: "children",
+                image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
+            },
+            {
+                name: "Milk and Honey",
+                author: "Rupi Kaur",
+                description: "A collection of poetry and prose about survival and the experience of violence, abuse, love, loss, and femininity.",
+                price: 13.99,
+                category: "poetry",
+                image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
+            },
+            {
+                name: "The Sun and Her Flowers",
+                author: "Rupi Kaur",
+                description: "A vibrant journey through growth and healing.",
+                price: 13.99,
+                category: "poetry",
+                image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
+            },
+            {
+                name: "The Hobbit",
+                author: "J.R.R. Tolkien",
+                description: "A fantastical journey of a hobbit who finds himself on an unexpected adventure.",
+                price: 17.99,
+                category: "fiction",
+                image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
+            },
+            {
+                name: "Pride and Prejudice",
+                author: "Jane Austen",
+                description: "A masterful story of love and marriage in Georgian England.",
+                price: 14.99,
+                category: "fiction",
+                image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
+            },
+            {
+                name: "Sapiens",
+                author: "Yuval Noah Harari",
+                description: "A brief history of humankind exploring our evolution and future.",
+                price: 19.99,
+                category: "non-fiction",
+                image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
+            },
+            {
+                name: "Beloved",
+                author: "Toni Morrison",
+                description: "A powerful exploration of the physical and psychological scars of slavery.",
+                price: 15.99,
+                category: "fiction",
+                image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
+            },
+            {
+                name: "The Little Prince",
+                author: "Antoine de Saint-Exupéry",
+                description: "A poetic tale about the importance of human connection.",
+                price: 12.99,
+                category: "children",
+                image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
+            },
+            {
+                name: "The Road Not Taken",
+                author: "Robert Frost",
+                description: "A collection of Frost's most memorable and beloved poems.",
+                price: 11.99,
+                category: "poetry",
                 image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
             }
         ];
