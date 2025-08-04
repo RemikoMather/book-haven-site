@@ -1,44 +1,81 @@
 class SimpleGallery {
     constructor() {
         console.log('DEBUG: SimpleGallery constructor started');
+        console.log('Document ready state:', document.readyState);
+        
+        // Always bind the methods to this instance
+        this.init = this.init.bind(this);
+        this.showProducts = this.showProducts.bind(this);
+        this.createProductElement = this.createProductElement.bind(this);
+        
+        // Wait for DOM to be ready
+        if (document.readyState === 'loading') {
+            console.log('Document still loading, adding DOMContentLoaded listener');
+            document.addEventListener('DOMContentLoaded', () => {
+                console.log('DOMContentLoaded fired');
+                this.init();
+            });
+        } else {
+            console.log('Document already loaded, initializing immediately');
+            this.init();
+        }
+    }
+
+    init() {
+        console.log('DEBUG: init called');
+        try {
+            this.initializeElements();
+            this.showProducts();
+            console.log('DEBUG: initialization complete');
+        } catch (error) {
+            console.error('ERROR during initialization:', error);
+        }
+    }
+
+    initializeElements() {
+        console.log('DEBUG: initializeElements started');
+        
         // Initialize container elements
         this.productsContainer = document.getElementById('productsContainer');
-        this.loadingState = document.getElementById('loadingState');
-        this.errorState = document.getElementById('errorState');
-        this.emptyState = document.getElementById('emptyState');
+        console.log('DEBUG: productsContainer found:', !!this.productsContainer);
+        
+        this.loadingState = document.querySelector('.loading-state');
+        this.errorState = document.querySelector('.error-state');
+        this.emptyState = document.querySelector('.empty-state');
+        
+        console.log('DEBUG: State elements found:', {
+            loading: !!this.loadingState,
+            error: !!this.errorState,
+            empty: !!this.emptyState
+        });
         
         // Initialize products data
-        this.products = [
+        this.products = [];
+        const products = [
             {
-                name: 'The Great Gatsby',
-                author: 'F. Scott Fitzgerald',
+                name: "The Great Gatsby",
+                author: "F. Scott Fitzgerald",
+                description: "A masterpiece of American fiction that captures the essence of the Jazz Age.",
                 price: 15.99,
-                description: 'A masterpiece of American fiction that captures the essence of the Jazz Age.',
-                category: 'fiction',
-                image: 'https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg'
+                image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
             },
             {
-                name: 'To Kill a Mockingbird',
-                author: 'Harper Lee',
+                name: "To Kill a Mockingbird",
+                author: "Harper Lee",
+                description: "A timeless classic exploring racial injustice in a small Southern town.",
                 price: 14.99,
-                description: 'A timeless classic exploring racial injustice in a small Southern town.',
-                category: 'fiction',
-                image: 'https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg'
+                image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
             },
             {
-                name: '1984',
-                author: 'George Orwell',
+                name: "1984",
+                author: "George Orwell",
+                description: "A dystopian social science fiction novel exploring totalitarianism.",
                 price: 12.99,
-                description: 'A dystopian social science fiction novel exploring totalitarianism.',
-                category: 'fiction',
-                image: 'https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg'
+                image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
             }
         ];
-        
-        // Initialize cart
-        this.cart = JSON.parse(localStorage.getItem('cart')) || [];
-        this.orderProcessed = false;
-        
+        this.products = products;
+
         // Initialize cart elements
         this.cartCountElement = document.querySelector('[data-cart-count]');
         this.cartItemsContainer = document.getElementById('cart-items');
@@ -46,26 +83,55 @@ class SimpleGallery {
         this.checkoutButton = document.querySelector('.checkout-btn');
         this.cartDropdown = document.querySelector('.cart-dropdown');
         
+        // Initialize cart
+        this.cart = JSON.parse(localStorage.getItem('cart')) || [];
+        this.orderProcessed = false;
+        
         // Add cart controls
         this.setupCartControls();
         
-        console.log('DEBUG: Cart elements:', {
-            cartCount: !!this.cartCountElement,
-            cartItems: !!this.cartItemsContainer,
-            cartTotal: !!this.cartTotalElement,
-            checkoutBtn: !!this.checkoutButton
-        });
-        
-        // Update cart display
+        // Update initial cart display
         this.updateCartDisplay();
+    }
 
-        // Log element status
-        console.log({
-            productsContainer: !!this.productsContainer,
-            loadingState: !!this.loadingState,
-            errorState: !!this.errorState,
-            emptyState: !!this.emptyState
-        });
+    createProductElement(product) {
+        console.log('Creating element for product:', product);
+        
+        if (!product || !product.name || !product.author || !product.price) {
+            console.error('Invalid product data:', product);
+            return null;
+        }
+
+        const div = document.createElement('div');
+        div.className = 'gallery-item';
+        
+        const template = `
+            <div class="img-container">
+                <img src="${product.image || 'https://via.placeholder.com/300x400'}" alt="${product.name}" loading="lazy">
+            </div>
+            <div class="product-details">
+                <h3>${product.name}</h3>
+                <p class="book-author">By ${product.author}</p>
+                <p class="price">$${product.price.toFixed(2)}</p>
+                <p class="book-description">${product.description || 'No description available.'}</p>
+                <button class="btn btn-primary add-to-cart" data-product="${product.name}">
+                    <i class="fas fa-shopping-cart"></i>
+                    Add to Cart
+                </button>
+            </div>
+        `;
+        
+        div.innerHTML = template;
+        console.log('Created element HTML:', div.outerHTML);
+
+        const addToCartBtn = div.querySelector('.add-to-cart');
+        if (addToCartBtn) {
+            addToCartBtn.addEventListener('click', () => this.addToCart(product));
+        } else {
+            console.error('Add to cart button not found in created element');
+        }
+        
+        return div;
     }
 
     showLoading() {
@@ -79,13 +145,74 @@ class SimpleGallery {
     }
 
     showProducts() {
-        console.log('DEBUG: Showing products');
-        this.loadingState?.setAttribute('hidden', 'true');
-        this.errorState?.setAttribute('hidden', 'true');
-        this.emptyState?.setAttribute('hidden', 'true');
-        if (this.productsContainer) {
+        console.log('DEBUG: showProducts started');
+        
+        try {
+            // Hide all state containers first
+            const states = [this.loadingState, this.errorState, this.emptyState];
+            states.forEach(state => {
+                if (state) state.hidden = true;
+            });
+            
+            // Validate products container
+            if (!this.productsContainer) {
+                console.error('ERROR: Products container not found!');
+                this.errorState?.removeAttribute('hidden');
+                return;
+            }
+
+            // Validate products array
+            if (!Array.isArray(this.products)) {
+                console.error('ERROR: Products is not an array!');
+                this.errorState?.removeAttribute('hidden');
+                return;
+            }
+
+            if (this.products.length === 0) {
+                console.log('DEBUG: No products to display');
+                this.emptyState?.removeAttribute('hidden');
+                return;
+            }
+
+            console.log(`DEBUG: Preparing to show ${this.products.length} products`);
+            
+            // Clear and prepare container
+            this.productsContainer.innerHTML = '';
             this.productsContainer.style.display = 'grid';
-        }
+            
+            // Show loading state while we prepare the products
+            this.loadingState?.removeAttribute('hidden');
+        
+        // Create and append product elements
+        this.products.forEach((product, index) => {
+            console.log(`Creating product element ${index}:`, product);
+            const productElement = this.createProductElement(product);
+            this.productsContainer.appendChild(productElement);
+        });
+    }
+
+    createProductElement(product) {
+        const div = document.createElement('div');
+        div.className = 'product-card';
+        
+        div.innerHTML = `
+            <img src="${product.image}" alt="${product.name}" class="product-image">
+            <div class="product-details">
+                <h3 class="product-title">${product.name}</h3>
+                <p class="product-author">By ${product.author}</p>
+                <p class="product-description">${product.description}</p>
+                <div class="product-price">$${product.price.toFixed(2)}</div>
+                <button class="add-to-cart-btn" data-product="${product.name}">
+                    Add to Cart
+                </button>
+            </div>
+        `;
+
+        // Add click handler for the Add to Cart button
+        const addToCartBtn = div.querySelector('.add-to-cart-btn');
+        addToCartBtn.addEventListener('click', () => this.addToCart(product));
+        
+        return div;
     }
 
     addToCart(product) {

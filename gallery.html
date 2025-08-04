@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Gallery - Book Haven</title>
+    <title>Bo        <!-- Product Grid Section -->
+        <section class="products-section">
+            <h2 class="section-title">Featured Books</h2>
+            <div class="product-grid" id="productsContainer" aria-live="polite"></div>
+        </section>ry - Book Haven</title>
     <meta name="description" content="Browse our extensive collection of books - from classic literature to contemporary bestsellers at Book Haven">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/gallery-simple.css">
@@ -161,6 +165,9 @@
         <!-- Product Grid Section -->
         <section class="products-section">
             <h2 class="section-title">Featured Books</h2>
+            <div id="loadingState" hidden>Loading...</div>
+            <div id="errorState" hidden>Error loading products. Please try again.</div>
+            <div id="emptyState" hidden>No products found.</div>
             <div class="product-grid" id="productsContainer" aria-live="polite"></div>
         </section>
 
@@ -215,8 +222,5 @@
         </div>
     </footer>
 
-    <!-- Gallery Script -->
-    <script src="js/gallery-simple.js"></script>
-    </script>
 </body>
 </html>

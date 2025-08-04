@@ -1,6 +1,11 @@
 .products-section {
     width: 100%;
-    max-width.cart-dropdown {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.cart-dropdown {
     position: absolute;
     right: 0;
     top: 100%;
@@ -22,8 +27,6 @@
     display: flex;
     opacity: 1;
     visibility: visible;
-} margin: 2rem auto;
-    padding: 0 1rem;
 }
 
 .product-grid {
