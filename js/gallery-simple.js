@@ -13,20 +13,36 @@ export class SimpleGallery {
         this.cartDropdown = document.querySelector('.cart-dropdown');
         this.cartItemsContainer = document.querySelector('#cart-items');
         this.cartTotalElement = document.querySelector('[data-cart-total]');
-        this.checkoutButton = document.querySelector('.checkout-button');
+        this.checkoutButton = document.querySelector('.checkout-btn');
         
-        // Initialize cart from localStorage
-        this.cart = JSON.parse(localStorage.getItem('cart')) || [];
+        // Ensure cart count is visible initially
+        if (this.cartCountElement) {
+            this.cartCountElement.style.display = 'flex';
+        }
+        
+        // Initialize cart from localStorage with error handling
+        try {
+            const savedCart = localStorage.getItem('cart');
+            this.cart = savedCart ? JSON.parse(savedCart) : [];
+            // Ensure cart is always an array
+            if (!Array.isArray(this.cart)) {
+                console.warn('Cart was not an array, resetting to empty array');
+                this.cart = [];
+                localStorage.setItem('cart', JSON.stringify(this.cart));
+            }
+        } catch (error) {
+            console.error('Error loading cart from localStorage:', error);
+            this.cart = [];
+            localStorage.setItem('cart', JSON.stringify(this.cart));
+        }
+        
         this.orderProcessed = false;
         
-        // Debug logging for cart elements
-        console.log('Cart elements:', {
-            countElement: this.cartCountElement,
-            dropdown: this.cartDropdown,
-            itemsContainer: this.cartItemsContainer,
-            totalElement: this.cartTotalElement,
-            checkoutButton: this.checkoutButton
-        });
+        // Debug logging
+        console.log('Cart initialized:', this.cart);
+        
+        // Initialize cart display
+        this.updateCartDisplay();
         
         // Initialize products data
         this.products = [
@@ -41,106 +57,34 @@ export class SimpleGallery {
             {
                 name: "To Kill a Mockingbird",
                 author: "Harper Lee",
-                description: "A timeless classic exploring racial injustice in a small Southern town.",
+                description: "A powerful story of racial injustice and loss of innocence in the American South.",
                 price: 14.99,
                 category: "fiction",
-                image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
-            },
-            {
-                name: "1984",
-                author: "George Orwell",
-                description: "A dystopian social science fiction novel exploring totalitarianism.",
-                price: 12.99,
-                category: "fiction",
-                image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
-            },
-            {
-                name: "A Brief History of Time",
-                author: "Stephen Hawking",
-                description: "A landmark exploration of the universe and our place in it.",
-                price: 18.99,
-                category: "non-fiction",
-                image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
-            },
-            {
-                name: "The Origin of Species",
-                author: "Charles Darwin",
-                description: "The foundational work of evolutionary biology.",
-                price: 16.99,
-                category: "non-fiction",
-                image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
-            },
-            {
-                name: "Where the Wild Things Are",
-                author: "Maurice Sendak",
-                description: "A beloved children's tale of imagination and adventure.",
-                price: 11.99,
-                category: "children",
-                image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
-            },
-            {
-                name: "The Very Hungry Caterpillar",
-                author: "Eric Carle",
-                description: "A colorful journey through the week of a very hungry caterpillar.",
-                price: 9.99,
-                category: "children",
-                image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
-            },
-            {
-                name: "Milk and Honey",
-                author: "Rupi Kaur",
-                description: "A collection of poetry and prose about survival and the experience of violence, abuse, love, loss, and femininity.",
-                price: 13.99,
-                category: "poetry",
-                image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
-            },
-            {
-                name: "The Sun and Her Flowers",
-                author: "Rupi Kaur",
-                description: "A vibrant journey through growth and healing.",
-                price: 13.99,
-                category: "poetry",
-                image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
+                image: "https://cdn.pixabay.com/photo/2019/07/02/11/18/book-4311279_640.jpg"
             },
             {
                 name: "The Hobbit",
                 author: "J.R.R. Tolkien",
-                description: "A fantastical journey of a hobbit who finds himself on an unexpected adventure.",
+                description: "An unforgettable tale that follows Bilbo Baggins on an incredible adventure.",
                 price: 17.99,
                 category: "fiction",
-                image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
-            },
-            {
-                name: "Pride and Prejudice",
-                author: "Jane Austen",
-                description: "A masterful story of love and marriage in Georgian England.",
-                price: 14.99,
-                category: "fiction",
-                image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
-            },
-            {
-                name: "Sapiens",
-                author: "Yuval Noah Harari",
-                description: "A brief history of humankind exploring our evolution and future.",
-                price: 19.99,
-                category: "non-fiction",
-                image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
+                image: "https://cdn.pixabay.com/photo/2019/07/05/10/25/book-4318559_640.jpg"
             },
             {
                 name: "Beloved",
                 author: "Toni Morrison",
-                description: "A powerful exploration of the physical and psychological scars of slavery.",
+                description: "A haunting chronicle of slavery and its aftermath, winner of the Pulitzer Prize.",
                 price: 15.99,
                 category: "fiction",
-                image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
+                image: "https://cdn.pixabay.com/photo/2019/07/05/10/25/book-4318560_640.jpg"
             },
             {
-                name: "The Little Prince",
-                author: "Antoine de Saint-Exupéry",
-                description: "A poetic tale about the importance of human connection.",
+                name: "1984",
+                author: "George Orwell",
+                description: "A dystopian masterpiece that explores surveillance, truth, and power.",
                 price: 12.99,
-                category: "children",
-                image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
+                category: "fiction",
+                image: "https://cdn.pixabay.com/photo/2019/07/02/11/18/book-4311280_640.jpg"
             },
             {
                 name: "The Road Not Taken",
@@ -148,294 +92,51 @@ export class SimpleGallery {
                 description: "A collection of Frost's most memorable and beloved poems.",
                 price: 11.99,
                 category: "poetry",
-                image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
+                image: "https://cdn.pixabay.com/photo/2019/07/02/11/18/book-4311281_640.jpg"
             }
         ];
-
-        // Start initialization only after DOM is ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => {
-                this.init().catch(error => {
-                    console.error('Failed to initialize gallery:', error);
-                    this.showError();
-                });
-            });
-        } else {
-            this.init().catch(error => {
-                console.error('Failed to initialize gallery:', error);
-                this.showError();
-            });
-        }
     }
 
-    setupEventListeners() {
-        try {
-            console.log('DEBUG: Setting up event listeners');
-            
-            // Set up filter listeners
-            const categoryFilter = document.getElementById('categoryFilter');
-            const sortFilter = document.getElementById('sortFilter');
-            const searchInput = document.getElementById('searchInput');
-            const clearSearch = document.getElementById('clearSearch');
-
-            if (categoryFilter) {
-                categoryFilter.addEventListener('change', () => this.filterProducts());
-            }
-            if (sortFilter) {
-                sortFilter.addEventListener('change', () => this.sortProducts());
-            }
-            if (searchInput) {
-                searchInput.addEventListener('input', () => this.searchProducts());
-            }
-            if (clearSearch) {
-                clearSearch.addEventListener('click', () => this.clearSearchInput());
-            }
-
-            // Set up cart listeners
-            const cartToggle = document.querySelector('.cart-toggle');
-            const closeCart = document.querySelector('.close-cart');
-            const clearCart = document.querySelector('.clear-cart');
-            const checkoutBtn = document.querySelector('.checkout-btn');
-
-            if (cartToggle) {
-                cartToggle.addEventListener('click', () => this.toggleCart());
-            }
-            if (closeCart) {
-                closeCart.addEventListener('click', () => this.closeCart());
-            }
-            if (clearCart) {
-                clearCart.addEventListener('click', () => this.clearCart());
-            }
-            if (checkoutBtn) {
-                checkoutBtn.addEventListener('click', () => this.processOrder());
-            }
-
-            // Set up retry button
-            const retryButton = document.querySelector('#errorState button');
-            if (retryButton) {
-                retryButton.addEventListener('click', () => {
-                    this.hideAllStates();
-                    this.init();
-                });
-            }
-
-            console.log('DEBUG: Event listeners setup complete');
-            return true;
-        } catch (error) {
-            console.error('Failed to setup event listeners:', error);
-            return false;
+    initialize() {
+        if (this.initialized) {
+            console.log('DEBUG: Gallery already initialized');
+            return;
         }
-    }
 
-    async init() {
-        console.log('DEBUG: init called');
-        try {
-            // Initialize elements first
-            if (!this.initializeElements()) {
-                throw new Error('Failed to initialize elements');
-            }
-
-            // Hide error state and show loading
-            this.hideAllStates();
-            this.showLoading();
-            
-            // Setup all event listeners
-            if (!this.setupEventListeners()) {
-                throw new Error('Failed to setup event listeners');
-            }
-            
-            // Finally render products
-            await this.renderProducts();
-            
-            // Show products on success
-            this.showProducts();
-            console.log('DEBUG: initialization complete');
-            return true;
-        } catch (error) {
-            console.error('Failed to initialize:', error);
-            this.hideAllStates();
-            this.showError();
-            return false;
-        }
-    }
-
-    hideAllStates() {
-        this.loadingState?.setAttribute('hidden', 'true');
-        this.errorState?.setAttribute('hidden', 'true');
-        this.emptyState?.setAttribute('hidden', 'true');
-        if (this.productsContainer) {
-            this.productsContainer.style.display = 'none';
-        }
-    }
-
-    showProducts() {
-        this.loadingState?.setAttribute('hidden', 'true');
-        this.errorState?.setAttribute('hidden', 'true');
-        this.emptyState?.setAttribute('hidden', 'true');
-        if (this.productsContainer) {
-            this.productsContainer.style.display = 'grid';
-        }
-    }
-
-    initializeElements() {
-        console.log('DEBUG: initializeElements started');
+        console.log('DEBUG: Initializing gallery');
         
         try {
-            // Get required elements
-            this.productsContainer = document.getElementById('productsContainer');
-            this.loadingState = document.getElementById('loadingState');
-            this.errorState = document.getElementById('errorState');
-            this.emptyState = document.getElementById('emptyState');
-            
-            // Initialize cart elements
-            this.cartCountElement = document.querySelector('[data-cart-count]');
-            this.cartItemsContainer = document.getElementById('cart-items');
-            this.cartTotalElement = document.querySelector('[data-cart-total]');
-            this.checkoutButton = document.querySelector('.checkout-btn');
-            this.cartDropdown = document.querySelector('.cart-dropdown');
-            
-            // Log element status
-            console.log('DEBUG: Elements found:', {
-                productsContainer: !!this.productsContainer,
-                loadingState: !!this.loadingState,
-                errorState: !!this.errorState,
-                emptyState: !!this.emptyState,
-                cartElements: {
-                    count: !!this.cartCountElement,
-                    items: !!this.cartItemsContainer,
-                    total: !!this.cartTotalElement,
-                    checkout: !!this.checkoutButton,
-                    dropdown: !!this.cartDropdown
-                }
-            });
-            
-            // Verify required elements
-            const requiredElements = [
-                this.productsContainer,
-                this.loadingState,
-                this.errorState,
-                this.cartItemsContainer,
-                this.cartCountElement
-            ];
-            
-            if (requiredElements.some(el => !el)) {
-                console.error('Missing required elements');
-                return false;
+            // Show loading state
+            const loadingState = document.getElementById('loadingState');
+            if (loadingState) {
+                loadingState.hidden = false;
             }
-            
-            // Initialize cart
-            this.cart = JSON.parse(localStorage.getItem('cart')) || [];
-            
-            return true;
-        } catch (error) {
-            console.error('Error in initializeElements:', error);
-            return false;
-        }
-        
-        // Update initial cart display
-        this.updateCartDisplay();
-    }
 
-    showError() {
-        console.log('Showing error state');
-        this.hideAllStates();
-        if (this.errorState) {
-            this.errorState.removeAttribute('hidden');
-        }
-    }
+            // Hide error state initially
+            this.hideError();
 
-    showLoading() {
-        console.log('Showing loading state');
-        this.hideAllStates();
-        if (this.loadingState) {
-            this.loadingState.removeAttribute('hidden');
-        }
-    }
+            // Setup cart controls and display
+            this.setupCartControls();
+            this.updateCartDisplay();
 
-    createProductElement(product) {
-        console.log('Creating element for product:', product);
-        
-        if (!product || !product.name || !product.author || !product.price) {
-            console.error('Invalid product data:', product);
-            return null;
-        }
-
-        const div = document.createElement('div');
-        div.className = 'gallery-item';
-        
-        const template = `
-            <div class="img-container">
-                <img src="${product.image || 'https://via.placeholder.com/300x400'}" alt="${product.name}" loading="lazy">
-            </div>
-            <div class="product-details">
-                <h3>${product.name}</h3>
-                <p class="book-author">By ${product.author}</p>
-                <p class="price">$${product.price.toFixed(2)}</p>
-                <p class="book-description">${product.description || 'No description available.'}</p>
-                <button class="btn btn-primary add-to-cart" data-product="${product.name}">
-                    <i class="fas fa-shopping-cart"></i>
-                    Add to Cart
-                </button>
-            </div>
-        `;
-        
-        div.innerHTML = template;
-        console.log('Created element HTML:', div.outerHTML);
-
-        const addToCartBtn = div.querySelector('.add-to-cart');
-        if (addToCartBtn) {
-            addToCartBtn.addEventListener('click', () => this.addToCart(product));
-        } else {
-            console.error('Add to cart button not found in created element');
-        }
-        
-        return div;
-    }
-
-    async renderProducts() {
-        console.log('DEBUG: Starting renderProducts', {
-            productsContainer: this.productsContainer,
-            products: this.products,
-            containerDisplay: this.productsContainer?.style.display,
-            loadingHidden: this.loadingState?.hasAttribute('hidden'),
-            errorHidden: this.errorState?.hasAttribute('hidden')
-        });
-        
-        if (!this.productsContainer) {
-            console.error('DEBUG: Products container not found');
-            this.showError();
-            return Promise.reject(new Error('Products container not found'));
-        }
-
-        try {
-            // Ensure error state is hidden before showing loading
-            this.errorState?.setAttribute('hidden', 'true');
-            this.showLoading();
-
-            // Clear container and show loading state
-            this.productsContainer.innerHTML = '';
-            
+            // Check if we have products data
             if (!Array.isArray(this.products) || this.products.length === 0) {
-                console.error('DEBUG: No products available');
-                this.showError();
-                return Promise.reject(new Error('No products available'));
+                throw new Error('No products data available');
             }
-
-            // Add each product to the container
-            this.products.forEach((product, index) => {
-                console.log(`Creating product element ${index}:`, product);
-                const productElement = this.createProductElement(product);
-                if (productElement) {
-                    this.productsContainer.appendChild(productElement);
-                }
-            });
 
             // Hide loading state and show products
-            this.loadingState?.setAttribute('hidden', 'true');
-            this.productsContainer.style.display = 'grid';
+            if (loadingState) {
+                loadingState.hidden = true;
+            }
+            const productsContainer = document.getElementById('productsContainer');
+            if (productsContainer) {
+                productsContainer.style.display = 'grid';
+                this.displayProducts();
+            }
 
+            this.initialized = true;
         } catch (error) {
-            console.error('ERROR in renderProducts:', error);
+            console.error('Error during initialization:', error);
             this.showError();
         }
     }
@@ -443,180 +144,286 @@ export class SimpleGallery {
     addToCart(product) {
         console.log('DEBUG: Adding to cart:', product);
         
-        // Find if product already exists in cart
-        const existingProduct = this.cart.find(item => item.name === product.name);
-        
-        if (existingProduct) {
-            existingProduct.quantity = (existingProduct.quantity || 1) + 1;
-        } else {
-            this.cart.push({
-                ...product,
-                quantity: 1
-            });
-        }
-
-        // Save to localStorage
-        localStorage.setItem('cart', JSON.stringify(this.cart));
-        
-        // Show feedback
-        const button = this.productsContainer.querySelector(`[data-product="${product.name}"]`);
-        if (button) {
-            const originalText = button.innerHTML;
-            button.innerHTML = '<i class="fas fa-check"></i> Added to Cart';
-            button.classList.add('added');
+        try {
+            // Ensure this.cart is an array
+            if (!Array.isArray(this.cart)) {
+                console.warn('Cart was not an array, resetting to empty array');
+                this.cart = [];
+            }
             
-            setTimeout(() => {
-                button.innerHTML = originalText;
-                button.classList.remove('added');
-            }, 2000);
-        }
+            // Find if product already exists in cart
+            const existingProduct = this.cart.find(item => item.name === product.name);
+            
+            if (existingProduct) {
+                existingProduct.quantity = (existingProduct.quantity || 1) + 1;
+            } else {
+                this.cart.push({
+                    ...product,
+                    quantity: 1
+                });
+            }
 
-        // Update cart display
-        this.updateCartDisplay();
+            // Save to localStorage
+            localStorage.setItem('cart', JSON.stringify(this.cart));
+            
+            // Show feedback and update display
+            this.updateCartDisplay();
+            this.showAlert('Item added to cart');
+            
+        } catch (error) {
+            console.error('Error adding to cart:', error);
+            this.showAlert('Error adding item to cart');
+        }
     }
 
     updateCartDisplay() {
-        // Update cart count
-        const totalItems = this.cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
-        if (this.cartCountElement) {
-            this.cartCountElement.textContent = totalItems;
-            this.cartCountElement.hidden = totalItems === 0;
-        }
+        try {
+            // Ensure this.cart is an array
+            if (!Array.isArray(this.cart)) {
+                this.cart = [];
+            }
+            
+            // Update cart count
+            const totalItems = this.cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+            if (this.cartCountElement) {
+                this.cartCountElement.textContent = totalItems;
+                this.cartCountElement.style.display = 'flex';
+                this.cartCountElement.style.visibility = totalItems === 0 ? 'hidden' : 'visible';
+            }
 
-        // Update cart items
-        if (this.cartItemsContainer) {
-            this.cartItemsContainer.innerHTML = this.cart.map(item => `
-                <div class="cart-item">
-                    <div class="cart-item-details">
-                        <h4>${item.name}</h4>
-                        <p>by ${item.author}</p>
-                        <p>$${item.price.toFixed(2)} × ${item.quantity}</p>
+            // Update cart items
+            if (this.cartItemsContainer) {
+                this.cartItemsContainer.innerHTML = this.cart.map(item => `
+                    <div class="cart-item">
+                        <div class="cart-item-details">
+                            <h4>${item.name}</h4>
+                            <p>by ${item.author}</p>
+                            <p>$${item.price.toFixed(2)} × ${item.quantity}</p>
+                        </div>
+                        <div class="cart-item-actions">
+                            <button class="btn-remove" data-product="${item.name}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
                     </div>
-                    <div class="cart-item-actions">
-                        <button class="btn-remove" data-product="${item.name}">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                </div>
-            `).join('');
+                `).join('');
 
-            // Add remove button listeners
-            this.cartItemsContainer.querySelectorAll('.btn-remove').forEach(button => {
-                button.addEventListener('click', () => {
-                    const productName = button.dataset.product;
-                    this.removeFromCart(productName);
+                // Add remove button listeners
+                this.cartItemsContainer.querySelectorAll('.btn-remove').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const productName = button.dataset.product;
+                        this.removeFromCart(productName);
+                    });
                 });
-            });
-        }
+            }
 
-        // Update total
-        if (this.cartTotalElement) {
-            const total = this.cart.reduce((sum, item) => sum + (item.price * (item.quantity || 1)), 0);
-            this.cartTotalElement.textContent = total.toFixed(2);
-        }
+            // Update total
+            if (this.cartTotalElement) {
+                const total = this.cart.reduce((sum, item) => sum + (item.price * (item.quantity || 1)), 0);
+                this.cartTotalElement.textContent = total.toFixed(2);
+            }
 
-        // Update checkout button
-        if (this.checkoutButton) {
-            this.checkoutButton.disabled = this.cart.length === 0;
+            // Update checkout button
+            const checkoutButton = document.querySelector('.checkout-btn');
+            if (checkoutButton) {
+                const hasItems = this.cart.length > 0;
+                checkoutButton.disabled = !hasItems;
+                checkoutButton.setAttribute('aria-disabled', !hasItems);
+                checkoutButton.title = hasItems ? 'Proceed to checkout' : 'Add items to cart to checkout';
+            }
+        } catch (error) {
+            console.error('Error updating cart display:', error);
         }
     }
 
     removeFromCart(productName) {
-        this.cart = this.cart.filter(item => item.name !== productName);
-        localStorage.setItem('cart', JSON.stringify(this.cart));
-        this.updateCartDisplay();
-        this.showAlert('Item removed from cart');
-    }
-
-    setupCartControls() {
-        // Add cart toggle button
-        const cartToggle = document.querySelector('.cart-toggle');
-        if (cartToggle) {
-            cartToggle.addEventListener('click', () => this.toggleCart());
-        }
-
-        // Add close cart button
-        const closeCart = document.querySelector('.close-cart');
-        if (closeCart) {
-            closeCart.addEventListener('click', () => this.toggleCart());
-        }
-
-        // Add clear cart listener
-        const clearCartBtn = document.querySelector('.clear-cart');
-        if (clearCartBtn) {
-            clearCartBtn.addEventListener('click', () => {
-                if (this.cart.length === 0) {
-                    this.showAlert('Cart is already empty');
-                    return;
-                }
-                
-                if (confirm('Are you sure you want to clear your cart?')) {
-                    this.clearCart();
-                }
-            });
-        }
-
-        // Add checkout listener
-        if (this.checkoutButton) {
-            this.checkoutButton.addEventListener('click', () => this.processOrder());
-        }
-    }
-
-    toggleCart() {
-        if (this.cartDropdown) {
-            this.cartDropdown.classList.toggle('show');
+        try {
+            this.cart = this.cart.filter(item => item.name !== productName);
+            localStorage.setItem('cart', JSON.stringify(this.cart));
+            this.updateCartDisplay();
+            this.showAlert('Item removed from cart');
+        } catch (error) {
+            console.error('Error removing from cart:', error);
+            this.showAlert('Error removing item from cart');
         }
     }
 
     clearCart() {
-        // Clear cart array and localStorage
-        this.cart = [];
-        localStorage.setItem('cart', JSON.stringify(this.cart));
-        
-        // Update UI
-        this.updateCartDisplay();
-        
-        // Show feedback
-        this.showAlert('Cart has been cleared');
-        
-        // Reset order state
-        this.orderProcessed = false;
-        
-        // Close the cart dropdown
-        this.toggleCart();
+        try {
+            this.cart = [];
+            localStorage.setItem('cart', JSON.stringify(this.cart));
+            this.updateCartDisplay();
+            this.showAlert('Cart has been cleared');
+            this.orderProcessed = false;
+        } catch (error) {
+            console.error('Error clearing cart:', error);
+            this.showAlert('Error clearing cart');
+        }
     }
 
     processOrder() {
-        if (this.orderProcessed) {
-            this.showAlert('This order has already been processed!');
-            return;
-        }
+        try {
+            if (this.orderProcessed) {
+                this.showAlert('This order has already been processed!', 'warning');
+                return;
+            }
 
-        if (this.cart.length === 0) {
-            this.showAlert('Your cart is empty!');
-            return;
-        }
+            if (this.cart.length === 0) {
+                this.showAlert('Your cart is empty!', 'warning');
+                return;
+            }
 
-        this.orderProcessed = true;
-        this.showAlert('Order processed successfully! Thank you for your purchase.');
-        this.cart = [];
-        localStorage.setItem('cart', JSON.stringify(this.cart));
-        this.updateCartDisplay();
+            // Calculate total
+            const total = this.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            this.orderProcessed = true;
+            this.showAlert(`Order processed successfully! Total: $${total.toFixed(2)}. Thank you for your purchase.`, 'success');
+            this.cart = [];
+            localStorage.setItem('cart', JSON.stringify(this.cart));
+            this.updateCartDisplay();
+            
+            // Close cart dropdown after successful order
+            const cartDropdown = document.querySelector('.cart-dropdown');
+            if (cartDropdown) {
+                cartDropdown.classList.remove('show');
+            }
+        } catch (error) {
+            console.error('Error processing order:', error);
+            this.showAlert('Error processing order');
+        }
     }
 
-    showAlert(message) {
+    showAlert(message, type = 'info') {
         const alertDiv = document.createElement('div');
-        alertDiv.className = 'cart-alert';
+        alertDiv.className = `cart-alert ${type}`;
         alertDiv.textContent = message;
+        
+        // Add icon based on type
+        const icon = document.createElement('i');
+        icon.className = 'fas ' + (type === 'success' ? 'fa-check-circle' : 
+                                 type === 'warning' ? 'fa-exclamation-triangle' : 
+                                 type === 'error' ? 'fa-times-circle' : 'fa-info-circle');
+        alertDiv.insertBefore(icon, alertDiv.firstChild);
+        
         document.body.appendChild(alertDiv);
-
-        setTimeout(() => alertDiv.classList.add('show'), 10);
+        
+        // Add animation classes
+        alertDiv.classList.add('slide-in');
+        
         setTimeout(() => {
-            alertDiv.classList.remove('show');
+            alertDiv.classList.add('slide-out');
             setTimeout(() => alertDiv.remove(), 300);
         }, 3000);
     }
-}
 
-// Create and initialize gallery when DOM is ready
-document.addEventListener('DOMContentLoaded', () => new SimpleGallery());
+    showError() {
+        // Hide loading state if it exists
+        const loadingState = document.getElementById('loadingState');
+        if (loadingState) {
+            loadingState.hidden = true;
+        }
+
+        // Show error state
+        const errorState = document.getElementById('errorState');
+        if (errorState) {
+            errorState.hidden = false;
+        }
+
+        // Hide products container
+        const productsContainer = document.getElementById('productsContainer');
+        if (productsContainer) {
+            productsContainer.style.display = 'none';
+        }
+    }
+
+    hideError() {
+        const errorState = document.getElementById('errorState');
+        if (errorState) {
+            errorState.hidden = true;
+        }
+    }
+
+    setupCartControls() {
+        // Setup cart toggle button
+        const cartToggle = document.querySelector('.cart-toggle');
+        const cartDropdown = document.querySelector('.cart-dropdown');
+        
+        if (cartToggle && cartDropdown) {
+            cartToggle.addEventListener('click', (event) => {
+                event.stopPropagation();
+                cartDropdown.classList.toggle('show');
+            });
+
+            // Close cart when clicking outside
+            document.addEventListener('click', (event) => {
+                if (!cartDropdown.contains(event.target) && !cartToggle.contains(event.target)) {
+                    cartDropdown.classList.remove('show');
+                }
+            });
+        }
+
+        // Setup clear cart button
+        const clearCartButton = document.querySelector('.clear-cart');
+        if (clearCartButton) {
+            clearCartButton.addEventListener('click', () => {
+                this.clearCart();
+            });
+        }
+
+        // Setup checkout button
+        const checkoutButton = document.querySelector('.checkout-btn');
+        if (checkoutButton) {
+            checkoutButton.addEventListener('click', () => {
+                this.processOrder();
+            });
+        }
+
+        // Setup close cart button
+        const closeCartButton = document.querySelector('.close-cart');
+        if (closeCartButton) {
+            closeCartButton.addEventListener('click', () => {
+                cartDropdown.classList.remove('show');
+            });
+        }
+
+        console.log('DEBUG: Cart controls initialized');
+    }
+
+    displayProducts() {
+        const productsContainer = document.getElementById('productsContainer');
+        if (!productsContainer) return;
+
+        try {
+            productsContainer.innerHTML = this.products.map(product => `
+                <article class="product-card">
+                    <div class="product-image">
+                        <img src="${product.image}" alt="${product.name}" loading="lazy">
+                    </div>
+                    <div class="product-info">
+                        <h3>${product.name}</h3>
+                        <p class="author">by ${product.author}</p>
+                        <p class="description">${product.description}</p>
+                        <p class="price">$${product.price.toFixed(2)}</p>
+                        <button class="btn btn-primary add-to-cart" data-product="${product.name}">
+                            Add to Cart <i class="fas fa-shopping-cart"></i>
+                        </button>
+                    </div>
+                </article>
+            `).join('');
+
+            // Add click handlers for add to cart buttons
+            productsContainer.querySelectorAll('.add-to-cart').forEach(button => {
+                button.addEventListener('click', () => {
+                    const productName = button.dataset.product;
+                    const product = this.products.find(p => p.name === productName);
+                    if (product) {
+                        this.addToCart(product);
+                    }
+                });
+            });
+        } catch (error) {
+            console.error('Error displaying products:', error);
+            this.showError();
+        }
+    }
+}
