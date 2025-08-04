@@ -1,3 +1,6 @@
+/**
+ * Gallery class for managing the book gallery functionality
+ */
 export class SimpleGallery {
     constructor() {
         console.log('DEBUG: SimpleGallery constructor started');
@@ -31,16 +34,62 @@ export class SimpleGallery {
             }
         ];
 
-        // Wait for DOM to be ready
-        if (document.readyState === 'loading') {
-            console.log('Document still loading, adding DOMContentLoaded listener');
-            document.addEventListener('DOMContentLoaded', () => {
-                console.log('DOMContentLoaded fired');
-                this.init();
-            });
-        } else {
-            console.log('Document already loaded, initializing immediately');
-            this.init();
+        // Start initialization
+        this.init().catch(error => {
+            console.error('Failed to initialize gallery:', error);
+            this.showError();
+        });
+    }
+
+    setupEventListeners() {
+        try {
+            // Set up filter listeners
+            const categoryFilter = document.getElementById('categoryFilter');
+            const sortFilter = document.getElementById('sortFilter');
+            const searchInput = document.getElementById('searchInput');
+            const clearSearch = document.getElementById('clearSearch');
+
+            if (categoryFilter) {
+                categoryFilter.addEventListener('change', () => this.filterProducts());
+            }
+            if (sortFilter) {
+                sortFilter.addEventListener('change', () => this.sortProducts());
+            }
+            if (searchInput) {
+                searchInput.addEventListener('input', () => this.searchProducts());
+            }
+            if (clearSearch) {
+                clearSearch.addEventListener('click', () => this.clearSearchInput());
+            }
+
+            // Set up cart listeners
+            const cartToggle = document.querySelector('.cart-toggle');
+            const closeCart = document.querySelector('.close-cart');
+            const clearCart = document.querySelector('.clear-cart');
+
+            if (cartToggle) {
+                cartToggle.addEventListener('click', () => this.toggleCart());
+            }
+            if (closeCart) {
+                closeCart.addEventListener('click', () => this.closeCart());
+            }
+            if (clearCart) {
+                clearCart.addEventListener('click', () => this.clearCart());
+            }
+
+            // Set up retry button
+            const retryButton = document.querySelector('#errorState button');
+            if (retryButton) {
+                retryButton.addEventListener('click', () => {
+                    this.hideAllStates();
+                    this.init();
+                });
+            }
+
+            return true;
+        } catch (error) {
+            console.error('Failed to setup event listeners:', error);
+            return false;
         }
     }
 
@@ -56,14 +105,60 @@ export class SimpleGallery {
             this.hideAllStates();
             this.showLoading();
             
-            // Setup event listeners and render
-            this.setupEventListeners();
+            // Setup all event listeners
+            if (!this.setupEventListeners()) {
+                throw new Error('Failed to setup event listeners');
+            }
+            
+            // Finally render products
             await this.renderProducts();
             
             // Show products on success
             this.showProducts();
             console.log('DEBUG: initialization complete');
             return true;
+        } catch (error) {
+            console.error('Failed to initialize:', error);
+            this.hideAllStates();
+            this.showError();
+            return false;
+        }
+    }
+            sortFilter.addEventListener('change', () => this.applyFilters());
+        }
+        
+        if (searchInput) {
+            searchInput.addEventListener('input', () => {
+                clearSearch.hidden = !searchInput.value;
+                this.applyFilters();
+            });
+        }
+        
+        if (clearSearch) {
+            clearSearch.addEventListener('click', () => {
+                searchInput.value = '';
+                clearSearch.hidden = true;
+                this.applyFilters();
+            });
+        }
+        
+        // Cart event listeners
+        const cartToggle = document.querySelector('.cart-toggle');
+        const closeCart = document.querySelector('.close-cart');
+        const clearCart = document.querySelector('.clear-cart');
+        
+        if (cartToggle) {
+            cartToggle.addEventListener('click', () => this.toggleCart());
+        }
+        
+        if (closeCart) {
+            closeCart.addEventListener('click', () => this.toggleCart(false));
+        }
+        
+        if (clearCart) {
+            clearCart.addEventListener('click', () => this.clearCart());
+        }
+    }
         } catch (error) {
             console.error('ERROR during initialization:', error);
             this.showError();
