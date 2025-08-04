@@ -18,7 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
         states.loading?.setAttribute('hidden', 'true');
         states.error?.removeAttribute('hidden');
     }
-});
     states.loading?.setAttribute('hidden', 'true');
     states.empty?.setAttribute('hidden', 'true');
     if (states.products) {
@@ -33,10 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Initialize gallery
     try {
-    if (errorState) {
-        errorState.setAttribute('hidden', 'true');
-    }
-    
         const gallery = new SimpleGallery();
         gallery.init().then(() => {
             console.log('DEBUG: Gallery initialized successfully');
@@ -66,5 +61,4 @@ document.addEventListener('DOMContentLoaded', () => {
             loadingHidden: states.loading?.hasAttribute('hidden')
         });
     }
-});
 });

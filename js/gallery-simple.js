@@ -34,15 +34,26 @@ export class SimpleGallery {
             }
         ];
 
-        // Start initialization
-        this.init().catch(error => {
-            console.error('Failed to initialize gallery:', error);
-            this.showError();
-        });
+        // Start initialization only after DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                this.init().catch(error => {
+                    console.error('Failed to initialize gallery:', error);
+                    this.showError();
+                });
+            });
+        } else {
+            this.init().catch(error => {
+                console.error('Failed to initialize gallery:', error);
+                this.showError();
+            });
+        }
     }
 
     setupEventListeners() {
         try {
+            console.log('DEBUG: Setting up event listeners');
+            
             // Set up filter listeners
             const categoryFilter = document.getElementById('categoryFilter');
             const sortFilter = document.getElementById('sortFilter');
@@ -66,6 +77,7 @@ export class SimpleGallery {
             const cartToggle = document.querySelector('.cart-toggle');
             const closeCart = document.querySelector('.close-cart');
             const clearCart = document.querySelector('.clear-cart');
+            const checkoutBtn = document.querySelector('.checkout-btn');
 
             if (cartToggle) {
                 cartToggle.addEventListener('click', () => this.toggleCart());
@@ -75,6 +87,9 @@ export class SimpleGallery {
             }
             if (clearCart) {
                 clearCart.addEventListener('click', () => this.clearCart());
+            }
+            if (checkoutBtn) {
+                checkoutBtn.addEventListener('click', () => this.processOrder());
             }
 
             // Set up retry button
@@ -86,6 +101,7 @@ export class SimpleGallery {
                 });
             }
 
+            console.log('DEBUG: Event listeners setup complete');
             return true;
         } catch (error) {
             console.error('Failed to setup event listeners:', error);
@@ -124,47 +140,6 @@ export class SimpleGallery {
             return false;
         }
     }
-            sortFilter.addEventListener('change', () => this.applyFilters());
-        }
-        
-        if (searchInput) {
-            searchInput.addEventListener('input', () => {
-                clearSearch.hidden = !searchInput.value;
-                this.applyFilters();
-            });
-        }
-        
-        if (clearSearch) {
-            clearSearch.addEventListener('click', () => {
-                searchInput.value = '';
-                clearSearch.hidden = true;
-                this.applyFilters();
-            });
-        }
-        
-        // Cart event listeners
-        const cartToggle = document.querySelector('.cart-toggle');
-        const closeCart = document.querySelector('.close-cart');
-        const clearCart = document.querySelector('.clear-cart');
-        
-        if (cartToggle) {
-            cartToggle.addEventListener('click', () => this.toggleCart());
-        }
-        
-        if (closeCart) {
-            closeCart.addEventListener('click', () => this.toggleCart(false));
-        }
-        
-        if (clearCart) {
-            clearCart.addEventListener('click', () => this.clearCart());
-        }
-    }
-        } catch (error) {
-            console.error('ERROR during initialization:', error);
-            this.showError();
-            throw error; // Re-throw to be caught by the caller
-        }
-    }
 
     hideAllStates() {
         this.loadingState?.setAttribute('hidden', 'true');
@@ -187,57 +162,57 @@ export class SimpleGallery {
     initializeElements() {
         console.log('DEBUG: initializeElements started');
         
-        // Get required elements
-        this.productsContainer = document.getElementById('productsContainer');
-        this.loadingState = document.getElementById('loadingState');
-        this.errorState = document.getElementById('errorState');
-        this.emptyState = document.getElementById('emptyState');
-        
-        // Log element status
-        console.log('DEBUG: Elements found:', {
-            productsContainer: !!this.productsContainer,
-            loadingState: !!this.loadingState,
-            errorState: !!this.errorState,
-            emptyState: !!this.emptyState
-        });
-        
-        // Verify required elements
-        if (!this.productsContainer || !this.loadingState || !this.errorState) {
-            console.error('Missing required elements');
-            return false;
-        }
-        
-        // Add retry functionality
-        const retryButton = this.errorState.querySelector('button');
-        if (retryButton) {
-            retryButton.addEventListener('click', async () => {
-                try {
-                    this.hideAllStates();
-                    this.showLoading();
-                    await this.renderProducts();
-                    this.showProducts();
-                } catch (error) {
-                    console.error('Retry failed:', error);
-                    this.showError();
+        try {
+            // Get required elements
+            this.productsContainer = document.getElementById('productsContainer');
+            this.loadingState = document.getElementById('loadingState');
+            this.errorState = document.getElementById('errorState');
+            this.emptyState = document.getElementById('emptyState');
+            
+            // Initialize cart elements
+            this.cartCountElement = document.querySelector('[data-cart-count]');
+            this.cartItemsContainer = document.getElementById('cart-items');
+            this.cartTotalElement = document.querySelector('[data-cart-total]');
+            this.checkoutButton = document.querySelector('.checkout-btn');
+            this.cartDropdown = document.querySelector('.cart-dropdown');
+            
+            // Log element status
+            console.log('DEBUG: Elements found:', {
+                productsContainer: !!this.productsContainer,
+                loadingState: !!this.loadingState,
+                errorState: !!this.errorState,
+                emptyState: !!this.emptyState,
+                cartElements: {
+                    count: !!this.cartCountElement,
+                    items: !!this.cartItemsContainer,
+                    total: !!this.cartTotalElement,
+                    checkout: !!this.checkoutButton,
+                    dropdown: !!this.cartDropdown
                 }
             });
+            
+            // Verify required elements
+            const requiredElements = [
+                this.productsContainer,
+                this.loadingState,
+                this.errorState,
+                this.cartItemsContainer,
+                this.cartCountElement
+            ];
+            
+            if (requiredElements.some(el => !el)) {
+                console.error('Missing required elements');
+                return false;
+            }
+            
+            // Initialize cart
+            this.cart = JSON.parse(localStorage.getItem('cart')) || [];
+            
+            return true;
+        } catch (error) {
+            console.error('Error in initializeElements:', error);
+            return false;
         }
-        
-        return true;
-        
-        // Initialize cart elements
-        this.cartCountElement = document.querySelector('[data-cart-count]');
-        this.cartItemsContainer = document.getElementById('cart-items');
-        this.cartTotalElement = document.querySelector('[data-cart-total]');
-        this.checkoutButton = document.querySelector('.checkout-btn');
-        this.cartDropdown = document.querySelector('.cart-dropdown');
-        
-        // Initialize cart
-        this.cart = JSON.parse(localStorage.getItem('cart')) || [];
-        this.orderProcessed = false;
-        
-        // Add cart controls
-        this.setupCartControls();
         
         // Update initial cart display
         this.updateCartDisplay();
