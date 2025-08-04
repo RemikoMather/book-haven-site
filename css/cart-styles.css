@@ -16,11 +16,16 @@
     z-index: 1000;
     max-height: 80vh;
     overflow-y: auto;
+    margin-top: 5px;
 }
 
 .cart-dropdown.show {
     display: block !important;
     animation: slideDown 0.3s ease-out;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
 }
 
 /* Cart Header */
