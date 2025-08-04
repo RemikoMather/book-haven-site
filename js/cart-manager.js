@@ -1,8 +1,7 @@
-import { StorageManager } from './storage-manager.js';
-import { config } from './config.js';
+// Assumes StorageManager and config are loaded globally before this script
 
 // Cart Manager for handling shopping cart operations
-export class CartManager {
+class CartManager {
     constructor() {
         this.cartStorage = new StorageManager('local'); // Use local storage for cart persistence
         this.CART_KEY = 'book_haven_cart';
@@ -205,14 +204,44 @@ export class CartManager {
 
     // Clear the entire cart with confirmation
     clearCart() {
+        if (this.cart.length === 0) {
+            if (window.notifications) window.notifications.info('Cart is already empty');
+            return;
+        }
         this.cart = [];
         this._saveCart();
         this._updateCartUI();
+        if (window.notifications) window.notifications.success('Cart has been cleared successfully');
     }
 
     // Get cart contents
     getCart() {
         return this.cart;
+    }
+
+    // Process the order
+    async processOrder() {
+        if (this.cart.length === 0) {
+            if (window.notifications) window.notifications.warning('Cannot process order: Cart is empty');
+            return false;
+        }
+
+        try {
+            // Here you would typically make an API call to process the order
+            // For now, we'll simulate a successful order
+            const orderTotal = this.getTotal();
+            
+            // Clear the cart after successful order
+            this.cart = [];
+            this._saveCart();
+            this._updateCartUI();
+            
+            if (window.notifications) window.notifications.success(`Order processed successfully! Total: $${orderTotal.toFixed(2)}`);
+            return true;
+        } catch (error) {
+            if (window.notifications) window.notifications.error('Failed to process order. Please try again.');
+            return false;
+        }
     }
 
     // Get cart total
@@ -232,9 +261,37 @@ export class CartManager {
         this.cartStorage.set(this.CART_KEY, this.cart);
     }
 
+    // Initialize event listeners for cart actions
+    _initializeCartActions() {
+        // Wait for DOMContentLoaded if needed
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => this._setupCartButtons());
+        } else {
+            this._setupCartButtons();
+        }
+    }
+
+    _setupCartButtons() {
+        // Clear cart button
+        const clearCartBtn = document.querySelector('.clear-cart');
+        if (clearCartBtn && !clearCartBtn._cartListener) {
+            clearCartBtn.addEventListener('click', () => this.clearCart());
+            clearCartBtn._cartListener = true;
+        }
+
+        // Checkout button
+        const checkoutBtn = document.querySelector('.checkout-btn');
+        if (checkoutBtn && !checkoutBtn._cartListener) {
+            checkoutBtn.addEventListener('click', () => this.processOrder());
+            checkoutBtn._cartListener = true;
+        }
+    }
+
     // Private method to update cart UI
     _updateCartUI() {
         try {
+            // Initialize cart actions if not already done
+            this._initializeCartActions();
             // Update cart count
             const cartCountElements = document.querySelectorAll('[data-cart-count]');
             cartCountElements.forEach(element => {
@@ -324,5 +381,6 @@ export class CartManager {
     }
 }
 
-// Export a singleton instance
-export const cartManager = new CartManager();
+// Attach CartManager and cartManager to window for global access
+window.CartManager = CartManager;
+window.cartManager = new CartManager();

@@ -60,7 +60,7 @@ export class SimpleGallery {
                 description: "A powerful story of racial injustice and loss of innocence in the American South.",
                 price: 14.99,
                 category: "fiction",
-                image: "https://cdn.pixabay.com/photo/2019/07/02/11/18/book-4311279_640.jpg"
+                image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
             },
             {
                 name: "The Hobbit",
@@ -68,7 +68,7 @@ export class SimpleGallery {
                 description: "An unforgettable tale that follows Bilbo Baggins on an incredible adventure.",
                 price: 17.99,
                 category: "fiction",
-                image: "https://cdn.pixabay.com/photo/2019/07/05/10/25/book-4318559_640.jpg"
+                image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
             },
             {
                 name: "Beloved",
@@ -76,7 +76,7 @@ export class SimpleGallery {
                 description: "A haunting chronicle of slavery and its aftermath, winner of the Pulitzer Prize.",
                 price: 15.99,
                 category: "fiction",
-                image: "https://cdn.pixabay.com/photo/2019/07/05/10/25/book-4318560_640.jpg"
+                image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
             },
             {
                 name: "1984",
@@ -84,7 +84,7 @@ export class SimpleGallery {
                 description: "A dystopian masterpiece that explores surveillance, truth, and power.",
                 price: 12.99,
                 category: "fiction",
-                image: "https://cdn.pixabay.com/photo/2019/07/02/11/18/book-4311280_640.jpg"
+                image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
             },
             {
                 name: "The Road Not Taken",
@@ -92,7 +92,7 @@ export class SimpleGallery {
                 description: "A collection of Frost's most memorable and beloved poems.",
                 price: 11.99,
                 category: "poetry",
-                image: "https://cdn.pixabay.com/photo/2019/07/02/11/18/book-4311281_640.jpg"
+                image: "https://cdn.pixabay.com/photo/2019/01/30/08/30/book-3964050_640.jpg"
             }
         ];
     }
@@ -143,36 +143,31 @@ export class SimpleGallery {
 
     addToCart(product) {
         console.log('DEBUG: Adding to cart:', product);
-        
         try {
-            // Ensure this.cart is an array
             if (!Array.isArray(this.cart)) {
                 console.warn('Cart was not an array, resetting to empty array');
                 this.cart = [];
             }
-            
-            // Find if product already exists in cart
             const existingProduct = this.cart.find(item => item.name === product.name);
-            
             if (existingProduct) {
                 existingProduct.quantity = (existingProduct.quantity || 1) + 1;
             } else {
-                this.cart.push({
-                    ...product,
-                    quantity: 1
-                });
+                this.cart.push({ ...product, quantity: 1 });
             }
-
-            // Save to localStorage
             localStorage.setItem('cart', JSON.stringify(this.cart));
-            
-            // Show feedback and update display
             this.updateCartDisplay();
-            this.showAlert('Item added to cart');
-            
+            if (window.notifications) {
+                window.notifications.success('Item added to cart');
+            } else {
+                this.showAlert('Item added to cart');
+            }
         } catch (error) {
             console.error('Error adding to cart:', error);
-            this.showAlert('Error adding item to cart');
+            if (window.notifications) {
+                window.notifications.error('Error adding item to cart');
+            } else {
+                this.showAlert('Error adding item to cart');
+            }
         }
     }
 
@@ -183,12 +178,20 @@ export class SimpleGallery {
                 this.cart = [];
             }
             
-            // Update cart count
+            // Calculate total items
             const totalItems = this.cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+            
+            // Update cart badge count
             if (this.cartCountElement) {
                 this.cartCountElement.textContent = totalItems;
                 this.cartCountElement.style.display = 'flex';
                 this.cartCountElement.style.visibility = totalItems === 0 ? 'hidden' : 'visible';
+            }
+            
+            // Update cart header count
+            const headerCount = document.querySelector('.cart-header-count');
+            if (headerCount) {
+                headerCount.textContent = `(${totalItems} ${totalItems === 1 ? 'item' : 'items'})`;
             }
 
             // Update cart items
@@ -241,10 +244,18 @@ export class SimpleGallery {
             this.cart = this.cart.filter(item => item.name !== productName);
             localStorage.setItem('cart', JSON.stringify(this.cart));
             this.updateCartDisplay();
-            this.showAlert('Item removed from cart');
+            if (window.notifications) {
+                window.notifications.info('Item removed from cart');
+            } else {
+                this.showAlert('Item removed from cart');
+            }
         } catch (error) {
             console.error('Error removing from cart:', error);
-            this.showAlert('Error removing item from cart');
+            if (window.notifications) {
+                window.notifications.error('Error removing item from cart');
+            } else {
+                this.showAlert('Error removing item from cart');
+            }
         }
     }
 
@@ -253,35 +264,51 @@ export class SimpleGallery {
             this.cart = [];
             localStorage.setItem('cart', JSON.stringify(this.cart));
             this.updateCartDisplay();
-            this.showAlert('Cart has been cleared');
+            if (window.notifications) {
+                window.notifications.success('Cart has been cleared');
+            } else {
+                this.showAlert('Cart has been cleared');
+            }
             this.orderProcessed = false;
         } catch (error) {
             console.error('Error clearing cart:', error);
-            this.showAlert('Error clearing cart');
+            if (window.notifications) {
+                window.notifications.error('Error clearing cart');
+            } else {
+                this.showAlert('Error clearing cart');
+            }
         }
     }
 
     processOrder() {
         try {
             if (this.orderProcessed) {
-                this.showAlert('This order has already been processed!', 'warning');
+                if (window.notifications) {
+                    window.notifications.info('This order has already been processed!');
+                } else {
+                    this.showAlert('This order has already been processed!', 'warning');
+                }
                 return;
             }
-
             if (this.cart.length === 0) {
-                this.showAlert('Your cart is empty!', 'warning');
+                if (window.notifications) {
+                    window.notifications.warning('Your cart is empty!');
+                } else {
+                    this.showAlert('Your cart is empty!', 'warning');
+                }
                 return;
             }
-
             // Calculate total
             const total = this.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            
             this.orderProcessed = true;
-            this.showAlert(`Order processed successfully! Total: $${total.toFixed(2)}. Thank you for your purchase.`, 'success');
+            if (window.notifications) {
+                window.notifications.success(`Order processed successfully! Total: $${total.toFixed(2)}. Thank you for your purchase.`);
+            } else {
+                this.showAlert(`Order processed successfully! Total: $${total.toFixed(2)}. Thank you for your purchase.`, 'success');
+            }
             this.cart = [];
             localStorage.setItem('cart', JSON.stringify(this.cart));
             this.updateCartDisplay();
-            
             // Close cart dropdown after successful order
             const cartDropdown = document.querySelector('.cart-dropdown');
             if (cartDropdown) {
@@ -289,7 +316,11 @@ export class SimpleGallery {
             }
         } catch (error) {
             console.error('Error processing order:', error);
-            this.showAlert('Error processing order');
+            if (window.notifications) {
+                window.notifications.error('Error processing order');
+            } else {
+                this.showAlert('Error processing order');
+            }
         }
     }
 

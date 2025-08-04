@@ -15,13 +15,12 @@
     
     <!-- Load utilities and configurations -->
     <script src="js/config.js" type="module"></script>
-    
+    <!-- Notifications system -->
+    <script src="js/notifications.js"></script>
     <!-- Load core functionality -->
     <script src="js/gallery-simple.js" type="module"></script>
-    
     <!-- Load UI components -->
     <script src="js/mobile-nav.js"></script>
-    
     <!-- Load initialization script last -->
     <script src="js/script.js" type="module"></script>
 </head>
@@ -233,4 +232,12 @@
     </footer>
 
 </body>
+<script>
+  if (window.notifications) {
+    window.notifications.info('Test: Notification system is working!', 4000);
+  } else {
+    alert('window.notifications is not defined.');
+  }
+</script>
+</html>
 </html>

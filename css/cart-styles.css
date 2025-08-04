@@ -46,6 +46,13 @@
     font-size: 1.1em;
 }
 
+.cart-header-count {
+    font-size: 0.85em;
+    color: #666;
+    font-weight: normal;
+    margin-left: 5px;
+}
+
 .close-cart {
     background: none;
     border: none;
